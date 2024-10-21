@@ -20,5 +20,10 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        // try to get firebase user
+        // if user is null, make a new one and prompt for user information
+        // else show default page for user role
+
     }
 }
