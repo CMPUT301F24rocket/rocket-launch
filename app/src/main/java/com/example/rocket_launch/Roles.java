@@ -7,6 +7,8 @@ public class Roles {
 
     public Roles() {
         this.admin = false;
+        this.entrant = false;
+        this.organizer = false;
     }
 
     public void setAdmin(boolean admin) {

@@ -30,5 +30,18 @@ public class MainActivity extends AppCompatActivity {
             new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
         }
 
+        if (user.isEntrant()) {
+            // goto entrant activity
+        }
+        else if (user.isOrganizer()) {
+            // goto organizer activity
+        }
+        else if (user.isAdmin()) {
+            // goto admin activity
+        }
+        else {
+            // we were not supposed to get here
+        }
+
     }
 }
