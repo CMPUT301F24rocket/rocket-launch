@@ -18,7 +18,6 @@ public class UsersDB {
         // db = FirebaseFirestore.getInstance(); // load database on initialization
         // user_ref = db.collection("users"); // from collection of users load user
 
-
     }
 
     public User getUser() {

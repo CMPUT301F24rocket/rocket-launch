@@ -27,8 +27,8 @@ public class MainActivity extends AppCompatActivity {
         // if user is null, make a new one and prompt for user information
         if (user == null) {
             user = new User();
-
             new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
         }
+
     }
 }

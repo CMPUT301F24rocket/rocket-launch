@@ -4,17 +4,22 @@ package com.example.rocket_launch;
 public class User {
 
     private String android_id;
-    private Role role;
+    private Roles roles;
 
     public User() {
 
     }
 
-    public Role getRole() {
-        return role;
+    public void setAndroid_id(String android_id) {
+        this.android_id = android_id;
     }
 
-    public void setRole(Role role) {
-        this.role = role;
+    public Roles getRoles() {
+        return roles;
     }
+
+    public void setRoles(Roles roles) {
+        this.roles = roles;
+    }
+
 }

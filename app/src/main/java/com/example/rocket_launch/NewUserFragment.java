@@ -1,48 +1,40 @@
 package com.example.rocket_launch;
 
+import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 public class NewUserFragment  extends DialogFragment {
     User user;
+    Roles roles;
 
     NewUserFragment(User user) {
         this.user = user;
+        this.roles = new Roles();
     }
 
     @NonNull
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.select_role_fragment, null);
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
+
+        SwitchCompat entrant_switch = view.findViewById(R.id.entrant_switch);
+        SwitchCompat organizer_switch = view.findViewById(R.id.organizer_switch);
+
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        return builder
                 .setView(view)
                 .setTitle("Select Role")
                 .setNegativeButton("Cancel", null)
-                .setPositiveButton("Ok", null) // we override so we can error check
+                .setPositiveButton("Ok", (dialog, which) -> {
+                    roles.setEntrant(entrant_switch.isChecked());
+                    roles.setOrganizer(organizer_switch.isChecked());
+                })
                 .create();
-
-        // customize listener for ok button to validate data
-        dialog.setOnShowListener(dialogInterface -> {
-            Button ok_button = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-
-            ok_button.setOnClickListener(v -> {
-                // get data from view
-
-                // validate the data
-                boolean valid = true;
-                // set valid to false if anything not true
-
-                if (valid) {
-                    dialog.dismiss();
-                }
-            });
-        });
-        return dialog;
     }
 }
