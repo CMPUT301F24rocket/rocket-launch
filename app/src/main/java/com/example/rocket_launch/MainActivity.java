@@ -21,9 +21,14 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        // try to get firebase user
-        // if user is null, make a new one and prompt for user information
-        // else show default page for user role
+        UsersDB usersDB = new UsersDB(); // load user database
+        User user = usersDB.getUser(); // try to get firebase user (returns null for now)
 
+        // if user is null, make a new one and prompt for user information
+        if (user == null) {
+            user = new User();
+
+            new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
+        }
     }
 }
