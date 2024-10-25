@@ -1,10 +1,18 @@
 package com.example.rocket_launch;
 
 
+import android.location.Location;
+import android.media.Image;
+
 public class User {
 
     private String android_id;
     private Roles roles;
+    private String email;
+    private Location location;
+    private Image profilePhoto;
+    private boolean notificationPreference;
+
 
     public User() {
         this.roles = new Roles();
