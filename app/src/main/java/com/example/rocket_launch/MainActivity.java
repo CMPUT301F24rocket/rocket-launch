@@ -30,17 +30,42 @@ public class MainActivity extends AppCompatActivity {
             new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
         }
 
+        // User is an entrant (the user joins or signs up for events)
         if (user.isEntrant()) {
-            // goto entrant activity
+
+            // Create a new user that is an entrant. I will delete this once
+            // we have a firebase db running
+            User new_user = new User();
+            Roles entrant_role = new Roles();
+            entrant_role.entrant = true;
+            new_user.setRoles(entrant_role);
+
+            NewUserFragment new_entrant = new NewUserFragment(new_user);
+
         }
         else if (user.isOrganizer()) {
-            // goto organizer activity
+
+            // Create a new user that is an organizer
+            User new_user = new User();
+            Roles organizer_role = new Roles();
+            organizer_role.organizer = true;
+            new_user.setRoles(organizer_role);
+
+            NewUserFragment new_organizer = new NewUserFragment(new_user);
+
         }
         else if (user.isAdmin()) {
-            // goto admin activity
+
+            // Create a new user that is an organizer
+            User new_user = new User();
+            Roles admin_role = new Roles();
+            admin_role.organizer = true;
+            new_user.setRoles(admin_role);
+
+            NewUserFragment new_organizer = new NewUserFragment(new_user);
         }
         else {
-            // we were not supposed to get here
+           System.out.print("Error");
         }
 
     }
