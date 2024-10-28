@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">rocket-launch</string>
+    <string name="title_user_profile">User Profile</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_create_events">Create Event</string>
+    <string name="title_user_events">User Events</string>
+    <string name="title_home">Home</string>
 </resources>
