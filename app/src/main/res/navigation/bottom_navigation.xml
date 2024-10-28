@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/bottom_navigation">
+
+    <!--home page -->
+    <activity
+        android:id="@+id/navigation_home"
+        android:label="@string/title_home"
+        tools:layout="@layout/activity_main"/>
+
+    <!-- user events-->
+    <activity
+        android:id="@+id/navigation_user_events"
+        android:label="@string/title_user_events"
+        tools:layout="@layout/activity_user_events" />
+
+    <!-- create event-->
+    <activity
+        android:id="@+id/navigation_create_events"
+        android:label="@string/title_create_events"
+        tools:layout="@layout/activity_create_event"/>
+
+    <!-- notifications-->
+    <activity
+        android:id="@+id/navigation_notifications"
+        android:label="@string/title_notifications"
+        tools:layout="@layout/activity_notifications"/>
+
+    <!-- user profile-->
+    <activity
+        android:id="@+id/navigation_user_profile"
+        android:label="@string/title_user_profile"
+        tools:layout="@layout/activity_user_profile"/>
+
+</navigation>
