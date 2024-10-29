@@ -27,8 +27,11 @@ public class CreateEventActivity extends AppCompatActivity {
         //for navigation bar
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_create_events);
+        bottomBarNavigation(bottomNav);
 
-        //navigating to different activities using the bottom nav bar
+    }
+
+    private void bottomBarNavigation(BottomNavigationView bottomNav){
         bottomNav.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_home) {
                 startActivity(new Intent(getApplicationContext(),MainActivity.class));
@@ -51,7 +54,5 @@ public class CreateEventActivity extends AppCompatActivity {
             }
             return false;
         });
-
-
     }
 }

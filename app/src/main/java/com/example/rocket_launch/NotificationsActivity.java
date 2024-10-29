@@ -27,7 +27,11 @@ public class NotificationsActivity extends AppCompatActivity {
         //for navigation bar
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_notifications);
+        bottomBarNavigation(bottomNav);
 
+    }
+
+    private void bottomBarNavigation(BottomNavigationView bottomNav){
         //navigating to different activities using the bottom nav bar
         bottomNav.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_home) {
