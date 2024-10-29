@@ -27,7 +27,11 @@ public class UserEventsActivity extends AppCompatActivity {
         //for navigation bar
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_user_events);
+        bottomBarNavigation(bottomNav);
 
+    }
+
+    private void bottomBarNavigation(BottomNavigationView bottomNav){
         bottomNav.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_home) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class));

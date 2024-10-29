@@ -7,11 +7,12 @@
     android:layout_height="match_parent"
     tools:context=".UserEventsActivity">
 
+    <!--User Profile Header-->
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="UserEventsActivity"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:id="@+id/user_profile_header"
+        style="@style/ActivityHeaderStyle"
+        android:text="@string/user_events_header"
+
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
@@ -19,14 +20,11 @@
     <!--Bottom Navigation Bar-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="0dp"
-        android:layout_marginEnd="0dp"
-        android:background="?android:attr/windowBackground"
+        app:menu="@menu/bottom_nav_menu"
+        style="@style/BottomNavBarStyle"
+
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        app:menu="@menu/bottom_nav_menu" />
+        app:layout_constraintRight_toRightOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
