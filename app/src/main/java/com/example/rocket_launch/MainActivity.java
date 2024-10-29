@@ -74,19 +74,23 @@ public class MainActivity extends AppCompatActivity {
                 //current activity, no nothing
                 return true;
             } else if (item.getItemId() == R.id.navigation_user_events) {
-                startActivity(new Intent(getApplicationContext(),UserEventsActivity.class));
+                startActivity(new Intent(getApplicationContext(),UserEventsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             } else if (item.getItemId() ==R.id.navigation_create_events) {
-                startActivity(new Intent(getApplicationContext(),CreateEventActivity.class));
+                startActivity(new Intent(getApplicationContext(),CreateEventActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             } else if (item.getItemId() ==R.id.navigation_notifications) {
-                startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                startActivity(new Intent(getApplicationContext(), NotificationsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             } else if (item.getItemId() ==R.id.navigation_user_profile) {
-                startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+                startActivity(new Intent(getApplicationContext(), UserProfileActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             }

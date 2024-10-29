@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15sp"
+        android:background="@color/tea_green"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:text="Edit Profile"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15sp">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            tools:srcCompat="@tools:sample/avatars"
+            android:contentDescription="TODO"/>
+
+        <Button
+            android:id="@+id/edit_profile_picture"
+            style="@style/ButtonStyleB"
+            android:layout_gravity="bottom"
+            android:text="Edit Profile Picture" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"
+            android:text="Name:"/>
+
+        <EditText
+            android:id="@+id/edit_user_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"/> </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"
+            android:text="Email:"/>
+
+        <EditText
+            android:id="@+id/edit_user_email"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"/> </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"
+            android:text="Phone:"/>
+
+        <EditText
+            android:id="@+id/edit_user_phone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"/> </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="10sp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"
+            android:text="Facility:"/>
+
+        <EditText
+            android:id="@+id/edit_user_facility"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"/> </LinearLayout>
+
+    <Button
+        android:id="@+id/edit_user_role_button"
+        style="@style/ButtonStyleB"
+        android:text="Edit Roles" />
+
+</LinearLayout>
