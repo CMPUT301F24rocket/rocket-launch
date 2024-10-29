@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">rocket-launch</string>
+
+    <!--Bottom Navigation Titles-->
+    <string name="title_home">Home</string>
+    <string name="title_user_profile">User Profile</string>
+    <string name="title_notifications">Notifications</string>
+    <string name="title_create_events">Create Event</string>
+    <string name="title_user_events">User Events</string>
+
+    <!--Activity Header Titles-->
+    <string name="user_profile_header">UserProfileActivity</string>
+    <string name="user_events_header">UserEventsActivity</string>
+    <string name="notifications_header">NotificationsActivity</string>
+    <string name="main_header">MainActivity</string>
+    <string name="create_event_header">CreateEventActivity</string>
+
+
 </resources>

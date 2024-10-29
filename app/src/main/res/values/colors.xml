@@ -2,4 +2,17 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+
+    <!--Colour Palette Placeholder: aka, random colours added cause pretty-->
+    <color name="lavender">#EAE8FF</color>
+    <color name="platinum">#D8D5DB</color>
+    <color name="french_gray">#ADACB5</color>
+    <color name="gunmetal">#2D3142</color>
+    <color name="uranian_blue">#B0D7FF</color>
+    <color name="marian_blue">#2B4570</color>
+    <color name="periwinkle">#D4DCFF</color>
+    <color name="coral_pink">#DD9787</color>
+    <color name="tea_green">#C6D8AF</color>
+    <color name="fern_green">#568259</color>
+
 </resources>

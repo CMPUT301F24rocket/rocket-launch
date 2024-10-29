@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "865708421869",
+    "project_id": "rocket-launch-21699",
+    "storage_bucket": "rocket-launch-21699.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:865708421869:android:8abf318f429384789752e4",
+        "android_client_info": {
+          "package_name": "com.example.rocket_launch"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBhXWSRSuJ_2JK33PBEliYTk1ySf1jdPS8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
