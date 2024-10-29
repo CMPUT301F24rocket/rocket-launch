@@ -2,10 +2,12 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!--For home screen: replace image later -->
+    <!--opens on launch but can't navigate back to it-->
     <item
         android:id="@+id/navigation_home"
         android:icon="@android:drawable/star_big_on"
-        android:title="@string/title_home"/>
+        android:title="@string/title_home"
+        android:visible="true" />
 
     <!--For user events: replace image later -->
     <item

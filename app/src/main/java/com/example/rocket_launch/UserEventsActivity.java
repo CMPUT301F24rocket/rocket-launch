@@ -34,22 +34,26 @@ public class UserEventsActivity extends AppCompatActivity {
     private void bottomBarNavigation(BottomNavigationView bottomNav){
         bottomNav.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_home) {
-                startActivity(new Intent(getApplicationContext(), MainActivity.class));
+                startActivity(new Intent(getApplicationContext(), MainActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             } else if (item.getItemId() == R.id.navigation_user_events) {
                 //current activity, do nothing
                 return true;
             } else if (item.getItemId() ==R.id.navigation_create_events) {
-                startActivity(new Intent(getApplicationContext(),CreateEventActivity.class));
+                startActivity(new Intent(getApplicationContext(),CreateEventActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             } else if (item.getItemId() ==R.id.navigation_notifications) {
-                startActivity(new Intent(getApplicationContext(), NotificationsActivity.class));
+                startActivity(new Intent(getApplicationContext(), NotificationsActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             } else if (item.getItemId() ==R.id.navigation_user_profile) {
-                startActivity(new Intent(getApplicationContext(), UserProfileActivity.class));
+                startActivity(new Intent(getApplicationContext(), UserProfileActivity.class)
+                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;
             }

@@ -31,7 +31,7 @@
 
         <!--User Profile Picture-->
         <ImageView
-            android:id="@+id/profile_picture_view"
+            android:id="@+id/profile_picture_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintTop_toTopOf="@id/user_profile_body"
@@ -43,6 +43,7 @@
 
             app:layout_constraintHorizontal_bias="0.1"
             app:layout_constraintVertical_bias="0.1"
+            android:contentDescription="TODO"
             />
 
         <!--User Profile Information Vertical Display-->
@@ -52,7 +53,7 @@
             android:layout_height="wrap_content"
             android:padding="15sp"
             android:orientation="vertical"
-            app:layout_constraintTop_toBottomOf="@+id/profile_picture_view"
+            app:layout_constraintTop_toBottomOf="@+id/profile_picture_display"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/user_profile_body"
@@ -61,7 +62,6 @@
 
             <!--Display Name-->
             <LinearLayout
-                android:id="@+id/name_display"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -72,13 +72,12 @@
                     android:text="Name: " />
 
                 <TextView
-                    android:id="@+id/user_profile_name"
+                    android:id="@+id/user_name_textview"
                     style="@style/UserProfileDisplayStyle"/>
             </LinearLayout>
 
             <!--Display Email-->
             <LinearLayout
-                android:id="@+id/email_display"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -89,13 +88,12 @@
                     android:text="Email: " />
 
                 <TextView
-                    android:id="@+id/user_profile_email"
+                    android:id="@+id/user_email_textview"
                     style="@style/UserProfileDisplayStyle"/>
             </LinearLayout>
 
             <!--Display Phone Number-->
             <LinearLayout
-                android:id="@+id/phone_display"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -106,13 +104,12 @@
                     android:text="Phone: " />
 
                 <TextView
-                    android:id="@+id/user_profile_phone"
+                    android:id="@+id/user_phone_textview"
                     style="@style/UserProfileDisplayStyle"/>
             </LinearLayout>
 
             <!--Display Facility-->
             <LinearLayout
-                android:id="@+id/facility_display"
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"
                 android:layout_width="wrap_content"
@@ -123,7 +120,7 @@
                     android:text="Facility: " />
 
                 <TextView
-                    android:id="@+id/user_facility"
+                    android:id="@+id/user_facility_textview"
                     style="@style/UserProfileDisplayStyle"/>
             </LinearLayout>
 
