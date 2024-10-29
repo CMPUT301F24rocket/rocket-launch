@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Style for all Activity Headers-->
+    <style name="ActivityHeaderStyle">
+
+        <item name="android:textAlignment">center</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/gunmetal</item>
+
+        <item name="android:paddingTop">25sp</item>
+        <item name="android:paddingBottom">25sp</item>
+        <item name="android:background">@color/periwinkle</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item> </style>
+
+    <!--Style for Bottom Navigation bar-->
+    <style name="BottomNavBarStyle">
+
+        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginStart">0sp</item>
+        <item name="android:layout_marginEnd">0sp</item>
+        <item name="android:background">@color/periwinkle</item> </style>
+
+    <!--Linear Layout Profile Style-->
+    <style name="UserProfileLinearDisplayStyle">
+        <item name="android:background">@color/lavender</item>
+        <item name="android:layout_width">350sp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">12sp</item> </style>
+
+    <!--Style for User Profile Displays-->
+    <style name="UserProfileDisplayStyle">
+        <item name="android:padding">10sp</item>
+        <item name="android:textColor">@color/gunmetal</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item> </style>
+
+    <!--Button A Style-->
+    <style name="ButtonStyleA">
+        <item name="android:backgroundTint">@color/uranian_blue</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">20sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/marian_blue</item> </style>
+
+    <!--Button B Style-->
+    <style name="ButtonStyleB">
+        <item name="android:backgroundTint">@color/tea_green</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">20sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/fern_green</item> </style>
+
+    <!--Fragment Constants-->
+    <style name="FragmentConstants">
+        <item name="android:textSize">20sp</item>
+        <item name="android:textColor">@color/gunmetal</item>
+        <item name="android:padding">10sp</item> </style>
+
+</resources>

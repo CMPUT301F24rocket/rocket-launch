@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/user_profile_activity"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".UserProfileActivity">
+
+    <!--Note: Can change visibilities to "gone", "visible" and "invisible" to deal with roles-->
+
+    <!--User Profile Header-->
+    <TextView
+        android:id="@+id/user_profile_header"
+        style="@style/ActivityHeaderStyle"
+        android:text="@string/user_profile_header"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/user_profile_body"
+        android:layout_width="match_parent"
+        android:layout_height="0sp"
+
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/user_profile_header"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view">
+
+        <!--User Profile Picture-->
+        <ImageView
+            android:id="@+id/profile_picture_display"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintTop_toTopOf="@id/user_profile_body"
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_body"
+            app:layout_constraintStart_toStartOf="@id/user_profile_body"
+            app:layout_constraintEnd_toEndOf="@id/user_profile_body"
+            tools:layout_editor_absoluteY="651dp"
+            tools:srcCompat="@tools:sample/avatars"
+
+            app:layout_constraintHorizontal_bias="0.1"
+            app:layout_constraintVertical_bias="0.1"
+            android:contentDescription="TODO"
+            />
+
+        <!--User Profile Information Vertical Display-->
+        <LinearLayout
+            android:id="@+id/user_display_info"
+            android:layout_width="350sp"
+            android:layout_height="wrap_content"
+            android:padding="15sp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@+id/profile_picture_display"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="@+id/user_profile_body"
+            app:layout_constraintVertical_bias="0.1"
+            android:background="@color/lavender">
+
+            <!--Display Name-->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <TextView
+                    style="@style/UserProfileDisplayStyle"
+                    android:text="Name: " />
+
+                <TextView
+                    android:id="@+id/user_name_textview"
+                    style="@style/UserProfileDisplayStyle"/>
+            </LinearLayout>
+
+            <!--Display Email-->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <TextView
+                    style="@style/UserProfileDisplayStyle"
+                    android:text="Email: " />
+
+                <TextView
+                    android:id="@+id/user_email_textview"
+                    style="@style/UserProfileDisplayStyle"/>
+            </LinearLayout>
+
+            <!--Display Phone Number-->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <TextView
+                    style="@style/UserProfileDisplayStyle"
+                    android:text="Phone: " />
+
+                <TextView
+                    android:id="@+id/user_phone_textview"
+                    style="@style/UserProfileDisplayStyle"/>
+            </LinearLayout>
+
+            <!--Display Facility-->
+            <LinearLayout
+                android:orientation="horizontal"
+                android:layout_height="wrap_content"
+                android:layout_width="wrap_content"
+                android:visibility="visible">
+
+                <TextView
+                    style="@style/UserProfileDisplayStyle"
+                    android:text="Facility: " />
+
+                <TextView
+                    android:id="@+id/user_facility_textview"
+                    style="@style/UserProfileDisplayStyle"/>
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/edit_profile_button"
+            style="@style/ButtonStyleA"
+            android:text="Edit Profile"
+            app:layout_constraintTop_toBottomOf="@id/user_display_info"
+            app:layout_constraintBottom_toBottomOf="@id/user_profile_body"
+            app:layout_constraintStart_toStartOf="@id/user_display_info"
+            app:layout_constraintEnd_toEndOf="@id/user_display_info"
+            app:layout_constraintVertical_bias="0.1"
+            app:layout_constraintHorizontal_bias="0"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <!--Bottom Navigation Bar-->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_nav_view"
+        app:menu="@menu/bottom_nav_menu"
+        style="@style/BottomNavBarStyle"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent">
+
+    </com.google.android.material.bottomnavigation.BottomNavigationView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
