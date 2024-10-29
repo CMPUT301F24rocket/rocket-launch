@@ -23,7 +23,7 @@
         <item name="android:layout_marginEnd">0sp</item>
         <item name="android:background">@color/periwinkle</item> </style>
 
-    <!--Linear Layour Profile Style-->
+    <!--Linear Layout Profile Style-->
     <style name="UserProfileLinearDisplayStyle">
         <item name="android:background">@color/lavender</item>
         <item name="android:layout_width">350sp</item>

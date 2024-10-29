@@ -17,6 +17,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+
+
+    <!--Button to open event QR code scan-->
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/open_qr_scan_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="0.86"
+        app:layout_constraintHorizontal_bias="0.9"
+        />
+
     <!--Bottom Navigation Bar-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_nav_view"

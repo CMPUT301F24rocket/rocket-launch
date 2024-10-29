@@ -7,7 +7,7 @@
         android:id="@+id/navigation_home"
         android:icon="@android:drawable/star_big_on"
         android:title="@string/title_home"
-        android:visible="false" />
+        android:visible="true" />
 
     <!--For user events: replace image later -->
     <item
