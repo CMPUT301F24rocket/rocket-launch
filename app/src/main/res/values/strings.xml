@@ -14,6 +14,11 @@
     <string name="notifications_header">NotificationsActivity</string>
     <string name="main_header">MainActivity</string>
     <string name="create_event_header">CreateEventActivity</string>
+    <string name="cmput301_event_lottery_system_application">CMPUT301 Event Lottery System Application.</string>
+    <string name="by_team_rocket">By team rocket</string>
+    <string name="get_started">Get Started</string>
+    <string name="waitlist">Waitlist</string>
+    <string name="registered">Registered</string>
 
 
 </resources>

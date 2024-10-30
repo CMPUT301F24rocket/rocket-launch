@@ -3,17 +3,15 @@ package com.example.rocket_launch;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.navigation.NavigationBarView;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -35,63 +33,41 @@ public class MainActivity extends AppCompatActivity {
 
         //for navigation bar
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
-       //setBarNavigationDisplay(bottomNav, user);
+
+        //setBarNavigationDisplay(bottomNav, user);
 
         bottomNav.setSelectedItemId(R.id.navigation_home);
 
         //navigating to different activities using the bottom nav bar
         bottomBarNavigation(bottomNav);
 
-
         UsersDB usersDB = new UsersDB(); // load user database
-        User user = usersDB.getUser(); // try to get firebase user (returns null for now)
+        final User[] user = {usersDB.getUser()}; // try to get firebase user (returns null for now)
 
         // if user is null, make a new one and prompt for user information
 
-        if (user == null) {
-            user = new User();
-            new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
-        }
+        Button get_started_button = findViewById(R.id.get_started);
+        get_started_button.setOnClickListener(v -> {
+            if (user[0] == null) {
+                user[0] = new User();
+                new NewUserFragment(user[0]).show(getSupportFragmentManager(), "Create New User");
+            }
 
-        // User is an entrant (the user joins or signs up for events)
-        if (user.isEntrant()) {
+            // User is an entrant (the user joins or signs up for events)
+            if (user[0].isEntrant()) {
 
-            // Create a new user that is an entrant. I will delete this once
-            // we have a firebase db running
-            User new_user = new User();
-            Roles entrant_role = new Roles();
-            entrant_role.entrant = true;
-            new_user.setRoles(entrant_role);
 
-            NewUserFragment new_entrant = new NewUserFragment(new_user);
+            } else if (user[0].isOrganizer()) {
 
-        }
-        else if (user.isOrganizer()) {
 
-            // Create a new user that is an organizer
-            User new_user = new User();
-            Roles organizer_role = new Roles();
-            organizer_role.organizer = true;
-            new_user.setRoles(organizer_role);
+            } else if (user[0].isAdmin()) {
 
-            NewUserFragment new_organizer = new NewUserFragment(new_user);
 
-        }
-        else if (user.isAdmin()) {
-
-            // Create a new user that is an organizer
-            User new_user = new User();
-            Roles admin_role = new Roles();
-            admin_role.organizer = true;
-            new_user.setRoles(admin_role);
-
-            NewUserFragment new_organizer = new NewUserFragment(new_user);
-        }
-        else {
-           System.out.print("Error");
-        }
-
-    }
+            } else {
+                System.out.print("Error");
+            }
+        });
+    };
 
     private void bottomBarNavigation(BottomNavigationView bottomNav){
         bottomNav.setOnItemSelectedListener(item -> {
