@@ -9,7 +9,7 @@
 
     <!--User Profile Header-->
     <TextView
-        android:id="@+id/user_profile_header"
+        android:id="@+id/notifications_header"
         style="@style/ActivityHeaderStyle"
         android:text="@string/notifications_header"
 
