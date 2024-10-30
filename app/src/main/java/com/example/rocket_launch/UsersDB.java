@@ -1,36 +1,48 @@
 package com.example.rocket_launch;
 
+import android.util.Log;
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import java.util.HashMap;
+import java.util.Map;
 
-
-/*
-users stored in users collection
-each user will be obtained through device id (the document id)
-we keep it in a class so we can reference the database and change values whenever
-*/
 public class UsersDB {
-     private FirebaseFirestore db;
-     private CollectionReference user_ref;
+    private FirebaseFirestore db;
+    private CollectionReference userRef;
 
     UsersDB() {
-        // uncomment when we actually have a database
-        // db = FirebaseFirestore.getInstance(); // load database on initialization
-        // user_ref = db.collection("users"); // from collection of users load user
-
+        db = FirebaseFirestore.getInstance();
+        userRef = db.collection("user_info");  // Reference the collection
     }
 
-    public User getUser() {
-        // return user when implemented
-        // null for testing
-        return null;
+    public void addUser(String androidId, User user) {
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("android_id", androidId);
+        userMap.put("name", user.getUserName());
+        userMap.put("email", user.getUserEmail());
+        userMap.put("phone", user.getUserPhoneNumber());
+
+        userRef.document(androidId).set(userMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Firebase", "User added successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.w("Firebase", "Error adding user", e);
+                    }
+                });
     }
 
-    public void addUser(User user) {
-
-    }
-
-    public void deleteUser() {
-
+    public void getUser(String androidId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
+        userRef.document(androidId).get()
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
     }
 }
