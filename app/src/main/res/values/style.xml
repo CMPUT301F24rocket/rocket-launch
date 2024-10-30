@@ -62,4 +62,11 @@
         <item name="android:textColor">@color/gunmetal</item>
         <item name="android:padding">10sp</item> </style>
 
+    <!--Listview header constants-->
+    <style name="ListViewHeaderA">
+        <item name="android:textSize">25sp</item>
+        <item name="android:background">@color/coral_pink</item>
+        <item name="android:padding">8sp</item>
+    </style>
+
 </resources>
