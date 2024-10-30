@@ -14,6 +14,16 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item> </style>
 
+    <!--Style for Event Page Header-->
+    <style name="EventPageHeaderStyle">
+        <item name="android:padding">25sp</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/fern_green</item>
+        <item name="android:background">@color/tea_green</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
     <!--Style for Bottom Navigation bar-->
     <style name="BottomNavBarStyle">
 
@@ -61,5 +71,12 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/gunmetal</item>
         <item name="android:padding">10sp</item> </style>
+
+    <!--Listview header constants-->
+    <style name="ListViewHeaderA">
+        <item name="android:textSize">25sp</item>
+        <item name="android:background">@color/coral_pink</item>
+        <item name="android:padding">8sp</item>
+    </style>
 
 </resources>

@@ -28,6 +28,7 @@ public class UserProfileActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_user_profile);
         bottomBarNavigation(bottomNav);
+
     }
 
     private void bottomBarNavigation(BottomNavigationView bottomNav){

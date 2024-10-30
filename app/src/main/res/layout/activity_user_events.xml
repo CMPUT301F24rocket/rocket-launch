@@ -9,7 +9,7 @@
 
     <!--User Profile Header-->
     <TextView
-        android:id="@+id/user_profile_header"
+        android:id="@+id/user_events_header"
         style="@style/ActivityHeaderStyle"
         android:text="@string/user_events_header"
 
@@ -17,7 +17,51 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
+    <LinearLayout
+        android:id="@+id/registered_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/user_events_header"
+        app:layout_constraintBottom_toTopOf="@id/waitlist_layout"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ListViewHeaderA"
+            android:text="Registered Events"/>
+
+        <ListView
+            android:id="@+id/registered_events_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/waitlist_layout"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/registered_layout"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/ListViewHeaderA"
+            android:text="Waitlisted Events"/>
+
+        <ListView
+            android:id="@+id/waitlisted_events_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
 
     <!--Button to open event QR code scan-->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -30,8 +74,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.86"
-        app:layout_constraintHorizontal_bias="0.9"
-        />
+        app:layout_constraintHorizontal_bias="0.9" />
 
     <!--Bottom Navigation Bar-->
     <com.google.android.material.bottomnavigation.BottomNavigationView
