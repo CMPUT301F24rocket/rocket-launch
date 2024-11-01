@@ -4,6 +4,9 @@ package com.example.rocket_launch;
 import android.location.Location;
 import android.media.Image;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class User {
 
     //Android ID
@@ -18,6 +21,18 @@ public class User {
     private Location location;
     private Roles roles;
     private boolean notificationPreference;
+    private List<String> eventsJoined;
+
+
+
+    public void addEvent(String eventID){
+        eventsJoined.add(eventID);
+    }
+
+
+    public List<String> getEventsJoined() {
+        return eventsJoined;
+    }
 
     //get user profile information
     String getUserName() {return this.userName;}
