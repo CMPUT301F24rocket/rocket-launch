@@ -4,7 +4,6 @@ package com.example.rocket_launch;
 import android.location.Location;
 import android.media.Image;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -50,7 +49,7 @@ public class User {
 
 
     //Android ID
-    String getAndroid_id() {return this.android_id;}
+    String getAndroid_id(String android_id) {return this.android_id;}
     public void setAndroid_id(String android_id) {
         this.android_id = android_id;
     }

@@ -24,6 +24,8 @@ public class UsersDB {
         userMap.put("name", user.getUserName());
         userMap.put("email", user.getUserEmail());
         userMap.put("phone", user.getUserPhoneNumber());
+        userMap.put("profile_picture_url", user.getProfilePhoto());
+        userMap.put("roles", user.getRoles());
 
         userRef.document(androidId).set(userMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -44,5 +46,9 @@ public class UsersDB {
         userRef.document(androidId).get()
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
+    }
+
+    public void updateUser(String androidId, User user){
+
     }
 }
