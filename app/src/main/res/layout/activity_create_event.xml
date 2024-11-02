@@ -9,7 +9,7 @@
 
     <!--User Profile Header-->
     <TextView
-        android:id="@+id/user_profile_header"
+        android:id="@+id/create_event_header"
         style="@style/ActivityHeaderStyle"
         android:text="@string/create_event_header"
 

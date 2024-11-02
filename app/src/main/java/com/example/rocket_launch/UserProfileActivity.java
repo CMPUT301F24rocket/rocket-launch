@@ -2,12 +2,15 @@ package com.example.rocket_launch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -28,6 +31,19 @@ public class UserProfileActivity extends AppCompatActivity {
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_user_profile);
         bottomBarNavigation(bottomNav);
+
+        //Open edit profile fragment
+        Button editProfileButton = findViewById(R.id.edit_profile_button);
+
+        editProfileButton.setOnClickListener(view ->{
+            findViewById(R.id.user_profile_body).setVisibility(View.GONE);
+            getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.edit_profile_fragment_container, new EditProfileFragment())
+                    .commit();
+        });
+
     }
 
     private void bottomBarNavigation(BottomNavigationView bottomNav){
