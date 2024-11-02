@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -35,21 +36,26 @@ public class MainActivity extends AppCompatActivity {
         usersDB = new UsersDB(); // Load user database
         String androidId = "your_device_id"; // Replace with actual device ID
 
-        // Get Firebase user
-        usersDB.getUser(androidId, new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    user = documentSnapshot.toObject(User.class);
-                    checkUserRole(user);
-                } else {
-                    user = new User();
-                    new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
+        Button get_started_button = findViewById(R.id.get_started);
+        get_started_button.setOnClickListener(v -> {
+
+            // Get Firebase user
+            usersDB.getUser(androidId, new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        user = documentSnapshot.toObject(User.class);
+                        checkUserRole(user);
+                    } else {
+                        user = new User();
+                        new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
+                    }
                 }
-            }
-        }, e -> {
-            Log.w("Firebase", "Error getting user", e);
+            }, e -> {
+                Log.w("Firebase", "Error getting user", e);
+            });
         });
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_home);
