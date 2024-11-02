@@ -4,9 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -14,11 +16,7 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-<<<<<<< HEAD
-
-=======
 import com.google.firebase.firestore.DocumentSnapshot;
->>>>>>> 8128ab930ae6ae4607599e7c50a1d7f3c93a9e03
 
 public class MainActivity extends AppCompatActivity {
     User user;
@@ -38,63 +36,31 @@ public class MainActivity extends AppCompatActivity {
         usersDB = new UsersDB(); // Load user database
         String androidId = "your_device_id"; // Replace with actual device ID
 
-        // Get Firebase user
-        usersDB.getUser(androidId, new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    user = documentSnapshot.toObject(User.class);
-                    checkUserRole(user);
-                } else {
-                    user = new User();
-                    new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
-                }
-            }
-        }, e -> {
-            Log.w("Firebase", "Error getting user", e);
-        });
-
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
-<<<<<<< HEAD
-
-        //setBarNavigationDisplay(bottomNav, user);
-
-=======
->>>>>>> 8128ab930ae6ae4607599e7c50a1d7f3c93a9e03
-        bottomNav.setSelectedItemId(R.id.navigation_home);
-        bottomBarNavigation(bottomNav);
-<<<<<<< HEAD
-
-        UsersDB usersDB = new UsersDB(); // load user database
-        final User[] user = {usersDB.getUser()}; // try to get firebase user (returns null for now)
-
-        // if user is null, make a new one and prompt for user information
-
         Button get_started_button = findViewById(R.id.get_started);
         get_started_button.setOnClickListener(v -> {
-            if (user[0] == null) {
-                user[0] = new User();
-                new NewUserFragment(user[0]).show(getSupportFragmentManager(), "Create New User");
-            }
 
-            // User is an entrant (the user joins or signs up for events)
-            if (user[0].isEntrant()) {
-
-
-            } else if (user[0].isOrganizer()) {
-
-
-            } else if (user[0].isAdmin()) {
-
-
-            } else {
-                System.out.print("Error");
-            }
+            // Get Firebase user
+            usersDB.getUser(androidId, new OnSuccessListener<DocumentSnapshot>() {
+                @Override
+                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                    if (documentSnapshot.exists()) {
+                        user = documentSnapshot.toObject(User.class);
+                        checkUserRole(user);
+                    } else {
+                        user = new User();
+                        new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
+                    }
+                }
+            }, e -> {
+                Log.w("Firebase", "Error getting user", e);
+            });
         });
-    };
-=======
+
+
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
+        bottomNav.setSelectedItemId(R.id.navigation_home);
+        bottomBarNavigation(bottomNav);
     }
->>>>>>> 8128ab930ae6ae4607599e7c50a1d7f3c93a9e03
 
     private void checkUserRole(User user) {
         if (user.isEntrant()) {
