@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -38,8 +39,11 @@ public class MainActivity extends AppCompatActivity {
         //Get Android Device ID
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);;
 
-        // Get Firebase user
-        usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
+        Button get_started_button = findViewById(R.id.get_started);
+        get_started_button.setOnClickListener(v -> {
+
+            // Get Firebase user
+            usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
@@ -50,11 +54,14 @@ public class MainActivity extends AppCompatActivity {
                     user.setAndroid_id(androidID); //set Android ID for new user
                     new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
                     usersDB.addUser(androidID, user);
+                    }
+
                 }
-            }
-        }, e -> {
-            Log.w("Firebase", "Error getting user", e);
+            }, e -> {
+                Log.w("Firebase", "Error getting user", e);
+            });
         });
+
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_home);
