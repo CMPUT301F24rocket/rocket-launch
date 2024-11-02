@@ -8,16 +8,11 @@
     tools:context=".UserProfileActivity">
 
     <!--Note: Can change visibilities to "gone", "visible" and "invisible" to deal with roles-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/edit_profile_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <!--User Profile Header-->
-    <TextView
-        android:id="@+id/user_profile_header"
-        style="@style/ActivityHeaderStyle"
-        android:text="@string/user_profile_header"
-
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/user_profile_body"
@@ -26,15 +21,25 @@
 
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/user_profile_header"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@id/bottom_nav_view">
+
+        <!--User Profile Header-->
+        <TextView
+            android:id="@+id/user_profile_header"
+            style="@style/ActivityHeaderStyle"
+            android:text="@string/user_profile_header"
+
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"/>
 
         <!--User Profile Picture-->
         <ImageView
             android:id="@+id/profile_picture_display"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintTop_toTopOf="@id/user_profile_body"
+            app:layout_constraintTop_toBottomOf="@id/user_profile_header"
             app:layout_constraintBottom_toBottomOf="@id/user_profile_body"
             app:layout_constraintStart_toStartOf="@id/user_profile_body"
             app:layout_constraintEnd_toEndOf="@id/user_profile_body"

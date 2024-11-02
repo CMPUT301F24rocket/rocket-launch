@@ -3,12 +3,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/edit_profile_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15sp"
+        android:padding="25sp"
         android:background="@color/tea_green"
         android:textSize="25sp"
         android:textAlignment="center"
@@ -26,8 +28,9 @@
             android:contentDescription="TODO"/>
 
         <Button
-            android:id="@+id/edit_profile_picture"
+            android:id="@+id/edit_profile_picture_button"
             style="@style/ButtonStyleB"
+            android:layout_marginLeft="15sp"
             android:layout_gravity="bottom"
             android:text="Edit Profile Picture" />
 
@@ -106,6 +109,7 @@
     <Button
         android:id="@+id/edit_user_role_button"
         style="@style/ButtonStyleB"
+        android:layout_marginLeft="15sp"
         android:text="Edit Roles" />
 
 </LinearLayout>
