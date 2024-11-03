@@ -2,6 +2,7 @@ package com.example.rocket_launch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.widget.Button;
 
@@ -16,6 +17,9 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 public class UserProfileActivity extends AppCompatActivity {
 
+    User user;
+    UsersDB usersDB;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -27,22 +31,33 @@ public class UserProfileActivity extends AppCompatActivity {
             return insets;
         });
 
-        //for navigation bar
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
-        bottomNav.setSelectedItemId(R.id.navigation_user_profile);
-        bottomBarNavigation(bottomNav);
+        //Get Android ID
+        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        usersDB = new UsersDB();
+
+        Bundle bundle = new Bundle();
+        bundle.putString("androidID", androidID);
+
 
         //Open edit profile fragment
         Button editProfileButton = findViewById(R.id.edit_profile_button);
+
+        EditProfileFragment editProfileFragment = new EditProfileFragment();
+        editProfileFragment.setArguments(bundle);
 
         editProfileButton.setOnClickListener(view ->{
             findViewById(R.id.user_profile_body).setVisibility(View.GONE);
             getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.edit_profile_fragment_container, new EditProfileFragment())
+                    .replace(R.id.edit_profile_fragment_container, editProfileFragment)
                     .commit();
         });
+
+        //for navigation bar
+        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
+        bottomNav.setSelectedItemId(R.id.navigation_user_profile);
+        bottomBarNavigation(bottomNav);
 
     }
 
