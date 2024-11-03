@@ -25,6 +25,7 @@ public class UsersDB {
         userMap.put("email", user.getUserEmail());
         userMap.put("phone", user.getUserPhoneNumber());
         userMap.put("profile_picture_url", user.getProfilePhoto());
+        userMap.put("facility", user.getUserFacility());
         userMap.put("roles", user.getRoles());
 
         userRef.document(androidId).set(userMap)
@@ -55,6 +56,7 @@ public class UsersDB {
         userMap.put("email", user.getUserEmail());
         userMap.put("phone", user.getUserPhoneNumber());
         userMap.put("profile_picture_url", user.getProfilePhoto());
+        userMap.put("facility", user.getUserFacility());
         userMap.put("roles", user.getRoles());
 
         userRef.document(androidId).update(userMap)
@@ -67,7 +69,7 @@ public class UsersDB {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        Log.w("Firebase", "Error adding user", e);
+                        Log.w("Firebase", "Error updating user", e);
                     }
                 });
     }
