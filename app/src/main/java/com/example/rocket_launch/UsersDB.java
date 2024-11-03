@@ -49,6 +49,27 @@ public class UsersDB {
     }
 
     public void updateUser(String androidId, User user){
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("android_id", androidId);
+        userMap.put("name", user.getUserName());
+        userMap.put("email", user.getUserEmail());
+        userMap.put("phone", user.getUserPhoneNumber());
+        userMap.put("profile_picture_url", user.getProfilePhoto());
+        userMap.put("roles", user.getRoles());
 
+        userRef.document(androidId).update(userMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Firebase", "User added successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.w("Firebase", "Error adding user", e);
+                    }
+                });
     }
+
 }
