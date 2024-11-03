@@ -13,10 +13,12 @@ import androidx.annotation.Nullable;
 public class NewUserFragment  extends DialogFragment {
     User user;
     Roles roles;
+    UsersDB usersDB;
 
-    NewUserFragment(User user) {
+    NewUserFragment(User user, UsersDB usersDB) {
         this.user = user;
         this.roles = new Roles();
+        this.usersDB = usersDB;
     }
 
     @NonNull
@@ -34,6 +36,10 @@ public class NewUserFragment  extends DialogFragment {
                 .setPositiveButton("Ok", (dialog, which) -> {
                     roles.setEntrant(entrant_switch.isChecked());
                     roles.setOrganizer(organizer_switch.isChecked());
+                    user.setRoles(roles);
+
+                    //Update firebase
+                    usersDB.updateUser(user.getAndroid_id(), user);
                 })
                 .create();
     }

@@ -48,7 +48,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     user = new User();
                     user.setAndroid_id(androidID); //set Android ID for new user
-                    new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
+                    new NewUserFragment(user, usersDB).show(getSupportFragmentManager(), "Create New User");
                     usersDB.addUser(androidID, user);
                 }
             }
