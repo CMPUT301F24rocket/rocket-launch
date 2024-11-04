@@ -123,7 +123,6 @@
             android:id="@+id/save_profile_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20sp"
             android:layout_marginRight="15sp"
             android:text="Save"
             android:textSize="20sp"
@@ -134,11 +133,10 @@
             android:id="@+id/cancel_profile_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20sp"
             android:text="Cancel"
             android:textSize="20sp"
             android:textColor="@color/fern_green"
-            android:backgroundTint="@android:color/transparent" />
+            android:backgroundTint="@android:color/transparent"/>
 
     </LinearLayout>
 </LinearLayout>

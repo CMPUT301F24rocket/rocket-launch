@@ -58,7 +58,28 @@ public class EditProfileFragment extends Fragment {
 
         // Set up the save button
         Button saveButton = view.findViewById(R.id.save_profile_edit_button);
-        saveButton.setOnClickListener(v -> updateUserDetails());
+        saveButton.setOnClickListener(v -> {
+            Log.d("EditProfileFragment", "Save button clicked!");
+            updateUserDetails();
+
+            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); //get user profile activity back
+            //close this fragment
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(this)
+                    .commit();
+        });
+
+        //Set up cancel button
+        Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
+        cancelButton.setOnClickListener(v -> {
+            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); //get user profile activity back
+            //close this fragment
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(this)
+                    .commit();
+        });
 
         // Load existing user details into the fields
         loadUserDetails();
@@ -108,8 +129,9 @@ public class EditProfileFragment extends Fragment {
             // Update Firestore document
             usersDB.updateUser(androidID, user);
 
+
             // Provide feedback to the user
-            Snackbar.make(getView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(requireView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
         } else {
             Log.e("EditProfileFragment", "User object is null, cannot update.");
         }

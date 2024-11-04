@@ -13,6 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -45,6 +46,9 @@ public class UserProfileActivity extends AppCompatActivity {
         // Get the device's Android ID
         String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
+        Bundle bundle = new Bundle();
+        bundle.putString("androidID", androidId);
+
         // Fetch user data based on android_id
         fetchUserProfile(androidId);
 
@@ -55,12 +59,15 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // Set up button to open edit profile fragment
         Button editProfileButton = findViewById(R.id.edit_profile_button);
+        EditProfileFragment editProfileFragment = new EditProfileFragment();
+
+        editProfileFragment.setArguments(bundle);
         editProfileButton.setOnClickListener(view -> {
             findViewById(R.id.user_profile_body).setVisibility(View.GONE);
             getSupportFragmentManager()
                     .beginTransaction()
                     .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.edit_profile_fragment_container, new EditProfileFragment())
+                    .replace(R.id.edit_profile_fragment_container, editProfileFragment)
                     .commit();
         });
     }
