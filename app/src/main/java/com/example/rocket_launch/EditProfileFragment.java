@@ -1,5 +1,6 @@
 package com.example.rocket_launch;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,12 +13,15 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 public class EditProfileFragment extends Fragment {
 
+    public interface OnProfileUpdatedListener {
+        void onProfileUpdated();
+    }
+
+    private OnProfileUpdatedListener profileUpdatedListener;
     private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
     private User user;
     private UsersDB usersDB;
@@ -25,6 +29,17 @@ public class EditProfileFragment extends Fragment {
 
     public EditProfileFragment() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        // Ensure the activity implements the listener
+        try {
+            profileUpdatedListener = (OnProfileUpdatedListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(context.toString() + " must implement OnProfileUpdatedListener");
+        }
     }
 
     @Override
@@ -56,43 +71,34 @@ public class EditProfileFragment extends Fragment {
         phoneEditText = view.findViewById(R.id.edit_user_phone);
         facilityEditText = view.findViewById(R.id.edit_user_facility);
 
-        // Set up the save button
-        Button saveButton = view.findViewById(R.id.save_profile_edit_button);
-        saveButton.setOnClickListener(v -> {
-            Log.d("EditProfileFragment", "Save button clicked!");
-            updateUserDetails();
-
-            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); //get user profile activity back
-            //close this fragment
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(this)
-                    .commit();
-        });
-
-        //Set up cancel button
-        Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
-        cancelButton.setOnClickListener(v -> {
-            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); //get user profile activity back
-            //close this fragment
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(this)
-                    .commit();
-        });
-
         // Load existing user details into the fields
         loadUserDetails();
 
-        // Initialize Edit Profile Picture and Roles buttons (optional functionality)
-        Button editProfilePictureButton = view.findViewById(R.id.edit_profile_picture_button);
-        editProfilePictureButton.setOnClickListener(view1 -> {
-            // Add code to handle profile picture editing
+        // Set up the save button
+        Button saveButton = view.findViewById(R.id.save_profile_edit_button);
+        saveButton.setOnClickListener(v -> {
+            updateUserDetails();
+
+            // Notify the activity that the profile was updated
+            if (profileUpdatedListener != null) {
+                profileUpdatedListener.onProfileUpdated();
+            }
+
+            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); // Show the user profile view
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(this)
+                    .commit();
         });
 
-        Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
-        editRolesButton.setOnClickListener(view1 -> {
-            // Add code to handle role editing
+        // Set up cancel button
+        Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
+        cancelButton.setOnClickListener(v -> {
+            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); // Show the user profile view
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(this)
+                    .commit();
         });
 
         return view;
@@ -128,7 +134,6 @@ public class EditProfileFragment extends Fragment {
 
             // Update Firestore document
             usersDB.updateUser(androidID, user);
-
 
             // Provide feedback to the user
             Snackbar.make(requireView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
