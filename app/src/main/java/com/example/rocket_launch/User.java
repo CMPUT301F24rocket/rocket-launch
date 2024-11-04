@@ -16,6 +16,7 @@ public class User {
     private String userEmail;
     private String userPhoneNumber;
     private Image profilePhoto;
+    private String userFacility;
 
     private Location location;
     private Roles roles;
@@ -38,12 +39,14 @@ public class User {
     String getUserEmail() {return this.userEmail;}
     String getUserPhoneNumber() {return this.userPhoneNumber;}
     Image getProfilePhoto() {return this.profilePhoto;}
+    String getUserFacility(){return  this.userFacility;}
 
     //set user profile information
     public void setUserName(String userName) {this.userName = userName;}
     public void setUserEmail(String userEmail) {this.userEmail = userEmail;}
     public void setUserPhoneNumber(String userPhoneNumber) {this.userPhoneNumber = userPhoneNumber;}
     public void setProfilePhoto(Image profilePhoto){this.profilePhoto = profilePhoto;}
+    public void setUserFacility(String userFacility){this.userFacility = userFacility;}
 
     //user Location Data
 
