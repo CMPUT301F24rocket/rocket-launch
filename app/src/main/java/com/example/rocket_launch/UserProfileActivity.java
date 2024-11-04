@@ -13,19 +13,17 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-public class UserProfileActivity extends AppCompatActivity {
+public class UserProfileActivity extends AppCompatActivity implements EditProfileFragment.OnProfileUpdatedListener {
 
     private static final String TAG = "UserProfileActivity";
     private FirebaseFirestore db;
+    private String androidId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,15 +40,10 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // Initialize Firestore
         db = FirebaseFirestore.getInstance();
+        androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // Get the device's Android ID
-        String androidId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        Bundle bundle = new Bundle();
-        bundle.putString("androidID", androidId);
-
-        // Fetch user data based on android_id
-        fetchUserProfile(androidId);
+        // Fetch initial user data from Firestore
+        fetchUserProfile();
 
         // Set up bottom navigation
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
@@ -59,21 +52,29 @@ public class UserProfileActivity extends AppCompatActivity {
 
         // Set up button to open edit profile fragment
         Button editProfileButton = findViewById(R.id.edit_profile_button);
-        EditProfileFragment editProfileFragment = new EditProfileFragment();
-
-        editProfileFragment.setArguments(bundle);
         editProfileButton.setOnClickListener(view -> {
             findViewById(R.id.user_profile_body).setVisibility(View.GONE);
-            getSupportFragmentManager()
-                    .beginTransaction()
-                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                    .replace(R.id.edit_profile_fragment_container, editProfileFragment)
-                    .commit();
+            openEditProfileFragment();
         });
     }
 
-    private void fetchUserProfile(String androidId) {
-        // Query Firestore to find the document with the specified android_id
+    private void openEditProfileFragment() {
+        // Pass androidID to the fragment
+        Bundle bundle = new Bundle();
+        bundle.putString("androidID", androidId);
+
+        EditProfileFragment editProfileFragment = new EditProfileFragment();
+        editProfileFragment.setArguments(bundle);
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.edit_profile_fragment_container, editProfileFragment)
+                .addToBackStack(null)  // Add to back stack so we can come back to this activity
+                .commit();
+    }
+
+    private void fetchUserProfile() {
         db.collection("user_info")
                 .whereEqualTo("android_id", androidId)
                 .get()
@@ -85,9 +86,6 @@ public class UserProfileActivity extends AppCompatActivity {
                             String email = document.getString("userEmail");
                             String phone = document.getString("userPhoneNumber");
                             String facility = document.getString("userFacility");
-                            Boolean admin = document.getBoolean("roles.admin");
-                            Boolean entrant = document.getBoolean("roles.entrant");
-                            Boolean organizer = document.getBoolean("roles.organizer");
 
                             // Update UI with retrieved data
                             TextView nameTextView = findViewById(R.id.user_name_textview);
@@ -99,18 +97,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             emailTextView.setText(email);
                             phoneTextView.setText(phone);
                             facilityTextView.setText(facility);
-
-                            // Display roles based on role values (optional)
-                            if (admin != null && admin) {
-                                // Show admin-specific elements if needed
-                            }
-                            if (entrant != null && entrant) {
-                                // Show entrant-specific elements if needed
-                            }
-                            if (organizer != null && organizer) {
-                                // Show organizer-specific elements if needed
-                            }
-                            break; // exit loop after the first document is found
+                            break;
                         }
                     } else {
                         Log.d(TAG, "No matching document found or task failed", task.getException());
@@ -118,9 +105,16 @@ public class UserProfileActivity extends AppCompatActivity {
                 });
     }
 
+    // Method from the interface, called when profile is updated
+    @Override
+    public void onProfileUpdated() {
+        // Reload user data to reflect updates
+        fetchUserProfile();
+        // Show the main profile view again
+        findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE);
+    }
 
-
-    private void bottomBarNavigation(BottomNavigationView bottomNav){
+    private void bottomBarNavigation(BottomNavigationView bottomNav) {
         bottomNav.setOnItemSelectedListener(item -> {
             if (item.getItemId() == R.id.navigation_home) {
                 startActivity(new Intent(getApplicationContext(), MainActivity.class)
