@@ -1,62 +1,46 @@
 package com.example.rocket_launch;
 
 import android.os.Bundle;
-
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toolbar;
+import android.widget.EditText;
 
-/**
- * A simple {@link Fragment} subclass.
- * Use the {@link EditProfileFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 public class EditProfileFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+    private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
+    private User user;
+    private UsersDB usersDB;
+    private String androidID;
 
     public EditProfileFragment() {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment EditProfileFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static EditProfileFragment newInstance(String param1, String param2) {
-        EditProfileFragment fragment = new EditProfileFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // Initialize UsersDB instance
+        usersDB = new UsersDB();
+
         if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+            androidID = getArguments().getString("androidID");
+
+            // Fetch user data from Firestore
+            usersDB.getUser(androidID, documentSnapshot -> {
+                user = documentSnapshot.toObject(User.class);
+            }, e -> Log.e("FirestoreError", "Error getting user data", e));
         }
     }
 
@@ -66,20 +50,68 @@ public class EditProfileFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.edit_profile_fragment, container, false);
 
-        //Edit Profile Picture Button
+        // Initialize Text Editing fields
+        nameEditText = view.findViewById(R.id.edit_user_name);
+        emailEditText = view.findViewById(R.id.edit_user_email);
+        phoneEditText = view.findViewById(R.id.edit_user_phone);
+        facilityEditText = view.findViewById(R.id.edit_user_facility);
+
+        // Set up the save button
+        Button saveButton = view.findViewById(R.id.save_profile_edit_button);
+        saveButton.setOnClickListener(v -> updateUserDetails());
+
+        // Load existing user details into the fields
+        loadUserDetails();
+
+        // Initialize Edit Profile Picture and Roles buttons (optional functionality)
         Button editProfilePictureButton = view.findViewById(R.id.edit_profile_picture_button);
-
         editProfilePictureButton.setOnClickListener(view1 -> {
-
+            // Add code to handle profile picture editing
         });
 
-        //Edit Roles Button
         Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
-
         editRolesButton.setOnClickListener(view1 -> {
-
+            // Add code to handle role editing
         });
-        
+
         return view;
+    }
+
+    // Load user data from Firestore
+    private void loadUserDetails() {
+        if (androidID != null && usersDB != null) {
+            usersDB.getUser(androidID, documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    user = documentSnapshot.toObject(User.class);
+                    if (user != null) {
+                        nameEditText.setText(user.getUserName());
+                        emailEditText.setText(user.getUserEmail());
+                        phoneEditText.setText(user.getUserPhoneNumber());
+                        facilityEditText.setText(user.getUserFacility());
+                    }
+                }
+            }, e -> Log.e("EditProfileFragment", "Error loading user data", e));
+        } else {
+            Log.e("EditProfileFragment", "androidID or usersDB is null.");
+        }
+    }
+
+    // Update user data in Firestore
+    private void updateUserDetails() {
+        if (user != null) {
+            // Update user object with input from EditText fields
+            user.setUserName(nameEditText.getText().toString());
+            user.setUserEmail(emailEditText.getText().toString());
+            user.setUserPhoneNumber(phoneEditText.getText().toString());
+            user.setUserFacility(facilityEditText.getText().toString());
+
+            // Update Firestore document
+            usersDB.updateUser(androidID, user);
+
+            // Provide feedback to the user
+            Snackbar.make(getView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
+        } else {
+            Log.e("EditProfileFragment", "User object is null, cannot update.");
+        }
     }
 }

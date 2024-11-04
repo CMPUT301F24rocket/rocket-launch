@@ -21,10 +21,11 @@ public class UsersDB {
     public void addUser(String androidId, User user) {
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("android_id", androidId);
-        userMap.put("name", user.getUserName());
-        userMap.put("email", user.getUserEmail());
-        userMap.put("phone", user.getUserPhoneNumber());
-        userMap.put("profile_picture_url", user.getProfilePhoto());
+        userMap.put("userName", user.getUserName());
+        userMap.put("userEmail", user.getUserEmail());
+        userMap.put("userPhoneNumber", user.getUserPhoneNumber());
+        userMap.put("profilePhoto", user.getProfilePhoto());
+        userMap.put("userFacility", user.getUserFacility());
         userMap.put("roles", user.getRoles());
 
         userRef.document(androidId).set(userMap)
@@ -51,10 +52,11 @@ public class UsersDB {
     public void updateUser(String androidId, User user){
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("android_id", androidId);
-        userMap.put("name", user.getUserName());
-        userMap.put("email", user.getUserEmail());
-        userMap.put("phone", user.getUserPhoneNumber());
-        userMap.put("profile_picture_url", user.getProfilePhoto());
+        userMap.put("userName", user.getUserName());
+        userMap.put("userEmail", user.getUserEmail());
+        userMap.put("userPhoneNumber", user.getUserPhoneNumber());
+        userMap.put("profilePhoto", user.getProfilePhoto());
+        userMap.put("userFacility", user.getUserFacility());
         userMap.put("roles", user.getRoles());
 
         userRef.document(androidId).update(userMap)
@@ -67,7 +69,7 @@ public class UsersDB {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(Exception e) {
-                        Log.w("Firebase", "Error adding user", e);
+                        Log.w("Firebase", "Error updating user", e);
                     }
                 });
     }

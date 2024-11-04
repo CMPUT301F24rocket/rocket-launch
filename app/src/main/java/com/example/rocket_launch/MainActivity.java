@@ -23,6 +23,7 @@ public class MainActivity extends AppCompatActivity {
     User user;
     UsersDB usersDB;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
         usersDB = new UsersDB(); // Load user database
 
         //Get Android Device ID
-        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);;
+        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         Button get_started_button = findViewById(R.id.get_started);
         get_started_button.setOnClickListener(v -> {
