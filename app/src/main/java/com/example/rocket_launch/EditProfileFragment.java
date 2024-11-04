@@ -60,7 +60,26 @@ public class EditProfileFragment extends Fragment {
         Button saveButton = view.findViewById(R.id.save_profile_edit_button);
         saveButton.setOnClickListener(v -> {
             Log.d("EditProfileFragment", "Save button clicked!");
-            updateUserDetails();});
+            updateUserDetails();
+
+            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); //get user profile activity back
+            //close this fragment
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(this)
+                    .commit();
+        });
+
+        //Set up cancel button
+        Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
+        cancelButton.setOnClickListener(v -> {
+            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); //get user profile activity back
+            //close this fragment
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .remove(this)
+                    .commit();
+        });
 
         // Load existing user details into the fields
         loadUserDetails();
