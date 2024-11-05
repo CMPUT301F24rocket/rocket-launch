@@ -34,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
+
+        EventDB eventDB = new EventDB();
+        String testEventID = "testEvent";
+        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null);
+        eventDB.addEvent(testEventID, testEvent);
+
+
         usersDB = new UsersDB(); // Load user database
 
         //Get Android Device ID
