@@ -1,132 +1,154 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp">
 
+    <!-- Header for Edit Profile -->
     <TextView
         android:id="@+id/edit_profile_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="25sp"
+        android:padding="16dp"
         android:background="@color/tea_green"
         android:textSize="25sp"
         android:textAlignment="center"
-        android:text="Edit Profile"/>
+        android:text="Edit Profile" />
 
+    <!-- Profile Picture Section -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="15sp">
+        android:orientation="horizontal"
+        android:padding="16dp"
+        android:gravity="center_vertical">
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/profile_image_view"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_marginEnd="16dp"
+            android:background="#2196F3"
+            android:scaleType="centerCrop"
             tools:srcCompat="@tools:sample/avatars"
-            android:contentDescription="TODO"/>
+            android:contentDescription="Profile Picture" />
 
         <Button
             android:id="@+id/edit_profile_picture_button"
             style="@style/ButtonStyleB"
-            android:layout_marginLeft="15sp"
-            android:layout_gravity="bottom"
             android:text="Edit Profile Picture" />
+    </LinearLayout>
 
+    <!-- Editable Fields Section -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/FragmentConstants"
+            android:text="Name:" />
+
+        <EditText
+            android:id="@+id/edit_user_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            style="@style/FragmentConstants"
+            android:hint="Enter Name" />
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        >
+        android:paddingBottom="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/FragmentConstants"
-            android:text="Name:"/>
-
-        <EditText
-            android:id="@+id/edit_user_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/FragmentConstants"/> </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/FragmentConstants"
-            android:text="Email:"/>
+            android:text="Email:" />
 
         <EditText
             android:id="@+id/edit_user_email"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/FragmentConstants"/> </LinearLayout>
+            android:layout_weight="1"
+            style="@style/FragmentConstants"
+            android:hint="Enter Email" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:paddingBottom="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/FragmentConstants"
-            android:text="Phone:"/>
+            android:text="Phone:" />
 
         <EditText
             android:id="@+id/edit_user_phone"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/FragmentConstants"/> </LinearLayout>
+            android:layout_weight="1"
+            style="@style/FragmentConstants"
+            android:hint="Enter Phone" />
+    </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:paddingBottom="10sp">
+        android:paddingBottom="8dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             style="@style/FragmentConstants"
-            android:text="Facility:"/>
+            android:text="Facility:" />
 
         <EditText
             android:id="@+id/edit_user_facility"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            style="@style/FragmentConstants"/> </LinearLayout>
+            android:layout_weight="1"
+            style="@style/FragmentConstants"
+            android:hint="Enter Facility" />
+    </LinearLayout>
 
+    <!-- Edit Roles Button -->
     <Button
         android:id="@+id/edit_user_role_button"
         style="@style/ButtonStyleB"
-        android:layout_marginLeft="15sp"
+        android:layout_width="wrap_content"
+        android:layout_marginTop="8dp"
         android:text="Edit Roles" />
 
+    <!-- Save and Cancel Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="20sp"
-        android:layout_marginLeft="15sp">
+        android:layout_marginTop="24dp"
+        android:gravity="end">
 
         <Button
             android:id="@+id/save_profile_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20sp"
-            android:layout_marginRight="15sp"
             android:text="Save"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/fern_green"
             android:backgroundTint="@android:color/transparent" />
 
@@ -134,11 +156,11 @@
             android:id="@+id/cancel_profile_edit_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="20sp"
+            android:layout_marginStart="16dp"
             android:text="Cancel"
-            android:textSize="20sp"
+            android:textSize="18sp"
             android:textColor="@color/fern_green"
             android:backgroundTint="@android:color/transparent" />
-
     </LinearLayout>
+
 </LinearLayout>

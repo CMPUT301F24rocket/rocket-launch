@@ -1,53 +1,82 @@
 package com.example.rocket_launch;
 
+import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnSuccessListener;
+import com.bumptech.glide.Glide;
 import com.google.android.material.snackbar.Snackbar;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
 
 public class EditProfileFragment extends Fragment {
 
+    public interface OnProfileUpdatedListener {
+        void onProfileUpdated();
+    }
+
+    private OnProfileUpdatedListener profileUpdatedListener;
     private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
-    private User user;
-    private UsersDB usersDB;
+    private ImageView profileImageView;
+    private FirebaseFirestore db;
+    private DocumentReference userRef;
     private String androidID;
+    private Uri imageUri;
+
+    private static final String TAG = "EditProfileFragment";
 
     public EditProfileFragment() {
         // Required empty public constructor
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Initialize UsersDB instance
-        usersDB = new UsersDB();
-
-        if (getArguments() != null) {
-            androidID = getArguments().getString("androidID");
-
-            // Fetch user data from Firestore
-            usersDB.getUser(androidID, documentSnapshot -> {
-                user = documentSnapshot.toObject(User.class);
-            }, e -> Log.e("FirestoreError", "Error getting user data", e));
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        if (context instanceof OnProfileUpdatedListener) {
+            profileUpdatedListener = (OnProfileUpdatedListener) context;
+        } else {
+            throw new ClassCastException(context.toString() + " must implement OnProfileUpdatedListener");
         }
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        // Initialize Firestore instance
+        db = FirebaseFirestore.getInstance();
+
+        if (getArguments() != null) {
+            androidID = getArguments().getString("androidID");
+            if (androidID != null) {
+                userRef = db.collection("user_info").document(androidID);
+            }
+        }
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_profile_fragment, container, false);
 
         // Initialize Text Editing fields
@@ -55,63 +84,128 @@ public class EditProfileFragment extends Fragment {
         emailEditText = view.findViewById(R.id.edit_user_email);
         phoneEditText = view.findViewById(R.id.edit_user_phone);
         facilityEditText = view.findViewById(R.id.edit_user_facility);
+        profileImageView = view.findViewById(R.id.profile_image_view);
 
-        // Set up the save button
         Button saveButton = view.findViewById(R.id.save_profile_edit_button);
-        saveButton.setOnClickListener(v -> updateUserDetails());
+        Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
+        Button editProfilePictureButton = view.findViewById(R.id.edit_profile_picture_button);
 
-        // Load existing user details into the fields
+        // Load existing user details and profile picture into fields
         loadUserDetails();
 
-        // Initialize Edit Profile Picture and Roles buttons (optional functionality)
-        Button editProfilePictureButton = view.findViewById(R.id.edit_profile_picture_button);
-        editProfilePictureButton.setOnClickListener(view1 -> {
-            // Add code to handle profile picture editing
-        });
-
-        Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
-        editRolesButton.setOnClickListener(view1 -> {
-            // Add code to handle role editing
-        });
+        saveButton.setOnClickListener(v -> updateUserDetails());
+        cancelButton.setOnClickListener(v -> closeFragment());
+        editProfilePictureButton.setOnClickListener(v -> openGallery());
 
         return view;
     }
 
-    // Load user data from Firestore
-    private void loadUserDetails() {
-        if (androidID != null && usersDB != null) {
-            usersDB.getUser(androidID, documentSnapshot -> {
-                if (documentSnapshot.exists()) {
-                    user = documentSnapshot.toObject(User.class);
-                    if (user != null) {
-                        nameEditText.setText(user.getUserName());
-                        emailEditText.setText(user.getUserEmail());
-                        phoneEditText.setText(user.getUserPhoneNumber());
-                        facilityEditText.setText(user.getUserFacility());
+    // Open the gallery to select a profile picture
+    private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
+            new ActivityResultContracts.StartActivityForResult(),
+            result -> {
+                if (result.getResultCode() == getActivity().RESULT_OK) {
+                    Intent data = result.getData();
+                    if (data != null) {
+                        imageUri = data.getData();
+                        try {
+                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
+                            String savedPath = saveImageLocally(bitmap); // Save the selected image locally
+                            saveImagePathToFirestore(savedPath); // Save the local path to Firestore
+                            loadProfileImage(savedPath); // Display the saved image
+                        } catch (IOException e) {
+                            Log.e(TAG, "Error saving image locally", e);
+                        }
                     }
                 }
-            }, e -> Log.e("EditProfileFragment", "Error loading user data", e));
+            }
+    );
+
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType("image/*");
+        galleryLauncher.launch(intent);
+    }
+
+    // Save the image locally and return the file path
+    private String saveImageLocally(Bitmap bitmap) throws IOException {
+        File storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+        File imageFile = new File(storageDir, "profile_" + androidID + ".jpg");
+
+        try (FileOutputStream out = new FileOutputStream(imageFile)) {
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
+        }
+
+        return imageFile.getAbsolutePath();
+    }
+
+    // Save the local file path in Firestore
+    private void saveImagePathToFirestore(String imagePath) {
+        if (userRef != null) {
+            userRef.update("profilePhotoPath", imagePath)
+                    .addOnSuccessListener(aVoid -> Snackbar.make(requireView(), "Profile photo updated locally", Snackbar.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to save image path to Firestore", e));
+        }
+    }
+
+    // Load the profile picture from a local file path using Glide
+    private void loadProfileImage(String imagePath) {
+        Glide.with(this).load(new File(imagePath)).into(profileImageView);
+    }
+
+    // Load user data from Firestore and set it in the EditText fields
+    private void loadUserDetails() {
+        if (userRef != null) {
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
+                if (documentSnapshot.exists()) {
+                    nameEditText.setText(documentSnapshot.getString("userName"));
+                    emailEditText.setText(documentSnapshot.getString("userEmail"));
+                    phoneEditText.setText(documentSnapshot.getString("userPhoneNumber"));
+                    facilityEditText.setText(documentSnapshot.getString("userFacility"));
+
+                    // Load profile picture from local path if it exists
+                    String profilePhotoPath = documentSnapshot.getString("profilePhotoPath");
+                    if (profilePhotoPath != null) {
+                        loadProfileImage(profilePhotoPath);
+                    }
+                } else {
+                    Log.e(TAG, "User document does not exist.");
+                }
+            }).addOnFailureListener(e -> Log.e(TAG, "Error loading user data", e));
         } else {
-            Log.e("EditProfileFragment", "androidID or usersDB is null.");
+            Log.e(TAG, "userRef is null.");
         }
     }
 
     // Update user data in Firestore
     private void updateUserDetails() {
-        if (user != null) {
-            // Update user object with input from EditText fields
-            user.setUserName(nameEditText.getText().toString());
-            user.setUserEmail(emailEditText.getText().toString());
-            user.setUserPhoneNumber(phoneEditText.getText().toString());
-            user.setUserFacility(facilityEditText.getText().toString());
+        if (userRef != null) {
+            String updatedName = nameEditText.getText().toString();
+            String updatedEmail = emailEditText.getText().toString();
+            String updatedPhone = phoneEditText.getText().toString();
+            String updatedFacility = facilityEditText.getText().toString();
 
-            // Update Firestore document
-            usersDB.updateUser(androidID, user);
+            userRef.update("userName", updatedName,
+                            "userEmail", updatedEmail,
+                            "userPhoneNumber", updatedPhone,
+                            "userFacility", updatedFacility)
+                    .addOnSuccessListener(aVoid -> {
+                        Snackbar.make(requireView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
 
-            // Provide feedback to the user
-            Snackbar.make(getView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
+                        if (profileUpdatedListener != null) {
+                            profileUpdatedListener.onProfileUpdated();
+                        }
+                        closeFragment();
+                    })
+                    .addOnFailureListener(e -> Log.e(TAG, "Error updating user data", e));
         } else {
-            Log.e("EditProfileFragment", "User object is null, cannot update.");
+            Log.e(TAG, "userRef is null, cannot update.");
         }
+    }
+
+    // Close the fragment and return to the main profile view
+    private void closeFragment() {
+        requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE);
+        requireActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
     }
 }
