@@ -9,27 +9,23 @@
         android:title="@string/title_home"
         android:visible="true" />
 
-    <!--For user events: replace image later -->
     <item
         android:id="@+id/navigation_user_events"
-        android:icon="@android:drawable/btn_star_big_on"
+        android:icon="@drawable/baseline_calendar_month_24"
         android:title="@string/title_user_events" />
 
-    <!--For create event: replace image later -->
     <item
         android:id="@+id/navigation_create_events"
-        android:icon="@android:drawable/btn_star_big_on"
+        android:icon="@drawable/baseline_event_available_24"
         android:title="@string/title_create_events" />
 
-    <!--For notifications: replace image later -->
     <item
         android:id="@+id/navigation_notifications"
-        android:icon="@android:drawable/btn_star_big_on"
+        android:icon="@drawable/baseline_notifications_24"
         android:title="@string/title_notifications" />
 
-    <!--For user profile: replace image later -->
     <item
         android:id="@+id/navigation_user_profile"
-        android:icon="@android:drawable/btn_star_big_on"
+        android:icon="@drawable/baseline_person_24"
         android:title="@string/title_user_profile" />
 </menu>
