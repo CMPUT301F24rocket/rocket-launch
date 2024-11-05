@@ -42,6 +42,11 @@ dependencies {
     implementation(libs.firebase.firestore)
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
+
+    // Bumptech glide
+    implementation("com.github.bumptech.glide:glide:4.16.0")
+
+
     //firebase
     implementation(platform("com.google.firebase:firebase-bom:33.5.1"))
     implementation("com.google.firebase:firebase-analytics")

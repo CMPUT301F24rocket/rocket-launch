@@ -9,7 +9,7 @@
 
     <!--User Profile Header-->
     <TextView
-        android:id="@+id/user_profile_header"
+        android:id="@+id/main_activity_header"
         style="@style/ActivityHeaderStyle"
         android:text="@string/main_header"
 
@@ -31,20 +31,21 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="16dp"
         android:text="@string/cmput301_event_lottery_system_application"
         android:textAlignment="center"
         android:textSize="30sp"
         app:layout_constraintBottom_toTopOf="@+id/get_started"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/user_profile_header" />
+        app:layout_constraintTop_toBottomOf="@+id/main_activity_header" />
 
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:layout_marginTop="16dp"
         android:text="@string/by_team_rocket"
         android:textSize="25sp"
         app:layout_constraintEnd_toEndOf="parent"
