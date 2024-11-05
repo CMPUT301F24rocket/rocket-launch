@@ -24,6 +24,7 @@ public class UserProfileActivity extends AppCompatActivity implements EditProfil
     private static final String TAG = "UserProfileActivity";
     private FirebaseFirestore db;
     private String androidId;
+    private String currentName, currentEmail, currentPhone, currentFacility;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,9 +60,13 @@ public class UserProfileActivity extends AppCompatActivity implements EditProfil
     }
 
     private void openEditProfileFragment() {
-        // Pass androidID to the fragment
+        // Pass current user data to the fragment
         Bundle bundle = new Bundle();
         bundle.putString("androidID", androidId);
+        bundle.putString("name", currentName);
+        bundle.putString("email", currentEmail);
+        bundle.putString("phone", currentPhone);
+        bundle.putString("facility", currentFacility);
 
         EditProfileFragment editProfileFragment = new EditProfileFragment();
         editProfileFragment.setArguments(bundle);
@@ -82,10 +87,10 @@ public class UserProfileActivity extends AppCompatActivity implements EditProfil
                     if (task.isSuccessful() && !task.getResult().isEmpty()) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
                             // Retrieve user data from Firestore
-                            String name = document.getString("userName");
-                            String email = document.getString("userEmail");
-                            String phone = document.getString("userPhoneNumber");
-                            String facility = document.getString("userFacility");
+                            currentName = document.getString("userName");
+                            currentEmail = document.getString("userEmail");
+                            currentPhone = document.getString("userPhoneNumber");
+                            currentFacility = document.getString("userFacility");
 
                             // Update UI with retrieved data
                             TextView nameTextView = findViewById(R.id.user_name_textview);
@@ -93,10 +98,10 @@ public class UserProfileActivity extends AppCompatActivity implements EditProfil
                             TextView phoneTextView = findViewById(R.id.user_phone_textview);
                             TextView facilityTextView = findViewById(R.id.user_facility_textview);
 
-                            nameTextView.setText(name);
-                            emailTextView.setText(email);
-                            phoneTextView.setText(phone);
-                            facilityTextView.setText(facility);
+                            nameTextView.setText(currentName);
+                            emailTextView.setText(currentEmail);
+                            phoneTextView.setText(currentPhone);
+                            facilityTextView.setText(currentFacility);
                             break;
                         }
                     } else {
@@ -121,7 +126,7 @@ public class UserProfileActivity extends AppCompatActivity implements EditProfil
                         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 return true;
             } else if (item.getItemId() == R.id.navigation_user_events) {
-                startActivity(new Intent(getApplicationContext(),UserEventsActivity.class)
+                startActivity(new Intent(getApplicationContext(), UserEventsActivity.class)
                         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
                 finish();
                 return true;

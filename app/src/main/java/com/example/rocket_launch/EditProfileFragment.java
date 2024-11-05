@@ -10,10 +10,11 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentReference;
 
 public class EditProfileFragment extends Fragment {
 
@@ -23,8 +24,8 @@ public class EditProfileFragment extends Fragment {
 
     private OnProfileUpdatedListener profileUpdatedListener;
     private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
-    private User user;
-    private UsersDB usersDB;
+    private FirebaseFirestore db;
+    private DocumentReference userRef;
     private String androidID;
 
     public EditProfileFragment() {
@@ -35,9 +36,9 @@ public class EditProfileFragment extends Fragment {
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
         // Ensure the activity implements the listener
-        try {
+        if (context instanceof OnProfileUpdatedListener) {
             profileUpdatedListener = (OnProfileUpdatedListener) context;
-        } catch (ClassCastException e) {
+        } else {
             throw new ClassCastException(context.toString() + " must implement OnProfileUpdatedListener");
         }
     }
@@ -46,16 +47,15 @@ public class EditProfileFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        // Initialize UsersDB instance
-        usersDB = new UsersDB();
+        // Initialize Firestore instance
+        db = FirebaseFirestore.getInstance();
 
+        // Retrieve androidID from arguments
         if (getArguments() != null) {
             androidID = getArguments().getString("androidID");
 
-            // Fetch user data from Firestore
-            usersDB.getUser(androidID, documentSnapshot -> {
-                user = documentSnapshot.toObject(User.class);
-            }, e -> Log.e("FirestoreError", "Error getting user data", e));
+            // Reference to the user's document in Firestore based on androidID
+            userRef = db.collection("user_info").document(androidID);
         }
     }
 
@@ -76,69 +76,71 @@ public class EditProfileFragment extends Fragment {
 
         // Set up the save button
         Button saveButton = view.findViewById(R.id.save_profile_edit_button);
-        saveButton.setOnClickListener(v -> {
-            updateUserDetails();
-
-            // Notify the activity that the profile was updated
-            if (profileUpdatedListener != null) {
-                profileUpdatedListener.onProfileUpdated();
-            }
-
-            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); // Show the user profile view
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(this)
-                    .commit();
-        });
+        saveButton.setOnClickListener(v -> updateUserDetails());
 
         // Set up cancel button
         Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
-        cancelButton.setOnClickListener(v -> {
-            requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); // Show the user profile view
-            requireActivity().getSupportFragmentManager()
-                    .beginTransaction()
-                    .remove(this)
-                    .commit();
-        });
+        cancelButton.setOnClickListener(v -> closeFragment());
 
         return view;
     }
 
-    // Load user data from Firestore
+    // Load user data from Firestore and set it in the EditText fields
     private void loadUserDetails() {
-        if (androidID != null && usersDB != null) {
-            usersDB.getUser(androidID, documentSnapshot -> {
+        if (userRef != null) {
+            userRef.get().addOnSuccessListener(documentSnapshot -> {
                 if (documentSnapshot.exists()) {
-                    user = documentSnapshot.toObject(User.class);
-                    if (user != null) {
-                        nameEditText.setText(user.getUserName());
-                        emailEditText.setText(user.getUserEmail());
-                        phoneEditText.setText(user.getUserPhoneNumber());
-                        facilityEditText.setText(user.getUserFacility());
-                    }
+                    // Set the fetched data in the EditText fields
+                    nameEditText.setText(documentSnapshot.getString("userName"));
+                    emailEditText.setText(documentSnapshot.getString("userEmail"));
+                    phoneEditText.setText(documentSnapshot.getString("userPhoneNumber"));
+                    facilityEditText.setText(documentSnapshot.getString("userFacility"));
+                } else {
+                    Log.e("EditProfileFragment", "User document does not exist.");
                 }
-            }, e -> Log.e("EditProfileFragment", "Error loading user data", e));
+            }).addOnFailureListener(e -> Log.e("EditProfileFragment", "Error loading user data", e));
         } else {
-            Log.e("EditProfileFragment", "androidID or usersDB is null.");
+            Log.e("EditProfileFragment", "userRef is null.");
         }
     }
 
     // Update user data in Firestore
     private void updateUserDetails() {
-        if (user != null) {
-            // Update user object with input from EditText fields
-            user.setUserName(nameEditText.getText().toString());
-            user.setUserEmail(emailEditText.getText().toString());
-            user.setUserPhoneNumber(phoneEditText.getText().toString());
-            user.setUserFacility(facilityEditText.getText().toString());
+        if (userRef != null) {
+            // Retrieve text from EditText fields
+            String updatedName = nameEditText.getText().toString();
+            String updatedEmail = emailEditText.getText().toString();
+            String updatedPhone = phoneEditText.getText().toString();
+            String updatedFacility = facilityEditText.getText().toString();
 
-            // Update Firestore document
-            usersDB.updateUser(androidID, user);
+            // Prepare a map of updated values
+            userRef.update("userName", updatedName,
+                            "userEmail", updatedEmail,
+                            "userPhoneNumber", updatedPhone,
+                            "userFacility", updatedFacility)
+                    .addOnSuccessListener(aVoid -> {
+                        // Show success message
+                        Snackbar.make(requireView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
 
-            // Provide feedback to the user
-            Snackbar.make(requireView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
+                        // Notify the activity that the profile was updated
+                        if (profileUpdatedListener != null) {
+                            profileUpdatedListener.onProfileUpdated();
+                        }
+
+                        // Close the fragment
+                        closeFragment();
+                    })
+                    .addOnFailureListener(e -> Log.e("EditProfileFragment", "Error updating user data", e));
         } else {
-            Log.e("EditProfileFragment", "User object is null, cannot update.");
+            Log.e("EditProfileFragment", "userRef is null, cannot update.");
         }
+    }
+
+    // Close the fragment and show the main profile view
+    private void closeFragment() {
+        requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE); // Show the user profile view
+        requireActivity().getSupportFragmentManager().beginTransaction()
+                .remove(this)
+                .commit();
     }
 }
