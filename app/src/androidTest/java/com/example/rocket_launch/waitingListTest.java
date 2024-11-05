@@ -16,24 +16,12 @@ public class waitingListTest {
     private String testUserID = "testUser";
 
     @Before
-    public void setUp(){
+    public void setUp() {
         db = new EventDB();
-    }
-
-    @Test
-    public void testAddEvent() {
-        Event newEvent = new Event(testEventID, "Test Event1", "Testing adding event", null, null, 20, null);
-
-        Map<String, Object> eventData = new HashMap<>();
-        eventData.put("eventID", newEvent.getEventID());
-        eventData.put("name", newEvent.getName());
-        eventData.put("description", newEvent.getDescription());
-        eventData.put("participants", newEvent.getParticipants());
-        eventData.put("waitingList", newEvent.getWaitingList());
-
-        // add event to db
+        Event newEvent = new Event(testEventID, "Test Event1", "Testing adding event", null, null, 20, null, 3);
         db.addEvent(testEventID, newEvent);
     }
+
 
     @Test
     public void testAddUserToWaitingList() {
@@ -43,6 +31,15 @@ public class waitingListTest {
     @Test
     public void testRemoveUserFromWaitingList() {
         db.removeUserFromWaitingList(testEventID, testUserID);
+
+    }
+
+    @Test
+    public void testWaitingListLimit() {
+        db.addUserToWaitingList(testEventID, "user1");
+        db.addUserToWaitingList(testEventID, "user2");
+        db.addUserToWaitingList(testEventID, "user3");
+        db.addUserToWaitingList(testEventID, "user4");
 
     }
 

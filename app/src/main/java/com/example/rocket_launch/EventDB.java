@@ -13,6 +13,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class EventDB {
@@ -34,6 +35,7 @@ public class EventDB {
         eventMap.put("endTime", event.getEndTime());
         eventMap.put("participants", event.getParticipants());
         eventMap.put("waitingList", new ArrayList<>());
+        eventMap.put("maxWaitingList", event.getMaxWaitingListSize());
 
         eventRef.document(eventID).set(eventMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -50,21 +52,40 @@ public class EventDB {
                 });
     }
 
-    // Add user to waiting list
-    public void addUserToWaitingList(String eventID, String userID){
-        eventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void aVoid) {
-                        Log.d("Firebase", "User added to waiting list");
+    // Add user to waiting list and check max waiting list size
+    public void addUserToWaitingList(String eventID, String userID) {
+        eventRef.document(eventID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Event event = documentSnapshot.toObject(Event.class);
+
+                    if (event != null) {
+                        int currentSize = event.getWaitingList().size();
+
+                        if (currentSize < event.getMaxWaitingListSize()) {
+                            eventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
+                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                        @Override
+                                        public void onSuccess(Void aVoid) {
+                                            Log.d("Firebase", "User added to waiting list");
+                                        }
+                                    })
+                                    .addOnFailureListener(new OnFailureListener() {
+                                        @Override
+                                        public void onFailure(@NonNull Exception e) {
+                                            Log.w("Firebase", "Error adding user", e);
+                                        }
+                                    });
+                        } else {
+                            Log.d("Firebase", "Waiting list is full");
+                        }
                     }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase", "Error adding user", e);
-                    }
-                });
+                } else {
+                    Log.w("Firebase", "Event document does not exist");
+                }
+            }
+        });
     }
 
     // Remove user from waiting list
