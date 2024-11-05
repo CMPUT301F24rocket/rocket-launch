@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
         EventDB eventDB = new EventDB();
         String testEventID = "testEvent";
-        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null);
+        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null, 3);
         eventDB.addEvent(testEventID, testEvent);
 
 
@@ -46,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
 
         //Get Android Device ID
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
 
         Button get_started_button = findViewById(R.id.get_started);
         get_started_button.setOnClickListener(v -> {
@@ -65,9 +64,9 @@ public class MainActivity extends AppCompatActivity {
                         usersDB.addUser(androidID, user);
                     }
                 }
-            }, e -> {
-                Log.w("Firebase", "Error getting user", e);
-            });
+                    }, e -> {
+                        Log.w("Firebase", "Error getting user", e);
+                    });
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
