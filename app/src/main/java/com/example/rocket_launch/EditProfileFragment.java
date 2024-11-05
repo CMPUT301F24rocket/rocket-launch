@@ -16,6 +16,9 @@ import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class EditProfileFragment extends Fragment {
 
     public interface OnProfileUpdatedListener {
@@ -27,7 +30,7 @@ public class EditProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private DocumentReference userRef;
     private String androidID;
-
+    private Roles roles;
     public EditProfileFragment() {
         // Required empty public constructor
     }
@@ -74,6 +77,14 @@ public class EditProfileFragment extends Fragment {
         // Load existing user details into the fields
         loadUserDetails();
 
+        // Set up edit roles button
+        Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
+
+        editRolesButton.setOnClickListener(v -> {
+            NewUserFragment edit_roles_frag = new NewUserFragment(roles);
+            getActivity().getSupportFragmentManager().beginTransaction()
+        });
+
         // Set up the save button
         Button saveButton = view.findViewById(R.id.save_profile_edit_button);
         saveButton.setOnClickListener(v -> updateUserDetails());
@@ -95,6 +106,10 @@ public class EditProfileFragment extends Fragment {
                     emailEditText.setText(documentSnapshot.getString("userEmail"));
                     phoneEditText.setText(documentSnapshot.getString("userPhoneNumber"));
                     facilityEditText.setText(documentSnapshot.getString("userFacility"));
+                    Object doc = documentSnapshot.get("roles");
+                    roles = new Roles();
+                    roles.fromDB((HashMap) doc);
+
                 } else {
                     Log.e("EditProfileFragment", "User document does not exist.");
                 }
