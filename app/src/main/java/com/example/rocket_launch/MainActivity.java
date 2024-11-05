@@ -21,6 +21,7 @@ public class MainActivity extends AppCompatActivity {
     User user;
     UsersDB usersDB;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,6 +32,13 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+
+        EventDB eventDB = new EventDB();
+        String testEventID = "testEvent";
+        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null);
+        eventDB.addEvent(testEventID, testEvent);
+
 
         usersDB = new UsersDB(); // Load user database
         String androidId = "your_device_id"; // Replace with actual device ID

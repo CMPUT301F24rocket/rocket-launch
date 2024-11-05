@@ -1,6 +1,9 @@
 package com.example.rocket_launch;
 
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
@@ -47,5 +50,40 @@ public class EventDB {
                 });
     }
 
+    // Add user to waiting list
+    public void addUserToWaitingList(String eventID, String userID){
+        eventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User added to waiting list");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error adding user", e);
+                    }
+                });
+    }
 
+    // Remove user from waiting list
+    public void removeUserFromWaitingList(String eventID, String userID) {
+        eventRef.document(eventID).update("waitingList", FieldValue.arrayRemove(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User removes from waiting list");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error removing user", e);
+                    }
+                });
+
+    }
 }
+
+
