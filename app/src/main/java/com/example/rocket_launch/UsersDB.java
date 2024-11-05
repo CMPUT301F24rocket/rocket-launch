@@ -21,9 +21,12 @@ public class UsersDB {
     public void addUser(String androidId, User user) {
         Map<String, Object> userMap = new HashMap<>();
         userMap.put("android_id", androidId);
-        userMap.put("name", user.getUserName());
-        userMap.put("email", user.getUserEmail());
-        userMap.put("phone", user.getUserPhoneNumber());
+        userMap.put("userName", user.getUserName());
+        userMap.put("userEmail", user.getUserEmail());
+        userMap.put("userPhoneNumber", user.getUserPhoneNumber());
+        userMap.put("profilePhoto", user.getProfilePhoto());
+        userMap.put("userFacility", user.getUserFacility());
+        userMap.put("roles", user.getRoles());
 
         userRef.document(androidId).set(userMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
@@ -45,4 +48,30 @@ public class UsersDB {
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
+
+    public void updateUser(String androidId, User user){
+        Map<String, Object> userMap = new HashMap<>();
+        userMap.put("android_id", androidId);
+        userMap.put("userName", user.getUserName());
+        userMap.put("userEmail", user.getUserEmail());
+        userMap.put("userPhoneNumber", user.getUserPhoneNumber());
+        userMap.put("profilePhoto", user.getProfilePhoto());
+        userMap.put("userFacility", user.getUserFacility());
+        userMap.put("roles", user.getRoles());
+
+        userRef.document(androidId).update(userMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void unused) {
+                        Log.d("Firebase", "User added successfully");
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(Exception e) {
+                        Log.w("Firebase", "Error updating user", e);
+                    }
+                });
+    }
+
 }
