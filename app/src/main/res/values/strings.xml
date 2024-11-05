@@ -16,6 +16,9 @@
     <string name="create_event_header">CreateEventActivity</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="by_team_rocket">By Team Rocket</string>
+    <string name="get_started">Create User</string>
+    <string name="cmput301_event_lottery_system_application">CMPUT301 Event Lottery System Application\n</string>
 
 
 </resources>
