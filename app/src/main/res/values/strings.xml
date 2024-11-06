@@ -13,7 +13,7 @@
     <string name="user_events_header">UserEventsActivity</string>
     <string name="notifications_header">NotificationsActivity</string>
     <string name="main_header">MainActivity</string>
-    <string name="create_event_header">CreateEventActivity</string>
+    <string name="create_event_header">Created Events</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="by_team_rocket">By Team Rocket</string>
