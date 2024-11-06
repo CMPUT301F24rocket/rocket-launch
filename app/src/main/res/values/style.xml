@@ -83,8 +83,9 @@
 
     <!--Listview header constants-->
     <style name="ListViewHeaderA">
-        <item name="android:textSize">25sp</item>
-        <item name="android:background">@color/coral_pink</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/lavender</item>
         <item name="android:padding">8sp</item>
     </style>
 
