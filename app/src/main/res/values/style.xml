@@ -67,6 +67,14 @@
         <item name="android:padding">20sp</item>
         <item name="android:textColor">@color/fern_green</item> </style>
 
+    <!--X button Style-->
+    <style name="XButtonStyle">
+        <item name="android:src">@drawable/close_thick</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">20sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item> </style>
+
     <!--Fragment Constants-->
     <style name="FragmentConstants">
         <item name="android:textSize">20sp</item>
@@ -75,8 +83,9 @@
 
     <!--Listview header constants-->
     <style name="ListViewHeaderA">
-        <item name="android:textSize">25sp</item>
-        <item name="android:background">@color/coral_pink</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/lavender</item>
         <item name="android:padding">8sp</item>
     </style>
 
