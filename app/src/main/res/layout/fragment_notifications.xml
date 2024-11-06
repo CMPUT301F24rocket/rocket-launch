@@ -32,7 +32,6 @@
         android:backgroundTint="@color/lavender"
         android:src="@drawable/bell_cog"
 
-        app:layout_constrainBottomp_toBottomOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
