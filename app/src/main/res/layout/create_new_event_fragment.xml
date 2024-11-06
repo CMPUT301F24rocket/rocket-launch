@@ -3,7 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:padding="16dp">
 
     <!-- Header for Edit Profile -->
     <TextView
@@ -40,8 +41,8 @@
         app:layout_constraintStart_toStartOf="@id/edit_event_poster_view"
         app:layout_constraintEnd_toEndOf="@id/edit_event_poster_view"
 
-        app:layout_constraintVertical_bias="0.01"
-        app:layout_constraintHorizontal_bias="0"/>
+        app:layout_constraintVertical_bias="0.1"
+        app:layout_constraintHorizontal_bias="0.02"/>
 
     <ImageButton
         android:id="@+id/edit_event_poster_button"
@@ -66,16 +67,107 @@
         app:layout_constraintTop_toBottomOf="@id/edit_event_poster_view"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Event Name: "/>
+
+            <EditText
+                android:id="@+id/edit_event_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"/> </LinearLayout>
+
+        <!--Set Event Capacity Size-->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Event Capacity: "/>
+
+            <EditText
+                android:id="@+id/edit_event_capacity"
+                android:layout_width="100dp"
+                android:textSize="20dp"
+                android:layout_height="wrap_content"/>
+
+        </LinearLayout>
+        <!--Set Waitlist Limit-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/check_set_waitlist_limit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Set Waitlist Limit: "/>
+
+            <EditText
+                android:id="@+id/waitlist_limit_size"
+                android:textSize="20dp"
+                android:layout_width="100dp"
+                android:layout_height="wrap_content" /> </LinearLayout>
+
+        <!--Require Geolocation Option-->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/check_set_geolocation_requirement"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20dp"
+                android:text="Set Waitlist Limit: "/> </LinearLayout>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingTop="10dp"
             android:textSize="20dp"
-            android:text="Event Name: "/>
+            android:text="Event Description:"/>
 
         <EditText
+            android:id="@+id/edit_event_description"
+            android:textSize="20dp"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:padding="16dp"/>
+            android:layout_height="wrap_content"/>
+
     </LinearLayout>
+
+    <Button
+        android:id="@+id/save_new_event_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/ButtonStyleB"
+        android:text="Create Event"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintVertical_bias="1"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
