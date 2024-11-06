@@ -68,12 +68,14 @@
         android:id="@+id/open_qr_scan_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:src="@drawable/plus"
+        android:backgroundTint="@color/lavender"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintVertical_bias="0.86"
+        app:layout_constraintVertical_bias="0.95"
         app:layout_constraintHorizontal_bias="0.9" />
 
     <!--Bottom Navigation Bar-->
