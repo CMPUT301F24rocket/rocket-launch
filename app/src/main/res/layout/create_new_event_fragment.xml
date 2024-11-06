@@ -36,16 +36,16 @@
         android:id="@+id/cancel_create_new_event_button"
         style="@style/XButtonStyle"
 
-        app:layout_constraintTop_toTopOf="@id/edit_event_poster_view"
-        app:layout_constraintBottom_toBottomOf="@id/edit_event_poster_view"
-        app:layout_constraintStart_toStartOf="@id/edit_event_poster_view"
-        app:layout_constraintEnd_toEndOf="@id/edit_event_poster_view"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
 
         app:layout_constraintVertical_bias="0.1"
-        app:layout_constraintHorizontal_bias="0.02"/>
+        app:layout_constraintHorizontal_bias="0"/>
 
     <ImageButton
-        android:id="@+id/edit_event_poster_button"
+        android:id="@+id/add_event_poster_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="20sp"
@@ -140,7 +140,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="20dp"
-                android:text="Set Waitlist Limit: "/> </LinearLayout>
+                android:text="Require Entrant Geolocation"/> </LinearLayout>
 
         <TextView
             android:layout_width="match_parent"
@@ -158,11 +158,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/save_new_event_button"
+        android:id="@+id/save_event_edits_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ButtonStyleB"
-        android:text="Create Event"
+        android:text="Save Changes"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"

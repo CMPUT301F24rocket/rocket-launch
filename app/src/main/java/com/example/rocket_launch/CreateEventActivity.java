@@ -2,14 +2,18 @@ package com.example.rocket_launch;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class CreateEventActivity extends AppCompatActivity {
 
@@ -29,6 +33,32 @@ public class CreateEventActivity extends AppCompatActivity {
         bottomNav.setSelectedItemId(R.id.navigation_create_events);
         bottomBarNavigation(bottomNav);
 
+        //Set up button to open CreateNewEventFragment
+        FloatingActionButton addNewEventButton = findViewById(R.id.add_new_event_button);
+        addNewEventButton.setOnClickListener(view -> {
+            findViewById(R.id.created_events_body).setVisibility(View.GONE);
+            openCreateNewEventFragment();
+        });
+
+        //TODO: Display list of events user has created
+        // Click on created event in list and:
+        // Menu where they can
+        // - Edit Event Details
+        // - View Entrant list
+        // - View Entrant map
+        // - See Event QR code
+
+    }
+
+    private void openCreateNewEventFragment(){
+        CreateNewEventFragment createNewEventFragment = new CreateNewEventFragment();
+
+        getSupportFragmentManager()
+                .beginTransaction()
+                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                .replace(R.id.create_new_event_fragment_container, createNewEventFragment)
+                .addToBackStack(null)
+                .commit();
     }
 
     private void bottomBarNavigation(BottomNavigationView bottomNav){
