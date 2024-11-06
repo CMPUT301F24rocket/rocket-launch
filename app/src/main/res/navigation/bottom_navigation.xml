@@ -14,24 +14,24 @@
     <activity
         android:id="@+id/navigation_user_events"
         android:label="@string/title_user_events"
-        tools:layout="@layout/activity_user_events" />
+        tools:layout="@layout/fragment_user_events" />
 
     <!-- create event-->
     <activity
         android:id="@+id/navigation_create_events"
         android:label="@string/title_create_events"
-        tools:layout="@layout/activity_create_event"/>
+        tools:layout="@layout/fragment_create_event"/>
 
     <!-- notifications-->
     <activity
         android:id="@+id/navigation_notifications"
         android:label="@string/title_notifications"
-        tools:layout="@layout/activity_notifications"/>
+        tools:layout="@layout/fragment_notifications"/>
 
     <!-- user profile-->
     <activity
         android:id="@+id/navigation_user_profile"
         android:label="@string/title_user_profile"
-        tools:layout="@layout/activity_user_profile"/>
+        tools:layout="@layout/fragment_user_profile"/>
 
 </navigation>
