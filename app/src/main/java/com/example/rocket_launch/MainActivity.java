@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
+        EventDB eventDB = new EventDB(this);
+        String testEventID = "testEvent";
+        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null, 3);
+        //eventDB.addEvent(testEventID, testEvent);
 
         // load fragments for navigation
         createEvent = new CreateEventFragment();
