@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,10 +13,11 @@ import androidx.fragment.app.Fragment;
 import com.example.rocket_launch.R;
 
 public class AdminEventsFragment extends Fragment {
-
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.admin_event_fragment, container, false);
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.admin_event_fragment, container, false);
+        TextView labelText = view.findViewById(R.id.tabLabel); // Make sure TextView id matches
+        labelText.setText("Events Empty"); // Set the appropriate label
+        return view;
     }
 }

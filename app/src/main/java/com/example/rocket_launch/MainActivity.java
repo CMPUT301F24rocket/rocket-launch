@@ -5,27 +5,22 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
 import android.widget.Button;
 
 import androidx.activity.EdgeToEdge;
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 public class MainActivity extends AppCompatActivity {
     User user;
     UsersDB usersDB;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,38 +33,32 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
-        EventDB eventDB = new EventDB();
-        String testEventID = "testEvent";
-        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null, 3);
-        eventDB.addEvent(testEventID, testEvent);
-
-
         usersDB = new UsersDB(); // Load user database
 
-        //Get Android Device ID
+        // Get Android Device ID
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        Button get_started_button = findViewById(R.id.get_started);
-        get_started_button.setOnClickListener(v -> {
-
-            // Get Firebase user
-            usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
-                @Override
-                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                    if (documentSnapshot.exists()) {
-                        user = documentSnapshot.toObject(User.class);
-                        checkUserRole(user);
-                    } else {
+        // Get Firebase user immediately
+        usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    user = documentSnapshot.toObject(User.class);
+                    checkUserRole(user); // Automatically check and navigate to admin mode if admin
+                } else {
+                    // Show "Create User" button for new users
+                    Button get_started_button = findViewById(R.id.get_started);
+                    get_started_button.setVisibility(View.VISIBLE);
+                    get_started_button.setOnClickListener(v -> {
                         user = new User();
-                        user.setAndroid_id(androidID); //set Android ID for new user
+                        user.setAndroid_id(androidID); // set Android ID for new user
                         new NewUserFragment(user, usersDB).show(getSupportFragmentManager(), "Create New User");
                         usersDB.addUser(androidID, user);
-                    }
-                }
-                    }, e -> {
-                        Log.w("Firebase", "Error getting user", e);
                     });
+                }
+            }
+        }, e -> {
+            Log.w("Firebase", "Error getting user", e);
         });
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
@@ -78,13 +67,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkUserRole(User user) {
-        if (user.isEntrant()) {
-            // Go to entrant activity
-        } else if (user.isOrganizer()) {
-            // Go to organizer activity
-        } else if (user.isAdmin()) {
+        Log.d("Role Check", "Admin Role: " + user.isAdmin()); // Log the admin role status
+        if (user.isAdmin()) {
             Intent intent = new Intent(this, AdminModeActivity.class);
             startActivity(intent);
+            finish(); // Ensure MainActivity doesn't stay in the back stack
+        } else {
+            Log.d("Role Check", "User is not an admin"); // Log if the user is not an admin
         }
     }
 
@@ -132,4 +121,3 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
-
