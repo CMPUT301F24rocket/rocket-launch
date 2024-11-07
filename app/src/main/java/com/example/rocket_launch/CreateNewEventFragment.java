@@ -23,6 +23,10 @@ public class CreateNewEventFragment extends Fragment {
     private FirebaseFirestore db;
     private String androidId;
 
+    interface AddEventDialogListener {
+        void addEvent(Event event);
+    }
+
     public CreateNewEventFragment(){
         // Required empty public constructor
     }
@@ -86,19 +90,24 @@ public class CreateNewEventFragment extends Fragment {
         CheckBox checkBoxGeolocationRequired = view.findViewById(R.id.checkbox_geolocation_requirement);
         CheckBox checkBoxWaitlistLimit = view.findViewById(R.id.checkbox_waitlist_limit);
 
+        Event event = new Event();
+        Map<String, Object> eventMap = new HashMap<>();
+
         //getting input from edit fields
         String eventName = editEventName.getText().toString();
         String eventCapacity = editEventCapacity.getText().toString();
-        String waitlistSizeLimit;
-
-        if (checkBoxWaitlistLimit.isChecked())
-            waitlistSizeLimit = editWaitlistLimitSize.getText().toString();
-        else waitlistSizeLimit = null;
+        String waitlistSizeLimit = checkBoxWaitlistLimit.isChecked() ? editWaitlistLimitSize.getText().toString() : null;;
 
         String eventDescription = editEventDescription.getText().toString();
         boolean geolocationRequired = checkBoxGeolocationRequired.isChecked();
 
-        Map<String, Object> eventMap = new HashMap<>();
+        event.setName(eventName);
+        event.setCapacity(Integer.parseInt(eventCapacity));
+        event.setMaxWaitlistSize(waitlistSizeLimit != null ? Integer.parseInt(waitlistSizeLimit) : 0);
+        event.setDescription(eventDescription);
+        event.setGeolocationRequired(geolocationRequired);
+        event.setWaitingList();
+
         eventMap.put("name", eventName);
         eventMap.put("capacity", eventCapacity);
         eventMap.put("waitlist_size_limit", waitlistSizeLimit);
@@ -106,16 +115,9 @@ public class CreateNewEventFragment extends Fragment {
         eventMap.put("geolocation_required", geolocationRequired);
         eventMap.put("waitingList", new ArrayList<>());
 
-        db.collection("organizer_events")
-                .document(androidId)
-                .collection("events")
-                .add(eventMap)
-                .addOnSuccessListener(documentReference -> {
-                    Log.d("Firestore", "Event added successfully with ID: " + documentReference.getId());
-                })
-                .addOnFailureListener(e -> {
-                    Log.w("Firestore", "Error adding event", e);
-                });
+        EventDB eventDB = new EventDB(getContext());
+        eventDB.addEvent(event);
+
     }
 
     // Close the fragment and return to the Created Activities view
