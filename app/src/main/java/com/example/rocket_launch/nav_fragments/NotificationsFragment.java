@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -21,7 +22,9 @@ import android.provider.Settings.Secure;
 
 import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.NotificationArrayAdapter;
+import com.example.rocket_launch.NotificationPreferencesFragment;
 import com.example.rocket_launch.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
 
@@ -55,18 +58,25 @@ public class NotificationsFragment extends Fragment {
     private String androidId;
     private List notifications;
 
-    public NotificationsFragment() {
+    private FloatingActionButton notificationSettingsButton;
+
+    public NotificationsFragment(){
+        // we are required to have (an) empty constructor
     }
 
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-
-        //  super.onCreate(savedInstanceState);
+        super.onCreate(savedInstanceState);
 
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
+
+        notificationSettingsButton = view.findViewById(R.id.notification_settings_button);
+        notificationSettingsButton.setOnClickListener(v -> {
+            new NotificationPreferencesFragment().show(getParentFragmentManager(), "edit notifs");
+        });
 
         notificationsListView = view.findViewById(R.id.notifications_list_view);
         notificationList = new ArrayList<>();
@@ -76,9 +86,6 @@ public class NotificationsFragment extends Fragment {
 
         db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        // getNotifications();
-
 
         loadNotifications();
 
@@ -111,4 +118,3 @@ public class NotificationsFragment extends Fragment {
 
     }
 }
- 
