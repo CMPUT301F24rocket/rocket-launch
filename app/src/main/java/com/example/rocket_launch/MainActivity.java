@@ -21,6 +21,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.List;
+
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
 
@@ -41,11 +43,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
-        EventDB eventDB = new EventDB();
-        String testEventID = "testEvent";
-        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null, 3);
-        eventDB.addEvent(testEventID, testEvent);
 
         // load fragments for navigation
         createEvent = new CreateEventFragment();

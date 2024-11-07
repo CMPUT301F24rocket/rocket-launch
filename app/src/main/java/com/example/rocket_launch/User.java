@@ -4,6 +4,7 @@ package com.example.rocket_launch;
 import android.location.Location;
 import android.media.Image;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class User {
@@ -23,7 +24,17 @@ public class User {
     private boolean notificationPreference;
     private List<String> eventsJoined;
 
+    private List<String> notifications;
 
+    public List<String> getNotifications() {return notifications;}
+
+    public void setNotifications(List<String> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotification(String notification){
+        notifications.add(notification);
+    }
 
     public void addEvent(String eventID){
         eventsJoined.add(eventID);
@@ -60,6 +71,8 @@ public class User {
     //User Roles
     public User() {
         this.roles = new Roles();
+        this.eventsJoined = new ArrayList<>();
+        this.notifications = new ArrayList<>();
     }
     public Roles getRoles() {
         return roles;

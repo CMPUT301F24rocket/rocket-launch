@@ -12,7 +12,7 @@ public class Event {
     private String description;
     private Calendar startTime;
     private Calendar endTime;
-    private int participants;
+    private List<String> participants;
     private Image photo;
     private List<String> waitingList;
     private int maxWaitingListSize; // Integer
@@ -21,13 +21,13 @@ public class Event {
 
     }
 
-    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo, int maxWaitingListSize) {
+    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, Image photo, int maxWaitingListSize) {
         this.eventID = eventID;
         this.name = name;
         this.description = description;
         this.startTime = startTime;
         this.endTime = endTime;
-        this.participants = participants;
+        this.participants = new ArrayList<>();
         this.photo = photo;
         this.waitingList = new ArrayList<>();
         this.maxWaitingListSize = maxWaitingListSize;
@@ -70,7 +70,7 @@ public class Event {
         return endTime;
     }
 
-    public int getParticipants() {
+    public List<String> getParticipants() {
         return participants;
     }
 }

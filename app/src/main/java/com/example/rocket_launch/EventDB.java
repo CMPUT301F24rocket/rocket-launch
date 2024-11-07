@@ -22,8 +22,8 @@ public class EventDB {
     private CollectionReference eventRef;
 
     public EventDB(){
-        db = FirebaseFirestore.getInstance();
-        eventRef = db.collection("events");
+        this.db = FirebaseFirestore.getInstance();
+        this.eventRef = db.collection("events");
     }
 
 
@@ -52,40 +52,22 @@ public class EventDB {
                 });
     }
 
-    // Add user to waiting list and check max waiting list size
+    // Add user to waiting list
     public void addUserToWaitingList(String eventID, String userID) {
-        eventRef.document(eventID).get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Event event = documentSnapshot.toObject(Event.class);
-
-                    if (event != null) {
-                        int currentSize = event.getWaitingList().size();
-
-                        if (currentSize < event.getMaxWaitingListSize()) {
-                            eventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
-                                    .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                        @Override
-                                        public void onSuccess(Void aVoid) {
-                                            Log.d("Firebase", "User added to waiting list");
-                                        }
-                                    })
-                                    .addOnFailureListener(new OnFailureListener() {
-                                        @Override
-                                        public void onFailure(@NonNull Exception e) {
-                                            Log.w("Firebase", "Error adding user", e);
-                                        }
-                                    });
-                        } else {
-                            Log.d("Firebase", "Waiting list is full");
-                        }
+        eventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User removes from waiting list");
                     }
-                } else {
-                    Log.w("Firebase", "Event document does not exist");
-                }
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error removing user", e);
+                    }
+                });
+
     }
 
     // Remove user from waiting list
@@ -105,6 +87,33 @@ public class EventDB {
                 });
 
     }
+
+    // promote user from waiting list to participant
+    public void promoteUserFromWaitingList(String eventID, String userID){
+      eventRef.document(eventID).get().addOnSuccessListener(documentSnapshot -> {
+          Event event = documentSnapshot.toObject(Event.class);
+          String eventName = event.getName();
+
+          eventRef.document(eventID).update(
+                  "participants", FieldValue.arrayUnion(userID),
+                  "waitinglist", FieldValue.arrayRemove(userID))
+                  .addOnSuccessListener(aVoid -> {
+                      Log.d("Firebase", "User promoted");
+
+                      String notficationMsg = "Youve been seleected for event" + eventName;
+
+                      UsersDB usersDB = new UsersDB();
+                      usersDB.addNotificationToUser(userID, notficationMsg);
+                  })
+                  .addOnFailureListener(e -> {
+                      Log.w("Firebase", "Error promoting user");
+                  });
+
+      });
+
+    }
+
+
 }
 
 
