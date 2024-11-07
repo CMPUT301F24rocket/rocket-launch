@@ -51,7 +51,7 @@ public class UserProfileFragment extends Fragment implements EditProfileFragment
         // Set up button to open edit profile fragment
         Button editProfileButton = view.findViewById(R.id.edit_profile_button);
         editProfileButton.setOnClickListener(v -> {
-            v.findViewById(R.id.user_profile_body).setVisibility(View.GONE);
+            view.findViewById(R.id.user_profile_body).setVisibility(View.GONE);
             openEditProfileFragment();
         });
 
