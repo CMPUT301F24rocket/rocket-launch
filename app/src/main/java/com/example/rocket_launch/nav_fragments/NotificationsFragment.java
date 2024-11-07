@@ -49,7 +49,7 @@ public class NotificationsFragment extends Fragment {
     private ListView notificationsListView;
     private ArrayAdapter<String> notificationsAdapter;
     private List<String> notificationList;
-  
+
     private static final String TAG = "NotificationsFragment";
     private FirebaseFirestore db;
     private String androidId;
@@ -61,9 +61,8 @@ public class NotificationsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      
-      
-      
+
+
         //  super.onCreate(savedInstanceState);
 
         // Inflate the layout for this fragment
@@ -74,11 +73,11 @@ public class NotificationsFragment extends Fragment {
 
         notificationsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, notificationList);
         notificationsListView.setAdapter(notificationsAdapter);
-      
+
         db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-       // getNotifications();
+        // getNotifications();
 
 
         loadNotifications();
@@ -111,5 +110,5 @@ public class NotificationsFragment extends Fragment {
         }); // <-- Closing parenthesis and semicolon added here
 
     }
-
+}
  
