@@ -28,6 +28,10 @@ public class CreateEventFragment extends Fragment {
 
         //Set up button to open CreateNewEventFragment
         addNewEventButton = view.findViewById(R.id.add_new_event_button);
+        addNewEventButton.setOnClickListener(v -> {
+            eventsBody.setVisibility(View.GONE);
+            openCreateNewEventFragment();
+        });
         // get event body
         eventsBody = view.findViewById(R.id.created_events_body);
 
@@ -37,11 +41,6 @@ public class CreateEventFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        addNewEventButton.setOnClickListener(view -> {
-            eventsBody.setVisibility(View.GONE);
-            openCreateNewEventFragment();
-        });
 
         //TODO: Display list of events user has created
         // Click on created event in list and:
