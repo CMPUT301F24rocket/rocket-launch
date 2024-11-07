@@ -19,10 +19,16 @@ import com.example.rocket_launch.nav_fragments.UserEventsFragment;
 import com.example.rocket_launch.nav_fragments.UserProfileFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
+
+    BottomNavigationView bottomNav;
 
     CreateEventFragment createEvent;
     UserEventsFragment userEvents;
@@ -42,10 +48,6 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        EventDB eventDB = new EventDB();
-        String testEventID = "testEvent";
-        Event testEvent = new Event(testEventID, "Test Event", "Testing Firestore event addition", null, null, 20, null, 3);
-        eventDB.addEvent(testEventID, testEvent);
 
         // load fragments for navigation
         createEvent = new CreateEventFragment();
@@ -54,14 +56,12 @@ public class MainActivity extends AppCompatActivity {
         notifications = new NotificationsFragment();
 
         // set up nav-bar
-        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
-        bottomBarNavigation(bottomNav);
+        bottomNav = findViewById(R.id.bottom_nav_view);
 
         usersDB = new UsersDB(); // Load user database
 
         //Get Android Device ID
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-
 
         // get user from firebase and set up navbar
         usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
@@ -70,13 +70,15 @@ public class MainActivity extends AppCompatActivity {
                 User user;
                 if (documentSnapshot.exists()) {
                     user = documentSnapshot.toObject(User.class); // if user exists, use class repr
+                    setupNavBar(user.getRoles()); // set up navbar given the user
                 } else {
                     user = new User(); // make new user if not in database
                     user.setAndroid_id(androidID); //set Android ID for new user
-                    new NewUserFragment(user.getRoles()).show(getSupportFragmentManager(), "Create New User");
                     usersDB.addUser(androidID, user);
+                    FirebaseFirestore db = FirebaseFirestore.getInstance();
+                    DocumentReference userRef = db.collection("user_info").document(androidID);  // Reference the collection
+                    new SelectRolesFragment(user.getRoles(), userRef).show(getSupportFragmentManager(), "Create New User");
                 }
-                setupNavBar(bottomNav, user); // set up navbar given the user
             }
                 }, e -> {
                     Log.w("Firebase", "Error getting user", e);
@@ -84,30 +86,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    private void setupNavBar(BottomNavigationView bottomNav, User user) {
-        if (user.isAdmin()) {
-            // goto admin activity when implemented
-            bottomNav.setSelectedItemId(R.id.navigation_home);
-        }
-        else if (user.isOrganizer()) {
-            bottomNav.setSelectedItemId(R.id.navigation_create_events);
-        }
-        else if (user.isEntrant()) {
-            bottomNav.setSelectedItemId(R.id.navigation_user_events);
-        }
-
-        Menu menu = bottomNav.getMenu();
-        if (!user.isEntrant()) {
-            // if not entrant, don't show user events
-            menu.findItem(R.id.navigation_user_events).setVisible(false);
-        }
-        if (!user.isOrganizer()) {
-            // if not organizer don't show create events
-            menu.findItem(R.id.navigation_create_events).setVisible(false);
-        }
-    }
-
-    private void bottomBarNavigation(BottomNavigationView bottomNav) {
+    private void setupNavBar(Roles roles) {
         bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -139,5 +118,26 @@ public class MainActivity extends AppCompatActivity {
                 return false;
             }
         });
+
+        Menu menu = bottomNav.getMenu();
+        if (!roles.isEntrant()) {
+            // if not entrant, don't show user events
+            menu.findItem(R.id.navigation_user_events).setVisible(false);
+        }
+        if (!roles.isOrganizer()) {
+            // if not organizer don't show create events
+            menu.findItem(R.id.navigation_create_events).setVisible(false);
+        }
+
+        if (roles.isAdmin()) {
+            // goto admin activity when implemented
+            bottomNav.setSelectedItemId(R.id.navigation_home);
+        }
+        else if (roles.isOrganizer()) {
+            bottomNav.setSelectedItemId(R.id.navigation_create_events);
+        }
+        else if (roles.isEntrant()) {
+            bottomNav.setSelectedItemId(R.id.navigation_user_events);
+        }
     }
 }
