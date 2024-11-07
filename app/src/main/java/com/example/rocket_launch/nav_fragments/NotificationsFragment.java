@@ -1,6 +1,11 @@
 package com.example.rocket_launch.nav_fragments;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
+
+import android.provider.Settings;
+
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +20,10 @@ import android.provider.Settings.Secure;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.Notification;
+import com.example.rocket_launch.NotificationArrayAdapter;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,13 +33,22 @@ public class NotificationsFragment extends Fragment {
     private ListView notificationsListView;
     private ArrayAdapter<String> notificationsAdapter;
     private List<String> notificationList;
+  
+    private static final String TAG = "NotificationsFragment";
+    private FirebaseFirestore db;
+    private String androidId;
+    private List notifications;
 
     public NotificationsFragment() {
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      
+      
+      
+        //  super.onCreate(savedInstanceState);
+
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
@@ -39,6 +57,11 @@ public class NotificationsFragment extends Fragment {
 
         notificationsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, notificationList);
         notificationsListView.setAdapter(notificationsAdapter);
+      
+        db = FirebaseFirestore.getInstance();
+        androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
+        getNotifications(); 
 
 
         loadNotifications();
@@ -71,4 +94,5 @@ public class NotificationsFragment extends Fragment {
         }); // <-- Closing parenthesis and semicolon added here
 
     }
-}
+
+ 

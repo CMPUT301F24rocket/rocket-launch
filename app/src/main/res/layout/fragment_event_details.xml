@@ -12,7 +12,7 @@
 
     <TextView
         android:id="@+id/details_event_header"
-        style="@style/EventPageHeaderStyle"
+        style="@style/SubHeaderStyle"
         android:text="EventDetailsActivity"
         android:textAlignment="center"
 
