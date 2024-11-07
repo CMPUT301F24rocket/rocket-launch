@@ -18,7 +18,7 @@ import com.example.rocket_launch.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-public class UserProfileFragment extends Fragment implements EditProfileFragment.OnProfileUpdatedListener {
+public class UserProfileFragment extends Fragment {
 
     private static final String TAG = "UserProfileFragment";
     private FirebaseFirestore db;
@@ -86,7 +86,7 @@ public class UserProfileFragment extends Fragment implements EditProfileFragment
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.edit_profile_fragment_container, editProfileFragment)
-                .addToBackStack(null)  // Add to back stack so we can come back to this activity
+//                .addToBackStack(null)  // Add to back stack so we can come back to this activity
                 .commit();
     }
 
@@ -114,14 +114,5 @@ public class UserProfileFragment extends Fragment implements EditProfileFragment
                         Log.d(TAG, "No matching document found or task failed", task.getException());
                     }
                 });
-    }
-
-    // Method from the interface, called when profile is updated
-    @Override
-    public void onProfileUpdated() {
-        // Reload user data to reflect updates
-        fetchUserProfile();
-        // Show the main profile view again
-        profileBodyView.setVisibility(View.VISIBLE);
     }
 }

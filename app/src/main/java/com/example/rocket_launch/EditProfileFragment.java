@@ -22,6 +22,7 @@ import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
+import com.example.rocket_launch.nav_fragments.UserProfileFragment;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.DocumentReference;
@@ -32,11 +33,6 @@ import java.io.IOException;
 
 public class EditProfileFragment extends Fragment {
 
-    public interface OnProfileUpdatedListener {
-        void onProfileUpdated();
-    }
-
-    private OnProfileUpdatedListener profileUpdatedListener;
     private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
     private ImageView profileImageView;
     private FirebaseFirestore db;
@@ -50,15 +46,6 @@ public class EditProfileFragment extends Fragment {
         // Required empty public constructor
     }
 
-    @Override
-    public void onAttach(@NonNull Context context) {
-        super.onAttach(context);
-        if (context instanceof OnProfileUpdatedListener) {
-            profileUpdatedListener = (OnProfileUpdatedListener) context;
-        } else {
-            throw new ClassCastException(context.toString() + " must implement OnProfileUpdatedListener");
-        }
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -191,10 +178,6 @@ public class EditProfileFragment extends Fragment {
                             "userFacility", updatedFacility)
                     .addOnSuccessListener(aVoid -> {
                         Snackbar.make(requireView(), "Profile updated successfully", Snackbar.LENGTH_SHORT).show();
-
-                        if (profileUpdatedListener != null) {
-                            profileUpdatedListener.onProfileUpdated();
-                        }
                         closeFragment();
                     })
                     .addOnFailureListener(e -> Log.e(TAG, "Error updating user data", e));
@@ -205,7 +188,10 @@ public class EditProfileFragment extends Fragment {
 
     // Close the fragment and return to the main profile view
     private void closeFragment() {
-        requireActivity().findViewById(R.id.user_profile_body).setVisibility(View.VISIBLE);
-        requireActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        UserProfileFragment userFragment= new UserProfileFragment();
+        requireActivity().getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.edit_profile_fragment_container, userFragment)
+                .commit();
     }
 }
