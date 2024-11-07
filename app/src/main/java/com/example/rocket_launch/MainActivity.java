@@ -70,7 +70,7 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     user = new User(); // make new user if not in database
                     user.setAndroid_id(androidID); //set Android ID for new user
-                    new NewUserFragment(user, usersDB).show(getSupportFragmentManager(), "Create New User");
+                    new NewUserFragment(user.getRoles()).show(getSupportFragmentManager(), "Create New User");
                     usersDB.addUser(androidID, user);
                 }
                 setupNavBar(bottomNav, user); // set up navbar given the user

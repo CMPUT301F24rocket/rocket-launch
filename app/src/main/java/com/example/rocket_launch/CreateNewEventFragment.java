@@ -5,11 +5,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 
+import com.google.firebase.firestore.FirebaseFirestore;
+
 public class CreateNewEventFragment extends Fragment {
+    private FirebaseFirestore db;
+    private String androidId;
 
     public CreateNewEventFragment(){
         // Required empty public constructor
@@ -41,9 +47,18 @@ public class CreateNewEventFragment extends Fragment {
         return view;
     }
 
+    //Create new event
+    private void createEvent(View view){
+        EditText editEventName = view.findViewById(R.id.edit_event_name);
+        EditText editEventCapacity = view.findViewById(R.id.edit_event_capacity);
+        EditText editWaitlistLimitSize = view.findViewById(R.id.edit_waitlist_limit_size);
+        EditText editEventDescription = view.findViewById(R.id.edit_event_description);
+        CheckBox checkBoxGeolocationRequired = view.findViewById(R.id.checkbox_geolocation_requirement);
+        CheckBox checkBoxWaitlistLimit = view.findViewById(R.id.checkbox_waitlist_limit);
+    }
+
     // Close the fragment and return to the Created Activities view
     private void closeFragment() {
-        requireActivity().findViewById(R.id.created_events_body).setVisibility(View.VISIBLE);
-        requireActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        requireActivity().getSupportFragmentManager().popBackStack();
     }
 }
