@@ -15,6 +15,7 @@ import androidx.fragment.app.Fragment;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -63,7 +64,11 @@ public class CreateNewEventFragment extends Fragment {
         //If Buttons are pressed
         cancelButton.setOnClickListener(v -> closeFragment());
         addEventPosterButton.setOnClickListener(v ->{});
-        createEventButton.setOnClickListener(v -> createEvent(view));
+        //When Create Event Button is clicked
+        createEventButton.setOnClickListener(v -> {
+            createEvent(view);
+            closeFragment();
+        });
 
         //TODO: choose event poster image
         // save event details into eventDB (should store based on user android ID as well)
@@ -99,6 +104,7 @@ public class CreateNewEventFragment extends Fragment {
         eventMap.put("waitlist_size_limit", waitlistSizeLimit);
         eventMap.put("description", eventDescription);
         eventMap.put("geolocation_required", geolocationRequired);
+        eventMap.put("waitingList", new ArrayList<>());
 
         db.collection("organizer_events")
                 .document(androidId)
