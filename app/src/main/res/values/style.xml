@@ -77,6 +77,25 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item> </style>
 
+    <!--Left Arrow button Style-->
+    <style name="ArrowLeftButtonStyle">
+        <item name="android:src">@drawable/arrow_left</item>
+        <item name="android:gravity">left</item>
+        <item name="android:padding">20sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item> </style>
+
+    <!-- Organizer event detail options button Style-->
+    <style name="OrganizerEventDetailsButtons">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">20sp</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/fern_green</item>
+        <item name="android:backgroundTint">@color/tea_green</item>
+        <item name="cornerRadius">10sp</item>
+    </style>
+
     <!--Fragment Constants-->
     <style name="FragmentConstants">
         <item name="android:textSize">20sp</item>
