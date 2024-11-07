@@ -1,6 +1,5 @@
 package com.example.rocket_launch;
 
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -17,8 +16,6 @@ import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.NonNull;
-import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -39,6 +36,7 @@ public class EditProfileFragment extends Fragment {
     private DocumentReference userRef;
     private String androidID;
     private Uri imageUri;
+    private Roles roles;
 
     private static final String TAG = "EditProfileFragment";
 
@@ -76,6 +74,7 @@ public class EditProfileFragment extends Fragment {
         Button saveButton = view.findViewById(R.id.save_profile_edit_button);
         Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
         Button editProfilePictureButton = view.findViewById(R.id.edit_profile_picture_button);
+        Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
 
         // Load existing user details and profile picture into fields
         loadUserDetails();
@@ -83,6 +82,10 @@ public class EditProfileFragment extends Fragment {
         saveButton.setOnClickListener(v -> updateUserDetails());
         cancelButton.setOnClickListener(v -> closeFragment());
         editProfilePictureButton.setOnClickListener(v -> openGallery());
+        editRolesButton.setOnClickListener(v -> {
+
+            new SelectRolesFragment(roles, userRef).show(getParentFragmentManager(), "Create New User");
+        });
 
         return view;
     }
@@ -149,6 +152,9 @@ public class EditProfileFragment extends Fragment {
                     emailEditText.setText(documentSnapshot.getString("userEmail"));
                     phoneEditText.setText(documentSnapshot.getString("userPhoneNumber"));
                     facilityEditText.setText(documentSnapshot.getString("userFacility"));
+
+                    // load user roles
+                    roles = documentSnapshot.get("roles", Roles.class);
 
                     // Load profile picture from local path if it exists
                     String profilePhotoPath = documentSnapshot.getString("profilePhotoPath");
