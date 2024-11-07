@@ -19,7 +19,7 @@ public class waitingListTest {
     public void setUp() {
         db = new EventDB();
         Event newEvent = new Event(testEventID, "Test Event1", "Testing adding event", null, null, 20, null, 3);
-        db.addEvent(testEventID, newEvent);
+        //db.addEvent(newEvent);
     }
 
 

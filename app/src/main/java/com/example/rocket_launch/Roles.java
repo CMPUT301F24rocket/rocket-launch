@@ -1,5 +1,7 @@
 package com.example.rocket_launch;
 
+import java.util.HashMap;
+
 public class Roles {
     boolean organizer;
     boolean entrant;
