@@ -21,7 +21,7 @@ public class User {
 
     private Location location;
     private Roles roles;
-    private UserNotificationPreferences notificationPreferences;
+    private Boolean notificationPreferences;
     private List<String> eventsJoined;
 
     private List<String> notifications;
@@ -94,11 +94,11 @@ public class User {
         return this.roles.isAdmin();
     }
 
-    public UserNotificationPreferences getNotificationPreferences() {
+    public Boolean getNotificationPreferences() {
         return notificationPreferences;
     }
 
-    public void setNotificationPreferences(UserNotificationPreferences notificationPreferences) {
+    public void setNotificationPreferences(Boolean notificationPreferences) {
         this.notificationPreferences = notificationPreferences;
     }
 }

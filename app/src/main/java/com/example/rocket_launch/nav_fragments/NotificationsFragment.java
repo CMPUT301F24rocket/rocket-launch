@@ -1,18 +1,12 @@
 package com.example.rocket_launch.nav_fragments;
 
-import static android.content.ContentValues.TAG;
-
 import android.os.Bundle;
 import android.util.Log;
 import android.provider.Settings;
 
-import android.provider.Settings;
-
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
@@ -20,12 +14,8 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.Settings.Secure;
 
-import com.example.rocket_launch.Notification;
-import com.example.rocket_launch.NotificationArrayAdapter;
 import com.example.rocket_launch.NotificationPreferencesFragment;
 import com.example.rocket_launch.R;
-import com.example.rocket_launch.SelectRolesFragment;
-import com.example.rocket_launch.UserNotificationPreferences;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
@@ -33,21 +23,6 @@ import com.example.rocket_launch.UsersDB;
 import java.util.ArrayList;
 import java.util.List;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.List;
-
-
-import com.example.rocket_launch.R;
-import com.example.rocket_launch.User;
-import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.Notification;
-import com.example.rocket_launch.NotificationArrayAdapter;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class NotificationsFragment extends Fragment {
 
