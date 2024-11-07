@@ -10,6 +10,8 @@ public class Event {
     private String eventID;
     private String name;
     private String description;
+    private int capacity;
+    private boolean geolocationRequired;
     private Calendar startTime;
     private Calendar endTime;
     private List<String> participants;
@@ -21,17 +23,21 @@ public class Event {
 
     }
 
+<
     public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, Image photo, int maxWaitingListSize) {
-        this.eventID = eventID;
-        this.name = name;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.participants = new ArrayList<>();
-        this.photo = photo;
-        this.waitingList = new ArrayList<>();
-        this.maxWaitingListSize = maxWaitingListSize;
-    }
+
+    public void setEventID(String eventID){this.eventID = eventID;}
+    public void setName(String name){this.name = name;}
+    public void setDescription(String description){this.description = description;}
+    public void setCapacity(int capacity){this.capacity = capacity;}
+    public void setGeolocationRequired(boolean geolocationRequired){this.geolocationRequired = geolocationRequired;}
+    public void setStartTime(Calendar startTime){this.startTime = startTime;}
+    public void setEndTime(Calendar endTime){this.endTime = endTime;}
+    public void setParticipants(int participants){this.participants = participants;}
+    public void setPhoto(Image photo){this.photo = photo;}
+    public void setWaitingList(){this.waitingList = new ArrayList<>();}
+    public void setMaxWaitingListSize(int maxWaitingListSize){this.maxWaitingListSize = maxWaitingListSize;}
+
 
 
     public int getMaxWaitingListSize() {
@@ -61,6 +67,10 @@ public class Event {
     public String getDescription() {
         return description;
     }
+
+    public int getCapacity() {return capacity;}
+
+    public boolean getGeolocationRequired() {return geolocationRequired;}
 
     public Calendar getStartTime() {
         return startTime;

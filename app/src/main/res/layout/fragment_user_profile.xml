@@ -114,10 +114,11 @@
 
             <!--Display Facility-->
             <LinearLayout
+                android:id="@+id/display_profile_facility"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <TextView
                     style="@style/UserProfileDisplayStyle"

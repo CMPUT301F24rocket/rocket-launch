@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -15,6 +16,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.EditProfileFragment;
 import com.example.rocket_launch.R;
+import com.example.rocket_launch.Roles;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -24,13 +26,14 @@ public class UserProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private String androidId;
     private String currentName, currentEmail, currentPhone, currentFacility;
+    private TextView nameTextView;
+    private TextView emailTextView;
+    private TextView phoneTextView;
+    private TextView facilityTextView;
+    private LinearLayout facilityLayout;
+    private ConstraintLayout profileBodyView;
 
-    TextView nameTextView;
-    TextView emailTextView;
-    TextView phoneTextView;
-    TextView facilityTextView;
-
-    ConstraintLayout profileBodyView;
+    private Roles roles;
 
 
     public UserProfileFragment() {
@@ -47,6 +50,9 @@ public class UserProfileFragment extends Fragment {
         emailTextView = view.findViewById(R.id.user_email_textview);
         phoneTextView = view.findViewById(R.id.user_phone_textview);
         facilityTextView = view.findViewById(R.id.user_facility_textview);
+
+        facilityLayout = view.findViewById(R.id.display_profile_facility);
+
 
         // Set up button to open edit profile fragment
         Button editProfileButton = view.findViewById(R.id.edit_profile_button);
@@ -103,11 +109,17 @@ public class UserProfileFragment extends Fragment {
                             currentPhone = document.getString("userPhoneNumber");
                             currentFacility = document.getString("userFacility");
 
+                            roles = document.get("roles", Roles.class);
+                            assert roles != null;
+                            if (roles.isOrganizer()) {
+                                facilityLayout.setVisibility(View.VISIBLE);
+                                facilityTextView.setText(currentFacility);
+                            }
+
                             // Update UI with retrieved data
                             nameTextView.setText(currentName);
                             emailTextView.setText(currentEmail);
                             phoneTextView.setText(currentPhone);
-                            facilityTextView.setText(currentFacility);
                             break;
                         }
                     } else {
