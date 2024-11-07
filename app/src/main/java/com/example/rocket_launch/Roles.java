@@ -1,5 +1,7 @@
 package com.example.rocket_launch;
 
+import java.util.HashMap;
+
 public class Roles {
     boolean organizer;
     boolean entrant;
@@ -33,5 +35,11 @@ public class Roles {
 
     public void setEntrant(boolean entrant) {
         this.entrant = entrant;
+    }
+
+    public void fromDB(HashMap vals) {
+        this.entrant = (Boolean) vals.get("entrant");
+        this.organizer = (Boolean) vals.get("organizer");
+        this.admin = (Boolean) vals.get("admin");
     }
 }
