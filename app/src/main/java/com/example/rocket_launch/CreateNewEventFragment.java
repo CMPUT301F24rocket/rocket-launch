@@ -46,7 +46,7 @@ public class CreateNewEventFragment extends Fragment {
         //Initializing Buttons
         ImageButton cancelButton = view.findViewById(R.id.cancel_create_new_event_button);
         ImageButton addEventPosterButton = view.findViewById(R.id.add_event_poster_button);
-        Button createEventButton = view.findViewById(R.id.save_event_edits_button);
+        Button createEventButton = view.findViewById(R.id.create_event_button);
 
         //hide setWaitlistLimit edit text field unless they check the setWaitlist box
         view.findViewById(R.id.edit_waitlist_limit_size).setVisibility(View.INVISIBLE);
