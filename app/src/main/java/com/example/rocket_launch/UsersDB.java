@@ -12,6 +12,11 @@ import java.util.Map;
 
 public class UsersDB {
     private FirebaseFirestore db;
+
+    public CollectionReference getUserRef() {
+        return userRef;
+    }
+
     private CollectionReference userRef;
 
     public UsersDB() {
