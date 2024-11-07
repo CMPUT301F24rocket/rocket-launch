@@ -23,6 +23,11 @@ public class SelectRolesFragment extends DialogFragment {
         this.userRef = userRef;
     }
 
+    public interface onSuccessListener {
+        void onSuccess();
+    }
+    private onSuccessListener listener;
+
     @NonNull
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
         View view = getLayoutInflater().inflate(R.layout.select_role_fragment, null);
@@ -64,7 +69,12 @@ public class SelectRolesFragment extends DialogFragment {
                             }
                         }
                     }
+                    listener.onSuccess();
                 })
                 .create();
+    }
+
+    public void setOnSuccessListener(onSuccessListener listener) {
+        this.listener = listener;
     }
 }

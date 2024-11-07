@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -31,6 +32,7 @@ import java.io.IOException;
 public class EditProfileFragment extends Fragment {
 
     private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
+    private LinearLayout facilityLayout;
     private ImageView profileImageView;
     private FirebaseFirestore db;
     private DocumentReference userRef;
@@ -76,6 +78,8 @@ public class EditProfileFragment extends Fragment {
         Button editProfilePictureButton = view.findViewById(R.id.edit_profile_picture_button);
         Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
 
+        facilityLayout = view.findViewById(R.id.display_edit_profile_facility);
+
         // Load existing user details and profile picture into fields
         loadUserDetails();
 
@@ -83,8 +87,15 @@ public class EditProfileFragment extends Fragment {
         cancelButton.setOnClickListener(v -> closeFragment());
         editProfilePictureButton.setOnClickListener(v -> openGallery());
         editRolesButton.setOnClickListener(v -> {
-
-            new SelectRolesFragment(roles, userRef).show(getParentFragmentManager(), "Create New User");
+            SelectRolesFragment frag = new SelectRolesFragment(roles, userRef);
+            // make sure we reload fragment if data possibly changed
+            frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {
+                @Override
+                public void onSuccess() {
+                    loadUserDetails();
+                }
+            });
+            frag.show(getParentFragmentManager(), "Create New User");
         });
 
         return view;
@@ -151,10 +162,17 @@ public class EditProfileFragment extends Fragment {
                     nameEditText.setText(documentSnapshot.getString("userName"));
                     emailEditText.setText(documentSnapshot.getString("userEmail"));
                     phoneEditText.setText(documentSnapshot.getString("userPhoneNumber"));
-                    facilityEditText.setText(documentSnapshot.getString("userFacility"));
 
                     // load user roles
                     roles = documentSnapshot.get("roles", Roles.class);
+                    assert roles != null;
+                    if (roles.isOrganizer()) {
+                        facilityLayout.setVisibility(View.VISIBLE);
+                        facilityEditText.setText(documentSnapshot.getString("userFacility"));
+                    }
+                    else {
+                        facilityLayout.setVisibility(View.GONE);
+                    }
 
                     // Load profile picture from local path if it exists
                     String profilePhotoPath = documentSnapshot.getString("profilePhotoPath");
