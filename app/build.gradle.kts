@@ -43,6 +43,10 @@ dependencies {
     implementation(libs.navigation.fragment)
     implementation(libs.navigation.ui)
 
+    // QR code scanner
+    implementation("com.journeyapps:zxing-android-embedded:4.3.0")
+    implementation("com.google.zxing:core:3.3.3")
+
     // Glide
     implementation("com.github.bumptech.glide:glide:4.16.0")
 

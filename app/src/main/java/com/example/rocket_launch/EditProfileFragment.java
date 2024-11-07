@@ -123,7 +123,7 @@ public class EditProfileFragment extends Fragment {
     );
 
     private void openGallery() {
-        Intent intent = new Intent(Intent.ACTION_PICK);
+        Intent intent = new Intent();
         intent.setType("image/*");
         galleryLauncher.launch(intent);
     }
