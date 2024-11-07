@@ -3,6 +3,8 @@ package com.example.rocket_launch.nav_fragments;
 import static android.content.ContentValues.TAG;
 
 import android.os.Bundle;
+import android.util.Log;
+import android.provider.Settings;
 
 import android.provider.Settings;
 
@@ -16,6 +18,20 @@ import android.widget.ListView;
 import androidx.fragment.app.Fragment;
 
 import android.provider.Settings.Secure;
+
+import com.example.rocket_launch.Notification;
+import com.example.rocket_launch.NotificationArrayAdapter;
+import com.example.rocket_launch.R;
+import com.example.rocket_launch.User;
+import com.example.rocket_launch.UsersDB;
+
+import java.util.ArrayList;
+import java.util.List;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.List;
+
 
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
@@ -42,6 +58,7 @@ public class NotificationsFragment extends Fragment {
     public NotificationsFragment() {
     }
 
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       
@@ -61,7 +78,7 @@ public class NotificationsFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        getNotifications(); 
+       // getNotifications();
 
 
         loadNotifications();
