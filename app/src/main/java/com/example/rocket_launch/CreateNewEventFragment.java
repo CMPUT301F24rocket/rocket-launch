@@ -43,7 +43,6 @@ public class CreateNewEventFragment extends Fragment {
 
     // Close the fragment and return to the Created Activities view
     private void closeFragment() {
-        requireActivity().findViewById(R.id.created_events_body).setVisibility(View.VISIBLE);
-        requireActivity().getSupportFragmentManager().beginTransaction().remove(this).commit();
+        requireActivity().getSupportFragmentManager().popBackStack();
     }
 }
