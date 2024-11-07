@@ -14,13 +14,27 @@ public class Event {
     private boolean geolocationRequired;
     private Calendar startTime;
     private Calendar endTime;
-    private int participants;
+    private List<String> participants;
     private Image photo;
     private List<String> waitingList;
     private int maxWaitingListSize; // Integer
 
     public Event(){
 
+    }
+
+
+    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, Image photo, int maxWaitingListSize) {
+
+        this.eventID = eventID;
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.photo = photo;
+        this.maxWaitingListSize = maxWaitingListSize;
+        this.participants = new ArrayList<>();
+        this.waitingList = new ArrayList<>();
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -30,25 +44,11 @@ public class Event {
     public void setGeolocationRequired(boolean geolocationRequired){this.geolocationRequired = geolocationRequired;}
     public void setStartTime(Calendar startTime){this.startTime = startTime;}
     public void setEndTime(Calendar endTime){this.endTime = endTime;}
-    public void setParticipants(int participants){this.participants = participants;}
+    public void setParticipants(List<String> participants){ this.participants = participants; }
     public void setPhoto(Image photo){this.photo = photo;}
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitingListSize(int maxWaitingListSize){this.maxWaitingListSize = maxWaitingListSize;}
 
-
-
-
-    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo, int maxWaitingListSize) {
-        this.eventID = eventID;
-        this.name = name;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.participants = participants;
-        this.photo = photo;
-        this.waitingList = new ArrayList<>();
-        this.maxWaitingListSize = maxWaitingListSize;
-    }
 
 
     public int getMaxWaitingListSize() {
@@ -91,7 +91,7 @@ public class Event {
         return endTime;
     }
 
-    public int getParticipants() {
+    public List<String> getParticipants() {
         return participants;
     }
 }
