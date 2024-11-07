@@ -24,6 +24,8 @@ import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.NotificationArrayAdapter;
 import com.example.rocket_launch.NotificationPreferencesFragment;
 import com.example.rocket_launch.R;
+import com.example.rocket_launch.SelectRolesFragment;
+import com.example.rocket_launch.UserNotificationPreferences;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
@@ -53,8 +55,11 @@ public class NotificationsFragment extends Fragment {
     private ArrayAdapter<String> notificationsAdapter;
     private List<String> notificationList;
 
+    private User user;
+
     private static final String TAG = "NotificationsFragment";
     private FirebaseFirestore db;
+    private UsersDB usersDB;
     private String androidId;
     private List notifications;
 
@@ -67,15 +72,23 @@ public class NotificationsFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
-        super.onCreate(savedInstanceState);
-
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
 
+        db = FirebaseFirestore.getInstance();
+        androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+
         notificationSettingsButton = view.findViewById(R.id.notification_settings_button);
         notificationSettingsButton.setOnClickListener(v -> {
-            new NotificationPreferencesFragment().show(getParentFragmentManager(), "edit notifs");
+            NotificationPreferencesFragment notifPreferences = new NotificationPreferencesFragment(user.getNotificationPreferences(), usersDB.getUserRef().document(androidId));
+            notifPreferences.setOnSuccessListener(new NotificationPreferencesFragment.onSuccessListener() {
+                @Override
+                public void onSuccess() {
+                    // this is def inefficient but it works
+                    loadNotifications();
+                }
+            });
+            notifPreferences.show(getParentFragmentManager(), "edit notifs");
         });
 
         notificationsListView = view.findViewById(R.id.notifications_list_view);
@@ -83,9 +96,6 @@ public class NotificationsFragment extends Fragment {
 
         notificationsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, notificationList);
         notificationsListView.setAdapter(notificationsAdapter);
-
-        db = FirebaseFirestore.getInstance();
-        androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         loadNotifications();
 
@@ -95,13 +105,14 @@ public class NotificationsFragment extends Fragment {
 
     private void loadNotifications() {
 
-        UsersDB usersDB = new UsersDB();
+        usersDB = new UsersDB();
         // reference https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
         String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
 
         usersDB.getUser(androidID, documentSnapshot -> {
-            User user = documentSnapshot.toObject(User.class);
+            user = documentSnapshot.toObject(User.class);
 
+            assert user != null;
             List<String> notifications = user.getNotifications();
             if (notifications != null) {
                 notificationList.clear();
