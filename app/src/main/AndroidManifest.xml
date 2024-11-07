@@ -2,6 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--  add permissions required for QR scanner  -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -27,6 +32,9 @@
         <activity
             android:name=".nav_fragments.UserEventsFragment"
             android:exported="true" />
+        <activity
+            android:name=".QRCodeScannerActivity"
+            android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
