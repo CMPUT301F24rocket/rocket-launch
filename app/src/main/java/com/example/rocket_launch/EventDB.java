@@ -27,11 +27,16 @@ public class EventDB {
     private CollectionReference organizerEventRef;
     private String androidId;
 
+
+    public EventDB(){
+        this.db = FirebaseFirestore.getInstance();
+        this.eventRef = db.collection("events");
+
     public EventDB(Context context){
         db = FirebaseFirestore.getInstance();
         organizerEventRef = db.collection("organizer_events");
         androidId = Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
-    }
+    
 
     public EventDB() {
 
@@ -72,39 +77,23 @@ public class EventDB {
                 }); */
     }
 
-    // Add user to waiting list and check max waiting list size
+    // Add user to waiting list
     public void addUserToWaitingList(String eventID, String userID) {
-        DocumentReference eventDocRef = organizerEventRef.document(androidId).collection("events").document(eventID);
 
-        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                Event event = documentSnapshot.toObject(Event.class);
-
-                if (event != null) {
-                    int currentSize = event.getWaitingList().size();
-
-                    if (currentSize < event.getMaxWaitingListSize()) {
-                        organizerEventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Firebase", "User added to waiting list");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("Firebase", "Error adding user", e);
-                                    }
-                                });
-                    } else {
-                        Log.d("Firebase", "Waiting list is full");
+        eventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User removes from waiting list");
                     }
-                }
-            } else {
-                Log.w("Firebase", "Event document does not exist");
-            }
-        });
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error removing user", e);
+                    }
+                });
+
     }
 
     // Remove user from waiting list
@@ -143,6 +132,33 @@ public class EventDB {
                 })
                 .addOnFailureListener(onFailure);
     }
+
+    // promote user from waiting list to participant
+    public void promoteUserFromWaitingList(String eventID, String userID){
+      eventRef.document(eventID).get().addOnSuccessListener(documentSnapshot -> {
+          Event event = documentSnapshot.toObject(Event.class);
+          String eventName = event.getName();
+
+          eventRef.document(eventID).update(
+                  "participants", FieldValue.arrayUnion(userID),
+                  "waitinglist", FieldValue.arrayRemove(userID))
+                  .addOnSuccessListener(aVoid -> {
+                      Log.d("Firebase", "User promoted");
+
+                      String notficationMsg = "Youve been seleected for event" + eventName;
+
+                      UsersDB usersDB = new UsersDB();
+                      usersDB.addNotificationToUser(userID, notficationMsg);
+                  })
+                  .addOnFailureListener(e -> {
+                      Log.w("Firebase", "Error promoting user");
+                  });
+
+      });
+
+    }
+
+
 }
 
 
