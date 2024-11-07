@@ -16,16 +16,16 @@
             android:name=".EventDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".nav_fragments.UserProfileFragment"
             android:exported="true" />
         <activity
-            android:name=".NotificationsActivity"
+            android:name=".nav_fragments.NotificationsFragment"
             android:exported="true" />
         <activity
-            android:name=".CreateEventActivity"
+            android:name=".nav_fragments.CreateEventFragment"
             android:exported="true" />
         <activity
-            android:name=".UserEventsActivity"
+            android:name=".nav_fragments.UserEventsFragment"
             android:exported="true" />
         <activity
             android:name=".MainActivity"

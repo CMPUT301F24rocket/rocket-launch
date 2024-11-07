@@ -5,7 +5,7 @@
     android:id="@+id/user_events_activity"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".UserEventsActivity">
+    tools:context=".nav_fragments.UserEventsFragment">
 
     <!--User Profile Header-->
     <TextView
@@ -46,7 +46,7 @@
         android:layout_height="0dp"
         android:orientation="vertical"
         app:layout_constraintTop_toBottomOf="@id/registered_layout"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
@@ -72,20 +72,10 @@
         android:backgroundTint="@color/lavender"
 
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toTopOf="@id/bottom_nav_view"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintVertical_bias="0.95"
-        app:layout_constraintHorizontal_bias="0.9" />
-
-    <!--Bottom Navigation Bar-->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_nav_view"
-        app:menu="@menu/bottom_nav_menu"
-        style="@style/BottomNavBarStyle"
-
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintRight_toRightOf="parent" />
+        app:layout_constraintHorizontal_bias="0.9"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
