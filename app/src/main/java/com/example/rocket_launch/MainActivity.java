@@ -5,15 +5,15 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -33,25 +33,22 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        usersDB = new UsersDB(); // Load user database
+        usersDB = new UsersDB();
 
-        // Get Android Device ID
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // Get Firebase user immediately
         usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 if (documentSnapshot.exists()) {
                     user = documentSnapshot.toObject(User.class);
-                    checkUserRole(user); // Automatically check and navigate to admin mode if admin
+                    checkUserRole(user);
                 } else {
-                    // Show "Create User" button for new users
-                    Button get_started_button = findViewById(R.id.get_started);
-                    get_started_button.setVisibility(View.VISIBLE);
-                    get_started_button.setOnClickListener(v -> {
+                    Button getStartedButton = findViewById(R.id.get_started);
+                    getStartedButton.setVisibility(View.VISIBLE);
+                    getStartedButton.setOnClickListener(v -> {
                         user = new User();
-                        user.setAndroid_id(androidID); // set Android ID for new user
+                        user.setAndroid_id(androidID);
                         new NewUserFragment(user, usersDB).show(getSupportFragmentManager(), "Create New User");
                         usersDB.addUser(androidID, user);
                     });
@@ -63,61 +60,13 @@ public class MainActivity extends AppCompatActivity {
 
         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
         bottomNav.setSelectedItemId(R.id.navigation_home);
-        bottomBarNavigation(bottomNav);
     }
 
     private void checkUserRole(User user) {
-        Log.d("Role Check", "Admin Role: " + user.isAdmin()); // Log the admin role status
         if (user.isAdmin()) {
             Intent intent = new Intent(this, AdminModeActivity.class);
             startActivity(intent);
-            finish(); // Ensure MainActivity doesn't stay in the back stack
-        } else {
-            Log.d("Role Check", "User is not an admin"); // Log if the user is not an admin
-        }
-    }
-
-    private void bottomBarNavigation(BottomNavigationView bottomNav) {
-        bottomNav.setOnItemSelectedListener(item -> {
-            if (item.getItemId() == R.id.navigation_home) {
-                return true;
-            } else if (item.getItemId() == R.id.navigation_user_events) {
-                startActivity(new Intent(getApplicationContext(), UserEventsActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                finish();
-                return true;
-            } else if (item.getItemId() == R.id.navigation_create_events) {
-                startActivity(new Intent(getApplicationContext(), CreateEventActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                finish();
-                return true;
-            } else if (item.getItemId() == R.id.navigation_notifications) {
-                startActivity(new Intent(getApplicationContext(), NotificationsActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                finish();
-                return true;
-            } else if (item.getItemId() == R.id.navigation_user_profile) {
-                startActivity(new Intent(getApplicationContext(), UserProfileActivity.class)
-                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
-                finish();
-                return true;
-            }
-            return false;
-        });
-    }
-
-    private void setBarNavigationDisplay(BottomNavigationView bottomNav, User user) {
-        Menu menu = bottomNav.getMenu();
-
-        // Hide menu items based on user roles
-        if (!user.getRoles().isEntrant()) {
-            menu.findItem(R.id.navigation_user_events).setVisible(false);
-            menu.findItem(R.id.navigation_notifications).setVisible(false);
-            menu.findItem(R.id.navigation_user_profile).setVisible(false);
-        }
-
-        if (!user.getRoles().isOrganizer()) {
-            menu.findItem(R.id.navigation_create_events).setVisible(false);
+            finish();
         }
     }
 }

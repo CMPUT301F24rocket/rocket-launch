@@ -28,6 +28,6 @@ public class AdminModePagerAdapter extends FragmentStateAdapter {
 
     @Override
     public int getItemCount() {
-        return 5; // Total number of tabs
+        return 5; // total number of tabs
     }
 }

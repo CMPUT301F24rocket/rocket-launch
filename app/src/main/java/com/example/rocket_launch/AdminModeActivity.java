@@ -18,11 +18,9 @@ public class AdminModeActivity extends AppCompatActivity {
         TabLayout tabLayout = findViewById(R.id.admin_tab_layout);
         ViewPager2 viewPager = findViewById(R.id.admin_view_pager);
 
-        // Set up the adapter for ViewPager
         AdminModePagerAdapter adapter = new AdminModePagerAdapter(this);
         viewPager.setAdapter(adapter);
 
-        // Connect the TabLayout with the ViewPager2
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
                 case 0: tab.setText("Events"); break;
