@@ -110,5 +110,6 @@ public class NotificationsFragment extends Fragment {
         }); // <-- Closing parenthesis and semicolon added here
 
     }
+
+
 }
- 

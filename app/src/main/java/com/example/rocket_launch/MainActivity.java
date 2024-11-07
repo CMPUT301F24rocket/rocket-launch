@@ -71,6 +71,10 @@ public class MainActivity extends AppCompatActivity {
                 if (documentSnapshot.exists()) {
                     user = documentSnapshot.toObject(User.class); // if user exists, use class repr
                     setupNavBar(user.getRoles()); // set up navbar given the user
+                    String testNotification = "Welcome back (this is a test notification.";
+                    usersDB.addNotificationToUser(androidID, testNotification);
+
+
                 } else {
                     user = new User(); // make new user if not in database
                     user.setAndroid_id(androidID); //set Android ID for new user
