@@ -8,12 +8,15 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 import androidx.fragment.app.Fragment;
 
 import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.NotificationArrayAdapter;
+import com.example.rocket_launch.NotificationPreferencesFragment;
 import com.example.rocket_launch.R;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
@@ -25,6 +28,8 @@ public class NotificationsFragment extends Fragment {
     private String androidId;
     private List notifications;
 
+    private FloatingActionButton notificationSettingsButton;
+
 
     public NotificationsFragment(){
         // we are required to have (an) empty constructor
@@ -33,7 +38,14 @@ public class NotificationsFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_notifications, container, false);
+        View view = inflater.inflate(R.layout.fragment_notifications, container, false);
+
+        notificationSettingsButton = view.findViewById(R.id.notification_settings_button);
+        notificationSettingsButton.setOnClickListener(v -> {
+            new NotificationPreferencesFragment().show(getParentFragmentManager(), "edit notifs");
+        });
+
+        return view;
 
     }
 

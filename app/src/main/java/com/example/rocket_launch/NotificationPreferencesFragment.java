@@ -10,20 +10,20 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.DialogFragment;
 
 public class NotificationPreferencesFragment  extends DialogFragment {
-    NotificationPreferencesFragment() {
+    public NotificationPreferencesFragment() {
 
     }
 
     @NonNull
     public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = getLayoutInflater().inflate(R.layout.select_role_fragment, null);
+        View view = getLayoutInflater().inflate(R.layout.notification_preferences_fragment, null);
 
 
 
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         return builder
                 .setView(view)
-                .setTitle("Select Role")
+                .setTitle("Notification Preferences")
                 .setNegativeButton("Cancel", null)
                 .setPositiveButton("Ok", (dialog, which) -> {
 
