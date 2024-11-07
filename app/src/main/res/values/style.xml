@@ -12,16 +12,18 @@
         <item name="android:paddingBottom">25sp</item>
         <item name="android:background">@color/periwinkle</item>
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item> </style>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item></style>
 
     <!--Style for Event Page Header-->
-    <style name="EventPageHeaderStyle">
+    <style name="SubHeaderStyle">
         <item name="android:padding">25sp</item>
         <item name="android:textSize">25sp</item>
         <item name="android:textColor">@color/fern_green</item>
         <item name="android:background">@color/tea_green</item>
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
     </style>
 
     <!--Style for Bottom Navigation bar-->
