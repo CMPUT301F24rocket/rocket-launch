@@ -32,14 +32,6 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.List;
 
-public class NotificationsFragment extends Fragment {
-    private static final String TAG = "NotificationsFragment";
-    private FirebaseFirestore db;
-    private String androidId;
-    private List notifications;
-
-
-
 
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
@@ -86,7 +78,7 @@ public class NotificationsFragment extends Fragment {
         db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        getNotifications(); 
+       // getNotifications();
 
 
         loadNotifications();

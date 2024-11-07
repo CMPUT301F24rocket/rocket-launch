@@ -23,8 +23,19 @@ public class Event {
 
     }
 
-<
+
     public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, Image photo, int maxWaitingListSize) {
+
+        this.eventID = eventID;
+        this.name = name;
+        this.description = description;
+        this.startTime = startTime;
+        this.endTime = endTime;
+        this.photo = photo;
+        this.maxWaitingListSize = maxWaitingListSize;
+        this.participants = new ArrayList<>();
+        this.waitingList = new ArrayList<>();
+    }
 
     public void setEventID(String eventID){this.eventID = eventID;}
     public void setName(String name){this.name = name;}
@@ -33,7 +44,7 @@ public class Event {
     public void setGeolocationRequired(boolean geolocationRequired){this.geolocationRequired = geolocationRequired;}
     public void setStartTime(Calendar startTime){this.startTime = startTime;}
     public void setEndTime(Calendar endTime){this.endTime = endTime;}
-    public void setParticipants(int participants){this.participants = participants;}
+    public void setParticipants(List<String> participants){ this.participants = participants; }
     public void setPhoto(Image photo){this.photo = photo;}
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitingListSize(int maxWaitingListSize){this.maxWaitingListSize = maxWaitingListSize;}
