@@ -14,9 +14,12 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 public class MainActivity extends AppCompatActivity {
@@ -80,7 +83,8 @@ public class MainActivity extends AppCompatActivity {
         } else if (user.isOrganizer()) {
             // Go to organizer activity
         } else if (user.isAdmin()) {
-            // Go to admin activity
+            Intent intent = new Intent(this, AdminModeActivity.class);
+            startActivity(intent);
         }
     }
 
@@ -128,3 +132,4 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 }
+
