@@ -17,7 +17,7 @@ public class Event {
     private int participants;
     private Image photo;
     private List<String> waitingList;
-    private int maxWaitingListSize; // Integer
+    private int maxWaitlistSize; // Integer
 
     public Event(){
 
@@ -33,12 +33,12 @@ public class Event {
     public void setParticipants(int participants){this.participants = participants;}
     public void setPhoto(Image photo){this.photo = photo;}
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
-    public void setMaxWaitingListSize(int maxWaitingListSize){this.maxWaitingListSize = maxWaitingListSize;}
+    public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
 
 
 
 
-    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo, int maxWaitingListSize) {
+    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo, int maxWaitlistSize) {
         this.eventID = eventID;
         this.name = name;
         this.description = description;
@@ -47,12 +47,12 @@ public class Event {
         this.participants = participants;
         this.photo = photo;
         this.waitingList = new ArrayList<>();
-        this.maxWaitingListSize = maxWaitingListSize;
+        this.maxWaitlistSize = maxWaitlistSize;
     }
 
 
-    public int getMaxWaitingListSize() {
-        return maxWaitingListSize;
+    public int getMaxWaitlistSize() {
+        return maxWaitlistSize;
     }
 
     public void addToWaitingList(String userID){

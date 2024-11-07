@@ -1,7 +1,5 @@
 package com.example.rocket_launch;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
 import android.content.Context;
 import android.provider.Settings;
 import android.util.Log;
@@ -38,8 +36,14 @@ public class EventDB {
     }
 
 
-    public void addEvent(String eventID, Event event){
+    public void addEvent(Event event){
+        DocumentReference organizerDocRef = organizerEventRef.document(androidId);
+        DocumentReference newEventRef = organizerDocRef.collection("events").document();
+
+        String eventID = newEventRef.getId();
         Map<String, Object> eventMap = new HashMap<>();
+
+        eventMap.put("eventID", eventID);
         eventMap.put("name", event.getName());
         eventMap.put("description", event.getDescription());
         eventMap.put("capacity", event.getCapacity());
@@ -47,12 +51,13 @@ public class EventDB {
         //eventMap.put("endTime", event.getEndTime());
         eventMap.put("participants", event.getParticipants());
         eventMap.put("waitingList", new ArrayList<>());
-        eventMap.put("waitlist_size_limit", event.getMaxWaitingListSize());
+        eventMap.put("waitlist_size_limit", event.getMaxWaitlistSize());
         eventMap.put("geolocation_required", event.getGeolocationRequired());
 
-        DocumentReference organizerDocRef = organizerEventRef.document(androidId);
-        organizerDocRef.collection("events").document(eventID).set(eventMap)
-                .addOnSuccessListener(unused -> Log.d("Firebase", "Event added successfully!"))
+        newEventRef.set(eventMap)
+                .addOnSuccessListener(documentReference -> {
+                    Log.d("Firebase", "Event added successfully!");
+                })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error adding Event", e));
 
 
@@ -83,7 +88,7 @@ public class EventDB {
                 if (event != null) {
                     int currentSize = event.getWaitingList().size();
 
-                    if (currentSize < event.getMaxWaitingListSize()) {
+                    if (currentSize < event.getMaxWaitlistSize()) {
                         organizerEventRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
                                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                                     @Override
@@ -125,6 +130,9 @@ public class EventDB {
     }
 
     //TODO: Update Event
+    public void updateEventDB(){
+
+    }
 
     //get all events for a specific organizer via androidID
     public void getAllOrganizerEvents(OnSuccessListener<List<Event>> onSuccess, OnFailureListener onFailure){
