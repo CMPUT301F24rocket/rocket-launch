@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.CreateNewEventFragment;
@@ -15,7 +16,6 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 public class CreateEventFragment extends Fragment {
     FloatingActionButton addNewEventButton;
-    ConstraintLayout eventsBody;
 
 
     public CreateEventFragment() {
@@ -29,11 +29,8 @@ public class CreateEventFragment extends Fragment {
         //Set up button to open CreateNewEventFragment
         addNewEventButton = view.findViewById(R.id.add_new_event_button);
         addNewEventButton.setOnClickListener(v -> {
-            eventsBody.setVisibility(View.GONE);
             openCreateNewEventFragment();
         });
-        // get event body
-        eventsBody = view.findViewById(R.id.created_events_body);
 
         return view;
     }
@@ -58,7 +55,7 @@ public class CreateEventFragment extends Fragment {
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.create_new_event_fragment_container, createNewEventFragment)
+                .replace(R.id.fragment_frame, createNewEventFragment)
                 .addToBackStack(null)
                 .commit();
     }
