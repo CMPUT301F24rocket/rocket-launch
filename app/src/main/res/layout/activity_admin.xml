@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- Header Text -->
+    <TextView
+        android:id="@+id/adminHeader"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Admin Mode"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:padding="16dp"
+        android:background="?attr/colorPrimary"
+        android:textColor="?android:attr/textColorPrimaryInverse" />
+
+    <!-- TabLayout for the admin tabs -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/admin_tab_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <!-- ViewPager2 to handle swiping between tabs -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/admin_view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+</LinearLayout>

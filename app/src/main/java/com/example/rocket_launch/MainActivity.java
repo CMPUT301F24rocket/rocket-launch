@@ -1,5 +1,6 @@
 package com.example.rocket_launch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -27,14 +28,12 @@ import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
-
     BottomNavigationView bottomNav;
 
     CreateEventFragment createEvent;
     UserEventsFragment userEvents;
     UserProfileFragment userProfile;
     NotificationsFragment notifications;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,7 +46,6 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-
         // load fragments for navigation
         createEvent = new CreateEventFragment();
         userEvents = new UserEventsFragment();
@@ -57,33 +55,38 @@ public class MainActivity extends AppCompatActivity {
         // set up nav-bar
         bottomNav = findViewById(R.id.bottom_nav_view);
 
-        usersDB = new UsersDB(); // Load user database
+        usersDB = new UsersDB();
 
-        //Get Android Device ID
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // get user from firebase and set up navbar
         usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
             @Override
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user;
                 if (documentSnapshot.exists()) {
-                    user = documentSnapshot.toObject(User.class); // if user exists, use class repr
-                    setupNavBar(user.getRoles()); // set up navbar given the user
+                    user = documentSnapshot.toObject(User.class);
+                    checkUserRole(user);
+                    setupNavBar(user.getRoles());
                 } else {
-                    user = new User(); // make new user if not in database
-                    user.setAndroid_id(androidID); //set Android ID for new user
+                    user = new User();
+                    user.setAndroid_id(androidID);
                     usersDB.addUser(androidID, user);
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     DocumentReference userRef = db.collection("user_info").document(androidID);  // Reference the collection
                     new SelectRolesFragment(user.getRoles(), userRef).show(getSupportFragmentManager(), "Create New User");
                 }
             }
-                }, e -> {
-                    Log.w("Firebase", "Error getting user", e);
-                });
+        }, e -> Log.w("Firebase", "Error getting user", e));
     }
 
+    // check if the user has the admin role and navigate to AdminModeActivity if true
+    private void checkUserRole(User user) {
+        if (user.isAdmin()) {
+            Intent intent = new Intent(this, AdminModeActivity.class);
+            startActivity(intent);
+            finish();
+        }
+    }
 
     private void setupNavBar(Roles roles) {
         bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
@@ -124,18 +127,15 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.navigation_user_events).setVisible(false);
         }
         if (!roles.isOrganizer()) {
-            // if not organizer don't show create events
+            // if not organizer, don't show create events
             menu.findItem(R.id.navigation_create_events).setVisible(false);
         }
 
         if (roles.isAdmin()) {
-            // goto admin activity when implemented
             bottomNav.setSelectedItemId(R.id.navigation_home);
-        }
-        else if (roles.isOrganizer()) {
+        } else if (roles.isOrganizer()) {
             bottomNav.setSelectedItemId(R.id.navigation_create_events);
-        }
-        else if (roles.isEntrant()) {
+        } else if (roles.isEntrant()) {
             bottomNav.setSelectedItemId(R.id.navigation_user_events);
         }
     }
