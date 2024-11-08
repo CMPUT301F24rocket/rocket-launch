@@ -6,6 +6,9 @@ import com.example.rocket_launch.R;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 
+/**
+ * activity that displays the qr code scanner
+ */
 public class QRCodeScannerActivity extends CaptureActivity {
 
     @Override

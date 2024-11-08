@@ -11,6 +11,9 @@ import android.widget.ImageButton;
 
 import com.example.rocket_launch.R;
 
+/**
+ * Fragment used for displaying a map to an organizer
+ */
 public class OrganizerViewMapFragment extends Fragment {
 
     public OrganizerViewMapFragment() {
@@ -36,7 +39,9 @@ public class OrganizerViewMapFragment extends Fragment {
         return view;
     }
 
-    // Close the fragment and return to the Created Activities view
+    /**
+     * Close the fragment and return to the Created Activities view
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

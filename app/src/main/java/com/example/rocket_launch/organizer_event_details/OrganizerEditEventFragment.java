@@ -11,9 +11,14 @@ import android.widget.ImageButton;
 
 import com.example.rocket_launch.R;
 
+/**
+ * fragment that is shown when a user wants to edit an event
+ */
 public class OrganizerEditEventFragment extends Fragment {
 
-
+    /**
+     * default constructor
+     */
     public OrganizerEditEventFragment() {
         // Required empty public constructor
     }
@@ -37,7 +42,9 @@ public class OrganizerEditEventFragment extends Fragment {
         return view;
     }
 
-    // Close the fragment and return to the Created Activities view
+    /**
+     * Close the fragment and return to the Created Activities view
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

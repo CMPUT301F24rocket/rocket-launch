@@ -7,6 +7,9 @@ import android.media.Image;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * class containing all user information
+ */
 public class User {
 
     //Android ID
@@ -156,9 +159,21 @@ public class User {
     public void setEventsWaitlisted(List<String> eventsWaitlisted) {
         this.eventsWaitlisted = eventsWaitlisted;
     }
+
+    /**
+     * adds event to waitlist
+     * @param id
+     *  id of event to add to
+     */
     public void addWaitlistEvent(String id) {
         eventsWaitlisted.add(id);
     }
+
+    /**
+     * removes event from waitlist
+     * @param id
+     *  id of event to remove
+     */
     public void removeWaitlistEvent(String id) {
         eventsWaitlisted.remove(id);
     }

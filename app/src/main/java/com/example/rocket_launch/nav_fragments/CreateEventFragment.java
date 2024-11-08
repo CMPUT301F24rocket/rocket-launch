@@ -30,6 +30,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * fragment used for displaying events created by an organizer
+ */
 public class CreateEventFragment extends Fragment {
     FloatingActionButton addNewEventButton;
     private EventsDB eventsDB;
@@ -38,6 +41,9 @@ public class CreateEventFragment extends Fragment {
     private EventArrayAdapter adapter;
     private ArrayList<Event> events = new ArrayList<>();
 
+    /**
+     * default constructor
+     */
     public CreateEventFragment() {
         // Required empty public constructor
     }
@@ -81,6 +87,9 @@ public class CreateEventFragment extends Fragment {
         // - View Entrant map
     }
 
+    /**
+     * function used for opening a fragment for organizer to create an event
+     */
     private void openCreateNewEventFragment(){
         CreateNewEventFragment createNewEventFragment = new CreateNewEventFragment();
 
@@ -92,6 +101,11 @@ public class CreateEventFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * function used for opening a fragment to display contents of an event
+     * @param clickedEventDetailsFragment
+     *  fragment that displays information needed to create an event
+     */
     private void openClickedEvent(CreatedEventDetailsFragment clickedEventDetailsFragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -101,6 +115,9 @@ public class CreateEventFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * function that fetches all events created by an organizer and loads them
+     */
     private void fetchEvents(){
         String androidID = Settings.Secure
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);

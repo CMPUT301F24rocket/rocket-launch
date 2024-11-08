@@ -1,3 +1,5 @@
+import com.android.build.gradle.internal.getSdkDir
+
 plugins {
     alias(libs.plugins.android.application)
     //firebase

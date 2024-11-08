@@ -19,10 +19,12 @@ import java.util.Objects;
 
 public class OrganizerViewEntrantListsFragment extends Fragment {
 
+    /**
+     * Default constructor
+     */
     public OrganizerViewEntrantListsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -44,7 +46,7 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
-                case 0: tab.setText("joined"); break;
+                case 0: tab.setText("Waitlist"); break;
                 case 1: tab.setText("Invited"); break;
                 case 2: tab.setText("Cancelled"); break;
                 case 3: tab.setText("Final"); break;
@@ -59,7 +61,9 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
         return view;
     }
 
-    // Close the fragment and return to the Created Activities view
+    /**
+     * Close the fragment and return to the Created Activities view
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

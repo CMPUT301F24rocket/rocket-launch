@@ -9,6 +9,9 @@ import android.widget.TextView;
 
 import com.example.rocket_launch.R;
 
+/**
+ * fragment for displaying contents of facilities tab for admin
+ */
 public class AdminFacilitiesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

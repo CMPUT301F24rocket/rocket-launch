@@ -9,6 +9,9 @@ import com.example.rocket_launch.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
+/**
+ * activity that is displayed if the user is an admin
+ */
 public class AdminModeActivity extends AppCompatActivity {
 
     @Override

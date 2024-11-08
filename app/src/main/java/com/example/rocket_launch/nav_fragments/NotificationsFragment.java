@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * fragment used to display all of a user's notifications
+ */
 public class NotificationsFragment extends Fragment {
 
     private ListView notificationsListView;
@@ -40,6 +43,9 @@ public class NotificationsFragment extends Fragment {
 
     private FloatingActionButton notificationSettingsButton;
 
+    /**
+     * default constructor
+     */
     public NotificationsFragment(){
         // we are required to have (an) empty constructor
     }
@@ -78,6 +84,9 @@ public class NotificationsFragment extends Fragment {
 
     }
 
+    /**
+     * function used to load and display all notifications
+     */
     private void loadNotifications() {
 
         usersDB = new UsersDB();

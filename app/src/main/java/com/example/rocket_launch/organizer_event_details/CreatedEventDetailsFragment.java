@@ -21,14 +21,25 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 
+/**
+ * fragment used to show details of an event created by an organizer
+ */
 public class CreatedEventDetailsFragment extends Fragment {
     private EventsDB eventsDB;
     private Event event;
 
+    /**
+     * default constructor
+     */
     public CreatedEventDetailsFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * constructor for if we want to pass an existing event to the fragment
+     * @param event
+     *  event who's details are to be displayed
+     */
     public CreatedEventDetailsFragment(Event event) {
         this.event = event;
     }
@@ -79,14 +90,6 @@ public class CreatedEventDetailsFragment extends Fragment {
     }
 
 
-    public static CreatedEventDetailsFragment newInstance(String param1, String param2) {
-        CreatedEventDetailsFragment fragment = new CreatedEventDetailsFragment();
-        Bundle args = new Bundle();
-
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -95,6 +98,11 @@ public class CreatedEventDetailsFragment extends Fragment {
         }
     }
 
+    /**
+     * navigate to the given fragment on button press
+     * @param fragment
+     *  fragment to navigate to
+     */
     private void pressButton(Fragment fragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -104,7 +112,9 @@ public class CreatedEventDetailsFragment extends Fragment {
                 .commit();
     }
 
-    // Close the fragment and return to the Created Activities view
+    /**
+     * Close the fragment and return to the Created Activities view
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

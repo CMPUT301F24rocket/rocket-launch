@@ -11,6 +11,9 @@ import androidx.fragment.app.FragmentTransaction;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.R;
 
+/**
+ * fragment to show details about an event
+ */
 public class ClickedEventDetails extends Fragment {
     private Event event;
 
@@ -22,6 +25,11 @@ public class ClickedEventDetails extends Fragment {
         return view;
     }
 
+    /**
+     * on button press navigate to the given fragment
+     * @param fragment
+     *  fragment to display
+     */
     private void pressButton(Fragment fragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()

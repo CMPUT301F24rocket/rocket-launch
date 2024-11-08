@@ -14,15 +14,28 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 
+/**
+ * fragment displayed when a user wants to edit their roles
+ */
 public class SelectRolesFragment extends DialogFragment {
     private Roles roles;
     private DocumentReference userRef;
 
+    /**
+     * constructor
+     * @param roles
+     *  current roles
+     * @param userRef
+     *  reference to user in database
+     */
     SelectRolesFragment(Roles roles, DocumentReference userRef) {
         this.roles = roles;
         this.userRef = userRef;
     }
 
+    /**
+     * interface for callback
+     */
     public interface onSuccessListener {
         void onSuccess();
     }
@@ -74,6 +87,11 @@ public class SelectRolesFragment extends DialogFragment {
                 .create();
     }
 
+    /**
+     * sets the onSuccessListener to a given listener
+     * @param listener
+     *  listener to be set to
+     */
     public void setOnSuccessListener(onSuccessListener listener) {
         this.listener = listener;
     }
