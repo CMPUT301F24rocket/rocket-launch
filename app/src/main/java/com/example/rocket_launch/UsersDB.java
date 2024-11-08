@@ -40,26 +40,48 @@ public class UsersDB {
                 .addOnFailureListener(onFailure);
     }
 
-    public void addNotificationToUser(String androidID, String notification){
+    // notifications
+    public void addNotification(String androidID, String notification){
         usersRef.document(androidID).update("notifications", FieldValue.arrayUnion(notification))
                 .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added"))
                 .addOnFailureListener(e -> Log.w("Firebase", "notfication added failed", e));
-
+    }
+    public void removeNotification(String androidID, String notification) {
+        usersRef.document(androidID).update("notifications", FieldValue.arrayRemove(notification))
+                .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added"))
+                .addOnFailureListener(e -> Log.w("Firebase", "notfication added failed", e));
     }
 
-    public void addJoinedEvent(String androidId, String eventID) {
+    // waitlisted events
+    public void addWaitlistedEvent(String androidId, String eventID) {
         usersRef.document(androidId)
-                .update("eventsJoined", FieldValue.arrayUnion(eventID))
+                .update("eventsWaitlisted", FieldValue.arrayUnion(eventID))
                 .addOnSuccessListener(unused -> Log.d("Firebase", "joined event added to user"))
                 .addOnFailureListener(e -> Log.w("Firebase", "joined event add failed", e));
     }
-    public void removeJoinedEvent(String androidId, String eventID) {
+    public void removeWaitlistedEvent(String androidId, String eventID) {
         usersRef.document(androidId)
-                .update("eventsJoined", FieldValue.arrayRemove(eventID))
+                .update("eventsWaitlisted", FieldValue.arrayRemove(eventID))
                 .addOnSuccessListener(unused -> Log.d("Firebase", "joined event removed from user"))
                 .addOnFailureListener(e -> Log.w("Firebase", "joined event removed failed", e));
     }
 
+    // registered events
+    public void addRegisteredEvent(String androidId, String eventID) {
+        usersRef.document(androidId)
+                .update("eventsRegistered", FieldValue.arrayUnion(eventID))
+                .addOnSuccessListener(unused -> Log.d("Firebase", "joined event added to user"))
+                .addOnFailureListener(e -> Log.w("Firebase", "joined event add failed", e));
+    }
+    public void removeRegisteredEvent(String androidId, String eventID) {
+        usersRef.document(androidId)
+                .update("eventsRegistered", FieldValue.arrayRemove(eventID))
+                .addOnSuccessListener(unused -> Log.d("Firebase", "joined event removed from user"))
+                .addOnFailureListener(e -> Log.w("Firebase", "joined event removed failed", e));
+    }
+
+
+    // created events
     public void addCreatedEvent(String androidId, String eventID) {
         usersRef.document(androidId)
                 .update("eventsCreated", FieldValue.arrayUnion(eventID))
