@@ -1,4 +1,4 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.organizer_event_details;
 
 import android.os.Bundle;
 
@@ -8,10 +8,13 @@ import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.rocket_launch.Event;
+import com.example.rocket_launch.R;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,6 +41,12 @@ public class CreatedEventDetailsFragment extends Fragment {
         //back button
         ImageButton backButton = view.findViewById(R.id.organizer_event_details_back_button);
         backButton.setOnClickListener(v -> closeFragment());
+
+        //Button Options
+        Button editEventButton = view.findViewById(R.id.edit_event_page_button);
+        Button viewEntrantListsButton = view.findViewById(R.id.view_entrant_lists_button);
+        Button viewEntrantMapButton = view.findViewById(R.id.view_entrant_map_button);
+        Button viewEventQrCodeButton = view.findViewById(R.id.view_event_qr_code_button);
 
         return view;
     }

@@ -28,7 +28,7 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.fragment_organizer_view_entrant_lists, container, false);
+        View view = inflater.inflate(R.layout.organizer_view_entrant_lists_fragment, container, false);
 
         return view;
     }
