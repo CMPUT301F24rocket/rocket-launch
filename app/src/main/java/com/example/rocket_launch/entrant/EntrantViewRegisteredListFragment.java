@@ -52,6 +52,8 @@ public class EntrantViewRegisteredListFragment extends Fragment {
             openClickedEvent(clickedEventDetailsFragment);
         });
 
+        requireActivity().getSupportFragmentManager().addOnBackStackChangedListener(this::fetchEvents);
+
         fetchEvents();
 
         return view;
