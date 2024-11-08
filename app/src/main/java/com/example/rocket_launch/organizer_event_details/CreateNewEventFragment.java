@@ -94,7 +94,6 @@ public class CreateNewEventFragment extends Fragment {
                 try {
                     int capacityInt = Integer.parseInt(capacityInput);
                     createEvent(view);
-                    closeFragment();
                 } catch (NumberFormatException e){
                     capacity.setError("Enter a valid Integer");
                 }
@@ -134,7 +133,9 @@ public class CreateNewEventFragment extends Fragment {
         event.setGeolocationRequired(geolocationRequired);
         event.setWaitingList();
 
-        eventsDB.addCreatedEvent(event, androidId);
+        eventsDB.addCreatedEvent(event, androidId, v -> {
+            closeFragment();
+        });
 
 
     }

@@ -6,6 +6,7 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -32,7 +33,7 @@ public class EventsDB {
     }
 
 
-    public void addCreatedEvent(Event event, String androidId) {
+    public void addCreatedEvent(Event event, String androidId, OnCompleteListener<Void> onCompleteListener) {
         UsersDB usersDB = new UsersDB();
         DocumentReference newEventRef = eventsRef.document();
         newEventRef.set(event)
@@ -40,7 +41,8 @@ public class EventsDB {
                     usersDB.addCreatedEvent(androidId, newEventRef.getId());
                     Log.d("Firebase", "Event added successfully!");
                 })
-                .addOnFailureListener(e -> Log.w("Firebase", "Error adding Event", e));
+                .addOnFailureListener(e -> Log.w("Firebase", "Error adding Event", e))
+                .addOnCompleteListener(onCompleteListener);
     }
 
     // Add user to waiting list and check max waiting list size
