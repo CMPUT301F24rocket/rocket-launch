@@ -62,9 +62,6 @@ public class User {
     // roles
     public Roles getRoles() {return roles;}
     public void setRoles(Roles roles) {this.roles = roles;}
-    public Boolean isEntrant() {return this.roles.isEntrant();}
-    public Boolean isOrganizer() {return this.roles.isOrganizer();}
-    public Boolean isAdmin() {return this.roles.isAdmin();}
 
     // notifications
     public List<String> getNotifications() {return notifications;}
