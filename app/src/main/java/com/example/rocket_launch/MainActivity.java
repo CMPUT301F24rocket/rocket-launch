@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.rocket_launch.admin.AdminModeActivity;
 import com.example.rocket_launch.nav_fragments.CreateEventFragment;
 import com.example.rocket_launch.nav_fragments.NotificationsFragment;
 import com.example.rocket_launch.nav_fragments.UserEventsFragment;
@@ -23,8 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
