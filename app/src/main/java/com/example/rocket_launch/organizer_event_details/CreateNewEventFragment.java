@@ -1,8 +1,7 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.organizer_event_details;
 
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +12,9 @@ import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.rocket_launch.Event;
+import com.example.rocket_launch.EventDB;
+import com.example.rocket_launch.R;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -68,10 +70,24 @@ public class CreateNewEventFragment extends Fragment {
         //If Buttons are pressed
         cancelButton.setOnClickListener(v -> closeFragment());
         addEventPosterButton.setOnClickListener(v ->{});
+
         //When Create Event Button is clicked
         createEventButton.setOnClickListener(v -> {
-            createEvent(view);
-            closeFragment();
+            //check if capacity is not null
+            EditText capacity = view.findViewById(R.id.edit_event_capacity);
+            String capacityInput = capacity.getText().toString().trim();
+
+            if (capacityInput.isEmpty()){
+                capacity.setError("Capacity cannot be empty");
+            } else {
+                try {
+                    int capacityInt = Integer.parseInt(capacityInput);
+                    createEvent(view);
+                    closeFragment();
+                } catch (NumberFormatException e){
+                    capacity.setError("Enter a valid Integer");
+                }
+            }
         });
 
         //TODO: choose event poster image
