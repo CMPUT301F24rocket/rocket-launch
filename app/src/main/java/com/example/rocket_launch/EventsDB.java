@@ -107,10 +107,15 @@ public class EventsDB {
 
     }
 
-    public void loadEvent(String id, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
+    public void loadEvent(String id, OnSuccessListener<DocumentSnapshot> onSuccess) {
         eventsRef.document(id).get()
                 .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error loading Event", e);
+                    }
+                });
     }
 
     //get all events for a specific organizer via androidID
