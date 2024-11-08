@@ -3,4 +3,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="View Entrant List Fragment"
+        android:textSize="30sp"
+        android:gravity="center"/>
+
+    <ImageButton
+        android:id="@+id/back_button"
+        style="@style/ArrowLeftButtonStyle" />
+
+
+
 </androidx.constraintlayout.widget.ConstraintLayout>

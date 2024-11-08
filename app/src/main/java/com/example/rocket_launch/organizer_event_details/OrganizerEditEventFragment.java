@@ -30,8 +30,9 @@ public class OrganizerEditEventFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.organizer_edit_event_fragment, container, false);
 
-        ImageButton cancelButton = view.findViewById(R.id.cancel_edit_event_button);
-        cancelButton.setOnClickListener(v -> closeFragment());
+        //back button
+        ImageButton backButton = view.findViewById(R.id.cancel_edit_event_button);
+        backButton.setOnClickListener(v -> closeFragment());
 
         return view;
     }
