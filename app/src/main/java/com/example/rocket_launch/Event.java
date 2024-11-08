@@ -66,6 +66,7 @@ public class Event {
     public void addToWaitingList(String userID){
         waitingList.add(userID);
     }
+    public void removeFromWaitingList(String userID) {waitingList.remove(userID);}
 
     public List<String> getWaitingList() {
         return waitingList;
@@ -102,6 +103,7 @@ public class Event {
     public int getParticipants() {
         return participants;
     }
+
 
     public Bitmap generateQRCode() {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
