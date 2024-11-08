@@ -3,6 +3,7 @@ package com.example.rocket_launch.organizer_event_details;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,6 +11,10 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import com.example.rocket_launch.R;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.util.Objects;
 
 
 public class OrganizerViewEntrantListsFragment extends Fragment {
@@ -30,6 +35,22 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.organizer_view_entrant_lists_fragment, container, false);
+
+        TabLayout tabLayout = view.findViewById(R.id.entrant_list_tab_layout);
+        ViewPager2 viewPager = view.findViewById(R.id.entrant_list_view_pager);
+
+        OrganizerEntrantListPagerAdapter adapter = new OrganizerEntrantListPagerAdapter(requireActivity());
+        viewPager.setAdapter(adapter);
+
+        new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
+            switch (position) {
+                case 0: tab.setText("joined"); break;
+                case 1: tab.setText("Invited"); break;
+                case 2: tab.setText("Cancelled"); break;
+                case 3: tab.setText("Final"); break;
+            }
+        }).attach();
+
 
         //back button
         ImageButton backButton = view.findViewById(R.id.back_button);

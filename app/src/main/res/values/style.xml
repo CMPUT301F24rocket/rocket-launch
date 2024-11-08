@@ -26,6 +26,17 @@
         <item name="android:gravity">center</item>
     </style>
 
+    <!--Style for Sub Headers B-->
+    <style name="SubHeaderStyleB">
+        <item name="android:padding">25sp</item>
+        <item name="android:textSize">25sp</item>
+        <item name="android:textColor">@color/gunmetal</item>
+        <item name="android:background">@color/desert_sand</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:gravity">center</item>
+    </style>
+
     <!--Style for Bottom Navigation bar-->
     <style name="BottomNavBarStyle">
 

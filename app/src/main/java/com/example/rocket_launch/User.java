@@ -18,87 +18,148 @@ public class User {
     private String userPhoneNumber;
     private Image profilePhoto;
     private String userFacility;
-
     private Location location;
     private Roles roles;
     private Boolean notificationPreferences;
-    private List<String> eventsJoined;
-
     private List<String> notifications;
 
-    public List<String> getNotifications() {return notifications;}
+    // event data
+    private List<String> eventsRegistered;
+    private List<String> eventsWaitlisted;
+    private List<String> eventsCreated;
 
-    public void setNotifications(List<String> notifications) {
-        this.notifications = notifications;
+
+    public User() {
+        this.roles = new Roles();
+        this.eventsRegistered = new ArrayList<>();
+        this.eventsWaitlisted = new ArrayList<>();
+        this.eventsCreated = new ArrayList<>();
+        this.notifications = new ArrayList<>();
+
+        this.userName = "";
+        this.userEmail = "";
+        this.userPhoneNumber = "";
+        this.userFacility = "";
     }
 
-    public void addNotification(String notification){
-        notifications.add(notification);
+    // Username
+    String getUserName() {
+        return this.userName;
+    }
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 
-    public void addEvent(String eventID){
-        eventsJoined.add(eventID);
+    // user email
+    String getUserEmail() {
+        return this.userEmail;
+    }
+    public void setUserEmail(String userEmail) {
+        this.userEmail = userEmail;
     }
 
-
-    public List<String> getEventsJoined() {
-        return eventsJoined;
+    // user phone number
+    String getUserPhoneNumber() {
+        return this.userPhoneNumber;
+    }
+    public void setUserPhoneNumber(String userPhoneNumber) {
+        this.userPhoneNumber = userPhoneNumber;
     }
 
-    //get user profile information
-    String getUserName() {return this.userName;}
-    String getUserEmail() {return this.userEmail;}
-    String getUserPhoneNumber() {return this.userPhoneNumber;}
-    Image getProfilePhoto() {return this.profilePhoto;}
-    String getUserFacility(){return  this.userFacility;}
+    // profile photo
+    Image getProfilePhoto() {
+        return this.profilePhoto;
+    }
+    public void setProfilePhoto(Image profilePhoto){
+        this.profilePhoto = profilePhoto;
+    }
 
-    //set user profile information
-    public void setUserName(String userName) {this.userName = userName;}
-    public void setUserEmail(String userEmail) {this.userEmail = userEmail;}
-    public void setUserPhoneNumber(String userPhoneNumber) {this.userPhoneNumber = userPhoneNumber;}
-    public void setProfilePhoto(Image profilePhoto){this.profilePhoto = profilePhoto;}
-    public void setUserFacility(String userFacility){this.userFacility = userFacility;}
+    // facility
+    String getUserFacility(){
+        return this.userFacility;
+    }
+    public void setUserFacility(String userFacility){
+        this.userFacility = userFacility;
+    }
 
-    //user Location Data
-
-
-    //Android ID
-    String getAndroid_id() {return this.android_id;}
+    // android id
+    String getAndroid_id() {
+        return this.android_id;
+    }
     public void setAndroid_id(String android_id) {
         this.android_id = android_id;
     }
 
-    //User Roles
-    public User() {
-        this.roles = new Roles();
-        this.eventsJoined = new ArrayList<>();
-        this.notifications = new ArrayList<>();
-    }
+    // roles
     public Roles getRoles() {
         return roles;
     }
-
     public void setRoles(Roles roles) {
         this.roles = roles;
     }
 
-    public Boolean isEntrant() {
-        return this.roles.isEntrant();
+    // notifications
+    public List<String> getNotifications() {
+        return notifications;
+    }
+    public void setNotifications(List<String> notifications) {
+        this.notifications = notifications;
+    }
+    public void addNotification(String notification){
+        notifications.add(notification);
     }
 
-    public Boolean isOrganizer() {
-        return this.roles.isOrganizer();
-    }
-
-    public Boolean isAdmin() {
-        return this.roles.isAdmin();
-    }
-
+    // notification preferences
     public Boolean getNotificationPreferences() {
         return notificationPreferences;
     }
-
     public void setNotificationPreferences(Boolean notificationPreferences) {
         this.notificationPreferences = notificationPreferences;
+    }
+    public void optInNotifications() {
+        notificationPreferences = true;
+    }
+    public void optOutNotifications() {
+        notificationPreferences = false;
+    }
+
+    // events joined
+    public List<String> getEventsRegistered() {
+        return eventsRegistered;
+    }
+    public void setEventsRegistered(List<String> eventsRegistered) {
+        this.eventsRegistered = eventsRegistered;
+    }
+    public void addJoinedEvent(String id) {
+        eventsRegistered.add(id);
+    };
+    public void removeJoinedEvent(String id) {
+        eventsRegistered.remove(id);
+    }
+
+    // events created
+    public List<String> getEventsCreated() {
+        return eventsCreated;
+    }
+    public void setEventsCreated(List<String> eventsCreated) {
+        this.eventsCreated = eventsCreated;}
+    public void addCreatedEvent(String id) {eventsCreated.add(id);
+    };
+    public void removeCreatedEvent(String id) {
+        eventsCreated.remove(id);
+    }
+
+    // events waitlisted
+    public List<String> getEventsWaitlisted() {
+        return eventsWaitlisted;
+    }
+    public void setEventsWaitlisted(List<String> eventsWaitlisted) {
+        this.eventsWaitlisted = eventsWaitlisted;
+    }
+    public void addWaitlistEvent(String id) {
+        eventsWaitlisted.add(id);
+    }
+    public void removeWaitlistEvent(String id) {
+        eventsWaitlisted.remove(id);
     }
 }

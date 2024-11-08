@@ -55,7 +55,7 @@ public class NotificationsFragment extends Fragment {
 
         notificationSettingsButton = view.findViewById(R.id.notification_settings_button);
         notificationSettingsButton.setOnClickListener(v -> {
-            NotificationPreferencesFragment notifPreferences = new NotificationPreferencesFragment(user.getNotificationPreferences(), usersDB.getUserRef().document(androidId));
+            NotificationPreferencesFragment notifPreferences = new NotificationPreferencesFragment(user.getNotificationPreferences(), usersDB.getUsersRef().document(androidId));
             notifPreferences.setOnSuccessListener(new NotificationPreferencesFragment.onSuccessListener() {
                 @Override
                 public void onSuccess() {

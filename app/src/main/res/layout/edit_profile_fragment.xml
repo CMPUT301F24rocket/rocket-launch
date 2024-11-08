@@ -41,17 +41,25 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
             <Button
-                android:id="@+id/edit_profile_picture_button"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:id="@+id/change_profile_picture_button"
                 style="@style/ButtonStyleB"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
                 android:text="Edit Profile Picture" />
             <Button
-                android:id="@+id/edit_profile_picture_gen_btn"
-                android:layout_width="match_parent"
-
+                android:id="@+id/generate_profile_picture_button"
                 style="@style/ButtonStyleB"
-                android:text="generate" />
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Generate Picture" />
+
+            <!-- Button to Delete Profile Picture -->
+            <Button
+                android:id="@+id/delete_profile_picture_button"
+                style="@style/ButtonStyleB"
+                android:layout_width="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Delete Picture" />
 
         </LinearLayout>
     </LinearLayout>

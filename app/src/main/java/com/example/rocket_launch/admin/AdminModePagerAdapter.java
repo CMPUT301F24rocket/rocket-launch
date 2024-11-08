@@ -1,11 +1,9 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.admin;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
-
-import com.example.rocket_launch.AdminEventsFragment;
 
 public class AdminModePagerAdapter extends FragmentStateAdapter {
 

@@ -1,4 +1,4 @@
-package com.example.rocket_launch.nav_fragments;
+package com.example.rocket_launch.entrant;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -13,49 +13,37 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.rocket_launch.SelectRolesFragment;
-import com.example.rocket_launch.User;
-import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.organizer_event_details.CreateNewEventFragment;
-import com.example.rocket_launch.organizer_event_details.CreatedEventDetailsFragment;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventArrayAdapter;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
+import com.example.rocket_launch.User;
+import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.organizer_event_details.CreatedEventDetailsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreateEventFragment extends Fragment {
-    FloatingActionButton addNewEventButton;
+public class EntrantViewRegisteredListFragment extends Fragment {
     private EventsDB eventsDB;
     private UsersDB usersDB;
     private ListView listView;
     private EventArrayAdapter adapter;
-    private ArrayList<Event> events = new ArrayList<>();
-
-    public CreateEventFragment() {
-        // Required empty public constructor
-    }
-
+    private ArrayList<Event> events;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_create_event, container, false);
-
-        //Setting up list view and eventDB
-        listView = view.findViewById(R.id.organizer_created_events_list);
+        View view = inflater.inflate(R.layout.view_list, container, false);
+        listView = view.findViewById(R.id.view_list_listview);
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
+        events = new ArrayList<>();
         adapter = new EventArrayAdapter(requireContext(), events);
         listView.setAdapter(adapter);
-        fetchEvents();
 
-        //clicking on a event
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             Event clickedEvent = events.get(position);
 
@@ -64,32 +52,17 @@ public class CreateEventFragment extends Fragment {
             openClickedEvent(clickedEventDetailsFragment);
         });
 
-        //Set up button to open CreateNewEventFragment
-        addNewEventButton = view.findViewById(R.id.add_new_event_button);
-        addNewEventButton.setOnClickListener(v -> {
-            openCreateNewEventFragment();
-        });
+        requireActivity().getSupportFragmentManager().addOnBackStackChangedListener(this::fetchEvents);
+
+        fetchEvents();
 
         return view;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        //TODO:
-        // - View Entrant map
-    }
-
-    private void openCreateNewEventFragment(){
-        CreateNewEventFragment createNewEventFragment = new CreateNewEventFragment();
-
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_frame, createNewEventFragment)
-                .addToBackStack("")
-                .commit();
+    public void onResume() {
+        super.onResume();
+        fetchEvents();
     }
 
     private void openClickedEvent(CreatedEventDetailsFragment clickedEventDetailsFragment){
@@ -101,7 +74,7 @@ public class CreateEventFragment extends Fragment {
                 .commit();
     }
 
-    private void fetchEvents(){
+    private void fetchEvents() {
         String androidID = Settings.Secure
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
@@ -109,14 +82,14 @@ public class CreateEventFragment extends Fragment {
             public void onSuccess(DocumentSnapshot documentSnapshot) {
                 User user = documentSnapshot.toObject(User.class);
                 assert user != null;
-                List<String> events = user.getEventsCreated();
+                List<String> events = user.getEventsRegistered();
                 if (events != null) {
                     eventsDB.getAllEventsInList(events, new OnSuccessListener<List<Event>>() {
                         @Override
                         public void onSuccess(List<Event> events) {
                             //update list adapter data with fetched events
-                            CreateEventFragment.this.events.clear();
-                            CreateEventFragment.this.events.addAll(events);
+                            EntrantViewRegisteredListFragment.this.events.clear();
+                            EntrantViewRegisteredListFragment.this.events.addAll(events);
                             adapter.notifyDataSetChanged();
                         }
                     }, new OnFailureListener(){

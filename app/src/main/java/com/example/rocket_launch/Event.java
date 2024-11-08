@@ -1,6 +1,12 @@
 package com.example.rocket_launch;
 
+import android.graphics.Bitmap;
 import android.media.Image;
+import android.util.Log;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,7 +26,6 @@ public class Event {
     private int maxWaitlistSize; // Integer
 
     public Event(){
-
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -30,7 +35,10 @@ public class Event {
     public void setGeolocationRequired(boolean geolocationRequired){this.geolocationRequired = geolocationRequired;}
     public void setStartTime(Calendar startTime){this.startTime = startTime;}
     public void setEndTime(Calendar endTime){this.endTime = endTime;}
-    public void setParticipants(int participants){this.participants = participants;}
+    public void setParticipants(Integer participants) {
+        this.participants = (participants != null) ? participants : 0; // Default to 0 if participants is null
+    }
+
     public void setPhoto(Image photo){this.photo = photo;}
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
@@ -50,7 +58,6 @@ public class Event {
         this.maxWaitlistSize = maxWaitlistSize;
     }
 
-
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;
     }
@@ -58,6 +65,8 @@ public class Event {
     public void addToWaitingList(String userID){
         waitingList.add(userID);
     }
+
+    public void removeFromWaitingList(String userID) {waitingList.remove(userID);}
 
     public List<String> getWaitingList() {
         return waitingList;
@@ -83,6 +92,8 @@ public class Event {
 
     public boolean getGeolocationRequired() {return geolocationRequired;}
 
+    // public boolean isGeolocationRequired() {return geolocationRequired;}
+
     public Calendar getStartTime() {
         return startTime;
     }
@@ -93,5 +104,40 @@ public class Event {
 
     public int getParticipants() {
         return participants;
+    }
+
+    public boolean canJoinWaitingList(){
+        return waitingList.size() < maxWaitlistSize;
+    }
+
+    public boolean acceptInvitation(String userID) {
+        return waitingList.contains(userID) && participants < capacity;
+    }
+
+    public void declineInvitation(String userID) {
+        removeFromWaitingList(userID);
+    }
+
+
+    public Bitmap generateQRCode() {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        try {
+            // Adjust the width and height of the QR code as needed
+            int width = 500, height = 500;
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+
+            com.google.zxing.common.BitMatrix bitMatrix = qrCodeWriter.encode(getEventID(), BarcodeFormat.QR_CODE, width, height);
+
+            // Convert the BitMatrix into a bitmap
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? android.graphics.Color.BLACK : android.graphics.Color.WHITE);
+                }
+            }
+            return bitmap;
+        } catch (WriterException e) {
+            Log.e("error creating qr code", e.toString());
+        }
+        return null;
     }
 }

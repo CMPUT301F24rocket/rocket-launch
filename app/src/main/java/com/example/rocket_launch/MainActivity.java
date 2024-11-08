@@ -14,6 +14,7 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.rocket_launch.admin.AdminModeActivity;
 import com.example.rocket_launch.nav_fragments.CreateEventFragment;
 import com.example.rocket_launch.nav_fragments.NotificationsFragment;
 import com.example.rocket_launch.nav_fragments.UserEventsFragment;
@@ -23,8 +24,6 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
@@ -73,7 +72,14 @@ public class MainActivity extends AppCompatActivity {
                     usersDB.addUser(androidID, user);
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     DocumentReference userRef = db.collection("user_info").document(androidID);  // Reference the collection
-                    new SelectRolesFragment(user.getRoles(), userRef).show(getSupportFragmentManager(), "Create New User");
+                    SelectRolesFragment frag = new SelectRolesFragment(user.getRoles(), userRef);
+                    frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {
+                        @Override
+                        public void onSuccess() {
+                            setupNavBar(user.getRoles());
+                        }
+                    });
+                    frag.show(getSupportFragmentManager(), "Create New User");
                 }
             }
         }, e -> Log.w("Firebase", "Error getting user", e));
@@ -81,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     // check if the user has the admin role and navigate to AdminModeActivity if true
     private void checkUserRole(User user) {
-        if (user.isAdmin()) {
+        if (user.getRoles().isAdmin()) {
             Intent intent = new Intent(this, AdminModeActivity.class);
             startActivity(intent);
             finish();
@@ -134,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         if (roles.isAdmin()) {
             bottomNav.setSelectedItemId(R.id.navigation_home);
         } else if (roles.isOrganizer()) {
-            bottomNav.setSelectedItemId(R.id.navigation_create_events);
+            //bottomNav.setSelectedItemId(R.id.navigation_create_events);
         } else if (roles.isEntrant()) {
             bottomNav.setSelectedItemId(R.id.navigation_user_events);
         }

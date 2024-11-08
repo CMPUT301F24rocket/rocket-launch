@@ -5,7 +5,7 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,18 +15,22 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocket_launch.Event;
+import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.firebase.firestore.DocumentSnapshot;
 
 
 public class CreatedEventDetailsFragment extends Fragment {
-    private String androidId;
-    private String eventId;
-    private FirebaseFirestore db;
+    private EventsDB eventsDB;
+    private Event event;
 
     public CreatedEventDetailsFragment() {
         // Required empty public constructor
+    }
+
+    public CreatedEventDetailsFragment(Event event) {
+        this.event = event;
     }
 
     @Override
@@ -35,10 +39,8 @@ public class CreatedEventDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_created_event_details, container, false);
 
-        androidId = Settings.Secure.getString((requireContext()).getContentResolver(), Settings.Secure.ANDROID_ID);
-        eventId = getArguments().getString("eventID");
-        loadEventFromID(androidId, eventId);
-
+        TextView eventName = view.findViewById(R.id.organizer_event_details_name);
+        eventName.setText(event.getName());
         //back button
         ImageButton backButton = view.findViewById(R.id.organizer_event_details_back_button);
         backButton.setOnClickListener(v -> closeFragment());
@@ -69,7 +71,7 @@ public class CreatedEventDetailsFragment extends Fragment {
 
         //View QR Code Button
         viewEventQrCodeButton.setOnClickListener(v -> {
-            OrganizerViewQrCodeFragment organizerViewQrCodeFragment = new OrganizerViewQrCodeFragment();
+            OrganizerViewQrCodeFragment organizerViewQrCodeFragment = new OrganizerViewQrCodeFragment(event);
             pressButton(organizerViewQrCodeFragment);
         });
 
@@ -91,32 +93,6 @@ public class CreatedEventDetailsFragment extends Fragment {
         if (getArguments() != null) {
 
         }
-    }
-
-    //Loading Event based on a organizer's event by eventID
-    //use this code in following fragments to display specific information
-    private void loadEventFromID(String androidId, String eventId){
-        db = FirebaseFirestore.getInstance();
-        DocumentReference eventRef = db.collection("organizer_events")
-                .document(androidId)
-                .collection("events")
-                .document(eventId);
-
-        eventRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()){
-                Event event = documentSnapshot.toObject(Event.class);
-
-                if (event != null){
-                    //display event name in menu
-                    TextView eventName = getView().findViewById(R.id.organizer_event_details_name);
-                    eventName.setText(event.getName());
-                }
-            } else {
-                Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Error loading event", Toast.LENGTH_SHORT).show();
-        });
     }
 
     private void pressButton(Fragment fragment){
