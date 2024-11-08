@@ -44,7 +44,7 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {
             switch (position) {
-                case 0: tab.setText("joined"); break;
+                case 0: tab.setText("Waitlist"); break;
                 case 1: tab.setText("Invited"); break;
                 case 2: tab.setText("Cancelled"); break;
                 case 3: tab.setText("Final"); break;

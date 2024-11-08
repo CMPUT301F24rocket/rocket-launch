@@ -15,11 +15,11 @@ public class OrganizerEntrantListPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0: return new EntrantListViewAllFragment();
+            case 0: return new EntrantListViewWaitlistFragment();
             case 1: return new EntrantListViewInvitedFragment();
             case 2: return new EntrantListViewCancelledFragment();
             case 3: return new EntrantListViewFinalFragment();
-            default: return new EntrantListViewAllFragment();
+            default: return new EntrantListViewWaitlistFragment();
         }
     }
 
