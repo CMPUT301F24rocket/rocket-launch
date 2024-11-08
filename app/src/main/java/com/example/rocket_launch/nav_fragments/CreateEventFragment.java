@@ -12,7 +12,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.rocket_launch.CreateNewEventFragment;
+import com.example.rocket_launch.organizer_event_details.CreateNewEventFragment;
 import com.example.rocket_launch.organizer_event_details.CreatedEventDetailsFragment;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventArrayAdapter;

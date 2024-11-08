@@ -23,7 +23,7 @@
 
         <!-- Specify android:exported attribute for each activity -->
         <activity
-            android:name=".AdminModeActivity"
+            android:name=".admin.AdminModeActivity"
             android:exported="false" />
         <activity
             android:name=".EventDetailsActivity"
