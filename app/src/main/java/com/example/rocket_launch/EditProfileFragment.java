@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -34,6 +35,7 @@ public class EditProfileFragment extends Fragment {
     private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
     private LinearLayout facilityLayout;
     private ImageView profileImageView;
+    private Button changeProfilePictureButton, deleteProfilePictureButton;
     private FirebaseFirestore db;
     private DocumentReference userRef;
     private String androidID;
@@ -41,10 +43,6 @@ public class EditProfileFragment extends Fragment {
     private Roles roles;
 
     private static final String TAG = "EditProfileFragment";
-
-    public EditProfileFragment() {
-        // Required empty public constructor
-    }
 
 
     @Override
@@ -66,95 +64,144 @@ public class EditProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.edit_profile_fragment, container, false);
 
-        // Initialize Text Editing fields
+        // Initialize UI components
         nameEditText = view.findViewById(R.id.edit_user_name);
         emailEditText = view.findViewById(R.id.edit_user_email);
         phoneEditText = view.findViewById(R.id.edit_user_phone);
         facilityEditText = view.findViewById(R.id.edit_user_facility);
         profileImageView = view.findViewById(R.id.profile_image_view);
+        changeProfilePictureButton = view.findViewById(R.id.change_profile_picture_button);
+        deleteProfilePictureButton = view.findViewById(R.id.delete_profile_picture_button);
+        facilityLayout = view.findViewById(R.id.display_edit_profile_facility);
 
         Button saveButton = view.findViewById(R.id.save_profile_edit_button);
         Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
-        Button editProfilePictureButton = view.findViewById(R.id.edit_profile_picture_button);
         Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
+        Button generateProfileButton = view.findViewById(R.id.generate_profile_picture_button);
+        generateProfileButton.setOnClickListener(v ->
+                Toast.makeText(requireContext(), "Implementation in progress...", Toast.LENGTH_SHORT).show()
+        );
 
-        facilityLayout = view.findViewById(R.id.display_edit_profile_facility);
-
-        // Load existing user details and profile picture into fields
+        // Load existing user details
         loadUserDetails();
 
+        // Set up button listeners
         saveButton.setOnClickListener(v -> updateUserDetails());
         cancelButton.setOnClickListener(v -> closeFragment());
-        editProfilePictureButton.setOnClickListener(v -> openGallery());
-        editRolesButton.setOnClickListener(v -> {
-            SelectRolesFragment frag = new SelectRolesFragment(roles, userRef);
-            // make sure we reload fragment if data possibly changed
-            frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {
-                @Override
-                public void onSuccess() {
-                    loadUserDetails();
-                }
-            });
-            frag.show(getParentFragmentManager(), "Create New User");
-        });
+        changeProfilePictureButton.setOnClickListener(v -> openGallery());
+        deleteProfilePictureButton.setOnClickListener(v -> deleteProfilePhoto());
+        editRolesButton.setOnClickListener(v -> openRolesFragment());
 
         return view;
     }
 
-    // Open the gallery to select a profile picture
+    // Open the gallery to select a new profile picture
+    private void openGallery() {
+        Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        galleryLauncher.launch(intent);
+    }
+
+    // Handle the result from the gallery
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == getActivity().RESULT_OK) {
+                if (result.getResultCode() == requireActivity().RESULT_OK) {
                     Intent data = result.getData();
                     if (data != null) {
                         imageUri = data.getData();
                         try {
                             Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-                            String savedPath = saveImageLocally(bitmap); // Save the selected image locally
-                            saveImagePathToFirestore(savedPath); // Save the local path to Firestore
-                            loadProfileImage(savedPath); // Display the saved image
+                            String savedPath = saveImageLocally(bitmap);
+                            saveImagePathToFirestore(savedPath);
+                            loadProfileImage(savedPath);
                         } catch (IOException e) {
-                            Log.e(TAG, "Error saving image locally", e);
+                            Log.e(TAG, "Error saving image", e);
                         }
                     }
                 }
             }
     );
 
-    private void openGallery() {
-        Intent intent = new Intent();
-        intent.setType("image/*");
-        galleryLauncher.launch(intent);
-    }
-
     // Save the image locally and return the file path
     private String saveImageLocally(Bitmap bitmap) throws IOException {
         File storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File imageFile = new File(storageDir, "profile_" + androidID + ".jpg");
+
+        // Use a unique filename based on the current timestamp
+        String fileName = "profile_" + androidID + "_" + System.currentTimeMillis() + ".jpg";
+        File imageFile = new File(storageDir, fileName);
 
         try (FileOutputStream out = new FileOutputStream(imageFile)) {
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
         }
-
         return imageFile.getAbsolutePath();
     }
 
-    // Save the local file path in Firestore
+
+    // Save the image path to Firestore
     private void saveImagePathToFirestore(String imagePath) {
         if (userRef != null) {
             userRef.update("profilePhotoPath", imagePath)
-                    .addOnSuccessListener(aVoid -> Snackbar.make(requireView(), "Profile photo updated locally", Snackbar.LENGTH_SHORT).show())
-                    .addOnFailureListener(e -> Log.e(TAG, "Failed to save image path to Firestore", e));
+                    .addOnSuccessListener(aVoid -> Snackbar.make(requireView(), "Profile photo updated", Snackbar.LENGTH_SHORT).show())
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to save image path", e));
         }
     }
 
-    // Load the profile picture from a local file path using Glide
-    private void loadProfileImage(String imagePath) {
-        Glide.with(this).load(new File(imagePath)).into(profileImageView);
+    private void handleImageSelection(Uri uri) {
+        try {
+            Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+            String savedPath = saveImageLocally(bitmap); // Save the new image
+            updateProfilePhotoPath(savedPath); // Update Firestore with the new path
+            loadProfileImage(savedPath); // Load the new image into the ImageView
+        } catch (IOException e) {
+            Log.e(TAG, "Error handling image selection", e);
+        }
     }
 
-    // Load user data from Firestore and set it in the EditText fields
+    // Load the profile picture using Glide
+    private void loadProfileImage(String imagePath) {
+        if (imagePath != null && !imagePath.isEmpty()) {
+            Glide.with(this)
+                    .load(new File(imagePath))
+                    .skipMemoryCache(true) // Bypass Glide's memory cache
+                    .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE) // Bypass disk cache
+                    .into(profileImageView);
+        } else {
+            // Set default image if no path is available
+            profileImageView.setImageResource(R.drawable.default_image);
+        }
+    }
+
+
+    private void updateProfilePhotoPath(String imagePath) {
+        if (userRef != null) {
+            userRef.update("profilePhotoPath", imagePath)
+                    .addOnSuccessListener(aVoid -> {
+                        Log.d(TAG, "Profile photo path updated in Firestore");
+                        Snackbar.make(requireView(), "Profile photo updated", Snackbar.LENGTH_SHORT).show();
+                    })
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to update profile photo path in Firestore", e));
+        }
+    }
+
+    private void deleteProfilePhoto() {
+        if (userRef != null) {
+            // Remove the profile photo path from Firestore
+            userRef.update("profilePhotoPath", null)
+                    .addOnSuccessListener(aVoid -> {
+                        profileImageView.setImageResource(R.drawable.default_image);
+                        Snackbar.make(requireView(), "Profile photo removed from cloud", Snackbar.LENGTH_SHORT).show();
+                        Log.d(TAG, "Profile photo path set to null in Firestore");
+                    })
+                    .addOnFailureListener(e -> Log.e(TAG, "Failed to update Firestore", e));
+        } else {
+            Log.e(TAG, "User reference is null, cannot delete photo");
+        }
+    }
+
+
+
+
+    // Load user details from Firestore
     private void loadUserDetails() {
         if (userRef != null) {
             userRef.get().addOnSuccessListener(documentSnapshot -> {
@@ -163,32 +210,24 @@ public class EditProfileFragment extends Fragment {
                     emailEditText.setText(documentSnapshot.getString("userEmail"));
                     phoneEditText.setText(documentSnapshot.getString("userPhoneNumber"));
 
-                    // load user roles
                     roles = documentSnapshot.get("roles", Roles.class);
-                    assert roles != null;
-                    if (roles.isOrganizer()) {
+                    if (roles != null && roles.isOrganizer()) {
                         facilityLayout.setVisibility(View.VISIBLE);
                         facilityEditText.setText(documentSnapshot.getString("userFacility"));
-                    }
-                    else {
+                    } else {
                         facilityLayout.setVisibility(View.GONE);
                     }
 
-                    // Load profile picture from local path if it exists
                     String profilePhotoPath = documentSnapshot.getString("profilePhotoPath");
                     if (profilePhotoPath != null) {
                         loadProfileImage(profilePhotoPath);
                     }
-                } else {
-                    Log.e(TAG, "User document does not exist.");
                 }
             }).addOnFailureListener(e -> Log.e(TAG, "Error loading user data", e));
-        } else {
-            Log.e(TAG, "userRef is null.");
         }
     }
 
-    // Update user data in Firestore
+    // Update user details in Firestore
     private void updateUserDetails() {
         if (userRef != null) {
             String updatedName = nameEditText.getText().toString();
@@ -205,17 +244,22 @@ public class EditProfileFragment extends Fragment {
                         closeFragment();
                     })
                     .addOnFailureListener(e -> Log.e(TAG, "Error updating user data", e));
-        } else {
-            Log.e(TAG, "userRef is null, cannot update.");
         }
     }
 
-    // Close the fragment and return to the main profile view
+    // Close the fragment
     private void closeFragment() {
-        UserProfileFragment userFragment= new UserProfileFragment();
+        UserProfileFragment userFragment = new UserProfileFragment();
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.edit_profile_fragment_container, userFragment)
                 .commit();
+    }
+
+    // Open the Roles Fragment
+    private void openRolesFragment() {
+        SelectRolesFragment frag = new SelectRolesFragment(roles, userRef);
+        frag.setOnSuccessListener(() -> loadUserDetails());
+        frag.show(getParentFragmentManager(), "Edit Roles");
     }
 }
