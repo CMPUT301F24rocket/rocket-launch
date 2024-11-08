@@ -72,7 +72,14 @@ public class MainActivity extends AppCompatActivity {
                     usersDB.addUser(androidID, user);
                     FirebaseFirestore db = FirebaseFirestore.getInstance();
                     DocumentReference userRef = db.collection("user_info").document(androidID);  // Reference the collection
-                    new SelectRolesFragment(user.getRoles(), userRef).show(getSupportFragmentManager(), "Create New User");
+                    SelectRolesFragment frag = new SelectRolesFragment(user.getRoles(), userRef);
+                    frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {
+                        @Override
+                        public void onSuccess() {
+                            setupNavBar(user.getRoles());
+                        }
+                    });
+                    frag.show(getSupportFragmentManager(), "Create New User");
                 }
             }
         }, e -> Log.w("Firebase", "Error getting user", e));

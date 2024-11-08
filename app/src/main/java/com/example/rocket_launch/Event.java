@@ -1,6 +1,12 @@
 package com.example.rocket_launch;
 
+import android.graphics.Bitmap;
 import android.media.Image;
+import android.util.Log;
+
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.google.zxing.qrcode.QRCodeWriter;
 
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,7 +26,6 @@ public class Event {
     private int maxWaitlistSize; // Integer
 
     public Event(){
-
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -96,5 +101,27 @@ public class Event {
 
     public int getParticipants() {
         return participants;
+    }
+
+    public Bitmap generateQRCode() {
+        QRCodeWriter qrCodeWriter = new QRCodeWriter();
+        try {
+            // Adjust the width and height of the QR code as needed
+            int width = 500, height = 500;
+            Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
+
+            com.google.zxing.common.BitMatrix bitMatrix = qrCodeWriter.encode(getEventID(), BarcodeFormat.QR_CODE, width, height);
+
+            // Convert the BitMatrix into a bitmap
+            for (int x = 0; x < width; x++) {
+                for (int y = 0; y < height; y++) {
+                    bitmap.setPixel(x, y, bitMatrix.get(x, y) ? android.graphics.Color.BLACK : android.graphics.Color.WHITE);
+                }
+            }
+            return bitmap;
+        } catch (WriterException e) {
+            Log.e("error creating qr code", e.toString());
+        }
+        return null;
     }
 }

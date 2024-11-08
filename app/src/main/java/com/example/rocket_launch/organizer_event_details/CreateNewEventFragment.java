@@ -11,10 +11,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Event;
-import com.example.rocket_launch.EventDB;
+import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
+import com.example.rocket_launch.SelectRolesFragment;
+import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.nav_fragments.CreateEventFragment;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -22,7 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CreateNewEventFragment extends Fragment {
-    private FirebaseFirestore db;
+    private UsersDB usersDB;
+    private EventsDB eventsDB;
     private String androidId;
 
     interface AddEventDialogListener {
@@ -33,11 +38,17 @@ public class CreateNewEventFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public interface onSuccessListener {
+        void onAddSuccess();
+    }
+    private onSuccessListener listener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = FirebaseFirestore.getInstance();
+        usersDB = new UsersDB();
+        eventsDB = new EventsDB();
         androidId = Settings.Secure.getString((requireContext()).getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
@@ -83,7 +94,6 @@ public class CreateNewEventFragment extends Fragment {
                 try {
                     int capacityInt = Integer.parseInt(capacityInput);
                     createEvent(view);
-                    closeFragment();
                 } catch (NumberFormatException e){
                     capacity.setError("Enter a valid Integer");
                 }
@@ -107,7 +117,6 @@ public class CreateNewEventFragment extends Fragment {
         CheckBox checkBoxWaitlistLimit = view.findViewById(R.id.checkbox_waitlist_limit);
 
         Event event = new Event();
-        Map<String, Object> eventMap = new HashMap<>();
 
         //getting input from edit fields
         String eventName = editEventName.getText().toString();
@@ -124,15 +133,10 @@ public class CreateNewEventFragment extends Fragment {
         event.setGeolocationRequired(geolocationRequired);
         event.setWaitingList();
 
-        eventMap.put("name", eventName);
-        eventMap.put("capacity", eventCapacity);
-        eventMap.put("waitlist_size_limit", waitlistSizeLimit);
-        eventMap.put("description", eventDescription);
-        eventMap.put("geolocation_required", geolocationRequired);
-        eventMap.put("waitingList", new ArrayList<>());
+        eventsDB.addCreatedEvent(event, androidId, v -> {
+            closeFragment();
+        });
 
-        EventDB eventDB = new EventDB(getContext());
-        eventDB.addEvent(event);
 
     }
 
