@@ -35,7 +35,10 @@ public class Event {
     public void setGeolocationRequired(boolean geolocationRequired){this.geolocationRequired = geolocationRequired;}
     public void setStartTime(Calendar startTime){this.startTime = startTime;}
     public void setEndTime(Calendar endTime){this.endTime = endTime;}
-    public void setParticipants(int participants){this.participants = participants;}
+    public void setParticipants(Integer participants) {
+        this.participants = (participants != null) ? participants : 0; // Default to 0 if participants is null
+    }
+
     public void setPhoto(Image photo){this.photo = photo;}
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
@@ -55,7 +58,6 @@ public class Event {
         this.maxWaitlistSize = maxWaitlistSize;
     }
 
-
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;
     }
@@ -63,6 +65,8 @@ public class Event {
     public void addToWaitingList(String userID){
         waitingList.add(userID);
     }
+
+    public void removeFromWaitingList(String userID) {waitingList.remove(userID);}
 
     public List<String> getWaitingList() {
         return waitingList;
@@ -88,6 +92,8 @@ public class Event {
 
     public boolean getGeolocationRequired() {return geolocationRequired;}
 
+    public boolean isGeolocationRequired() {return geolocationRequired;}
+
     public Calendar getStartTime() {
         return startTime;
     }
@@ -99,6 +105,19 @@ public class Event {
     public int getParticipants() {
         return participants;
     }
+
+    public boolean canJoinWaitingList(){
+        return waitingList.size() < maxWaitlistSize;
+    }
+
+    public boolean acceptInvitation(String userID) {
+        return waitingList.contains(userID) && participants < capacity;
+    }
+
+    public void declineInvitation(String userID) {
+        removeFromWaitingList(userID);
+    }
+
 
     public Bitmap generateQRCode() {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
