@@ -18,14 +18,14 @@ public class User {
     private String userPhoneNumber;
     private Image profilePhoto;
     private String userFacility;
-
     private Location location;
     private Roles roles;
     private Boolean notificationPreferences;
+    private List<String> notifications;
+
+    // event data
     private List<String> eventsJoined;
     private List<String> eventsCreated;
-
-    private List<String> notifications;
 
 
     public User() {
