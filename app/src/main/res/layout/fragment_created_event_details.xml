@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".CreatedEventDetailsFragment">
+    tools:context=".organizer_event_details.CreatedEventDetailsFragment">
 
     <TextView 
         android:id="@+id/organizer_event_details_header"
@@ -54,7 +54,7 @@
             android:text="View Entrant Map"/>
 
         <Button
-            android:id="@+id/see_event_qr_code_button"
+            android:id="@+id/view_event_qr_code_button"
             style="@style/OrganizerEventDetailsButtons"
             android:text="View Event QR Code"/>
 

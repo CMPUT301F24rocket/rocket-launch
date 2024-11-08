@@ -9,13 +9,11 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.CreateNewEventFragment;
-import com.example.rocket_launch.CreatedEventDetailsFragment;
+import com.example.rocket_launch.organizer_event_details.CreatedEventDetailsFragment;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventArrayAdapter;
 import com.example.rocket_launch.EventDB;

@@ -9,9 +9,9 @@
     <string name="title_user_events">User Events</string>
 
     <!--Activity Header Titles-->
-    <string name="user_profile_header">UserProfileActivity</string>
-    <string name="user_events_header">UserEventsActivity</string>
-    <string name="notifications_header">NotificationsActivity</string>
+    <string name="user_profile_header">User Profile</string>
+    <string name="user_events_header">My Events</string>
+    <string name="notifications_header">Notifications</string>
     <string name="main_header">MainActivity</string>
     <string name="create_event_header">Created Events</string>
     <!-- TODO: Remove or change this placeholder text -->
