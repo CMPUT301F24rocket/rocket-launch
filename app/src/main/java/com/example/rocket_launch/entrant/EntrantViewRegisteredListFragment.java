@@ -32,7 +32,7 @@ public class EntrantViewRegisteredListFragment extends Fragment {
     private UsersDB usersDB;
     private ListView listView;
     private EventArrayAdapter adapter;
-    private ArrayList<Event> events = new ArrayList<>();
+    private ArrayList<Event> events;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -40,7 +40,9 @@ public class EntrantViewRegisteredListFragment extends Fragment {
         listView = view.findViewById(R.id.view_list_listview);
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
+        events = new ArrayList<>();
         adapter = new EventArrayAdapter(requireContext(), events);
+        listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             Event clickedEvent = events.get(position);
@@ -53,6 +55,12 @@ public class EntrantViewRegisteredListFragment extends Fragment {
         fetchEvents();
 
         return view;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        fetchEvents();
     }
 
     private void openClickedEvent(CreatedEventDetailsFragment clickedEventDetailsFragment){

@@ -49,6 +49,7 @@ public class UserEventsFragment extends Fragment {
             }
         }).attach();
 
+        // add by qr code button
         addEvent = view.findViewById(R.id.open_qr_scan_button);
         addEvent.setOnClickListener(l -> scanQR());
 
