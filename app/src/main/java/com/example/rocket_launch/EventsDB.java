@@ -36,6 +36,7 @@ public class EventsDB {
     public void addCreatedEvent(Event event, String androidId, OnCompleteListener<Void> onCompleteListener) {
         UsersDB usersDB = new UsersDB();
         DocumentReference newEventRef = eventsRef.document();
+        event.setEventID(newEventRef.getId());
         newEventRef.set(event)
                 .addOnSuccessListener(documentReference -> {
                     usersDB.addCreatedEvent(androidId, newEventRef.getId());

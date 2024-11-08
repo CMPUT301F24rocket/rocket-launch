@@ -58,19 +58,8 @@ public class CreateEventFragment extends Fragment {
         //clicking on a event
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             Event clickedEvent = events.get(position);
-            String eventId = clickedEvent.getEventID();
 
-            CreatedEventDetailsFragment clickedEventDetailsFragment = new CreatedEventDetailsFragment();
-            Bundle bundle = new Bundle();
-
-            bundle.putString("eventID", eventId);
-            clickedEventDetailsFragment.setArguments(bundle);
-
-            if (eventId == null){
-                Log.e("Event Click", "EventID is null for event at position: " + position);
-            } else{
-                Log.d("Event Click", "EventID is not null at position" + position);
-            }
+            CreatedEventDetailsFragment clickedEventDetailsFragment = new CreatedEventDetailsFragment(clickedEvent);
 
             openClickedEvent(clickedEventDetailsFragment);
         });

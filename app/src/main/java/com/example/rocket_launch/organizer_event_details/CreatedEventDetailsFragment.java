@@ -5,7 +5,6 @@ import android.os.Bundle;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -19,17 +18,19 @@ import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class CreatedEventDetailsFragment extends Fragment {
-    private String eventId;
     private EventsDB eventsDB;
+    private Event event;
 
     public CreatedEventDetailsFragment() {
         // Required empty public constructor
+    }
+
+    public CreatedEventDetailsFragment(Event event) {
+        this.event = event;
     }
 
     @Override
@@ -37,10 +38,9 @@ public class CreatedEventDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_created_event_details, container, false);
-        eventId = getArguments().getString("eventID");
-        eventsDB = new EventsDB();
-        loadEventFromID(eventId);
 
+        TextView eventName = view.findViewById(R.id.organizer_event_details_name);
+        eventName.setText(event.getName());
         //back button
         ImageButton backButton = view.findViewById(R.id.organizer_event_details_back_button);
         backButton.setOnClickListener(v -> closeFragment());
@@ -71,7 +71,7 @@ public class CreatedEventDetailsFragment extends Fragment {
 
         //View QR Code Button
         viewEventQrCodeButton.setOnClickListener(v -> {
-            OrganizerViewQrCodeFragment organizerViewQrCodeFragment = new OrganizerViewQrCodeFragment();
+            OrganizerViewQrCodeFragment organizerViewQrCodeFragment = new OrganizerViewQrCodeFragment(event);
             pressButton(organizerViewQrCodeFragment);
         });
 
@@ -93,27 +93,6 @@ public class CreatedEventDetailsFragment extends Fragment {
         if (getArguments() != null) {
 
         }
-    }
-
-
-    //use this code in following fragments to display specific information
-    private void loadEventFromID(String eventId){
-        eventsDB.loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()){
-                    Event event = documentSnapshot.toObject(Event.class);
-
-                    if (event != null){
-                        //display event name in menu
-                        TextView eventName = getView().findViewById(R.id.organizer_event_details_name);
-                        eventName.setText(event.getName());
-                    }
-                } else {
-                    Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
-                }
-            }
-        }, e -> Log.w("Firebase", "Error getting user", e));
     }
 
     private void pressButton(Fragment fragment){
