@@ -23,6 +23,7 @@ import com.journeyapps.barcodescanner.ScanOptions;
 public class UserEventsFragment extends Fragment {
 
     FloatingActionButton addEvent;
+    ActivityResultLauncher<ScanOptions> QRLauncher;
 
     public UserEventsFragment() {
         // Required empty public constructor
@@ -41,15 +42,16 @@ public class UserEventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // I hope this works?
+        QRLauncher = registerForActivityResult(new ScanContract(), result -> {
+            if (result.getContents() != null) {
+                AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                builder.setTitle("result");
+                builder.show();
+            }
+        });
     }
 
-    ActivityResultLauncher<ScanOptions> QRLauncher = registerForActivityResult(new ScanContract(), result -> {
-        if (result.getContents() != null) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("result");
-            builder.show();
-        }
-    });
 
     private void scanQR() {
         ScanOptions options = new ScanOptions();
