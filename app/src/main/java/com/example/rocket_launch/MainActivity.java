@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
         if (roles.isAdmin()) {
             bottomNav.setSelectedItemId(R.id.navigation_home);
         } else if (roles.isOrganizer()) {
-            bottomNav.setSelectedItemId(R.id.navigation_create_events);
+            //bottomNav.setSelectedItemId(R.id.navigation_create_events);
         } else if (roles.isEntrant()) {
             bottomNav.setSelectedItemId(R.id.navigation_user_events);
         }

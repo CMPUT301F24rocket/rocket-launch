@@ -116,6 +116,12 @@ public class User {
     public void setNotificationPreferences(Boolean notificationPreferences) {
         this.notificationPreferences = notificationPreferences;
     }
+    public void optInNotifications() {
+        notificationPreferences = true;
+    }
+    public void optOutNotifications() {
+        notificationPreferences = false;
+    }
 
     // events joined
     public List<String> getEventsRegistered() {
