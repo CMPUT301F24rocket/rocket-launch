@@ -12,16 +12,11 @@ import java.util.Map;
 
 public class UsersDB {
     private FirebaseFirestore db;
-
-    public CollectionReference getUserRef() {
-        return userRef;
-    }
-
-    private CollectionReference userRef;
+    private CollectionReference usersRef;
 
     public UsersDB() {
         db = FirebaseFirestore.getInstance();
-        userRef = db.collection("user_info");  // Reference the collection
+        usersRef = db.collection("user_info");  // Reference the collection
     }
 
     public void addUser(String androidId, User user) {
@@ -34,7 +29,7 @@ public class UsersDB {
         userMap.put("userFacility", user.getUserFacility());
         userMap.put("roles", user.getRoles());
 
-        userRef.document(androidId).set(userMap)
+        usersRef.document(androidId).set(userMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -50,7 +45,7 @@ public class UsersDB {
     }
 
     public void getUser(String androidId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
-        userRef.document(androidId).get()
+        usersRef.document(androidId).get()
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
@@ -65,7 +60,7 @@ public class UsersDB {
         userMap.put("userFacility", user.getUserFacility());
         userMap.put("roles", user.getRoles());
 
-        userRef.document(androidId).update(userMap)
+        usersRef.document(androidId).update(userMap)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void unused) {
@@ -81,10 +76,13 @@ public class UsersDB {
     }
 
     public void addNotificationToUser(String androidID, String notification){
-        userRef.document(androidID).update("notifications", FieldValue.arrayUnion(notification))
+        usersRef.document(androidID).update("notifications", FieldValue.arrayUnion(notification))
                 .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added"))
                 .addOnFailureListener(e -> Log.w("Firebase", "notfication added failed", e));
 
     }
 
+    public CollectionReference getUsersRef() {
+        return usersRef;
+    }
 }
