@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
     // check if the user has the admin role and navigate to AdminModeActivity if true
     private void checkUserRole(User user) {
-        if (user.isAdmin()) {
+        if (user.getRoles().isAdmin()) {
             Intent intent = new Intent(this, AdminModeActivity.class);
             startActivity(intent);
             finish();
