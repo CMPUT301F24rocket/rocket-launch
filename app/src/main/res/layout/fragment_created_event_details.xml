@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".organizer_event_details.CreatedEventDetailsFragment">
+
+    <TextView 
+        android:id="@+id/organizer_event_details_header"
+        style="@style/SubHeaderStyle"
+        android:text="Organizer Event Details" 
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/organizer_event_details_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:orientation="vertical"
+        android:padding="20dp">
+        
+        <ImageButton
+            android:id="@+id/organizer_event_details_back_button"
+            style="@style/ArrowLeftButtonStyle" />
+
+        <TextView
+            android:id="@+id/organizer_event_details_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Event Name"
+            android:textSize="25sp"
+            android:padding="15sp"
+            android:gravity="center"/>
+
+        <Button
+            android:id="@+id/edit_event_page_button"
+            style="@style/OrganizerEventDetailsButtons"
+            android:text="Edit Event page"/>
+
+        <Button
+            android:id="@+id/view_entrant_lists_button"
+            style="@style/OrganizerEventDetailsButtons"
+            android:text="View Entrant Lists"/>
+
+        <Button
+            android:id="@+id/view_entrant_map_button"
+            style="@style/OrganizerEventDetailsButtons"
+            android:text="View Entrant Map"/>
+
+        <Button
+            android:id="@+id/view_event_qr_code_button"
+            style="@style/OrganizerEventDetailsButtons"
+            android:text="View Event QR Code"/>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

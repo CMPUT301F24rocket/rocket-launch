@@ -5,15 +5,21 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.HashMap;
 import java.util.Map;
 
 public class UsersDB {
     private FirebaseFirestore db;
+
+    public CollectionReference getUserRef() {
+        return userRef;
+    }
+
     private CollectionReference userRef;
 
-    UsersDB() {
+    public UsersDB() {
         db = FirebaseFirestore.getInstance();
         userRef = db.collection("user_info");  // Reference the collection
     }
@@ -72,6 +78,13 @@ public class UsersDB {
                         Log.w("Firebase", "Error updating user", e);
                     }
                 });
+    }
+
+    public void addNotificationToUser(String androidID, String notification){
+        userRef.document(androidID).update("notifications", FieldValue.arrayUnion(notification))
+                .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added"))
+                .addOnFailureListener(e -> Log.w("Firebase", "notfication added failed", e));
+
     }
 
 }

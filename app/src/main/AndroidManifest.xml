@@ -2,6 +2,14 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!-- Add Internet Permission for Firebase connectivity -->
+    <uses-permission android:name="android.permission.INTERNET" />
+
+    <!--  add permissions required for QR scanner  -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -12,27 +20,34 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Rocketlaunch"
         tools:targetApi="31">
+
+        <!-- Specify android:exported attribute for each activity -->
+        <activity
+            android:name=".AdminModeActivity"
+            android:exported="false" />
         <activity
             android:name=".EventDetailsActivity"
             android:exported="false" />
         <activity
-            android:name=".UserProfileActivity"
+            android:name=".nav_fragments.UserProfileFragment"
             android:exported="true" />
         <activity
-            android:name=".NotificationsActivity"
+            android:name=".nav_fragments.NotificationsFragment"
             android:exported="true" />
         <activity
-            android:name=".CreateEventActivity"
+            android:name=".nav_fragments.CreateEventFragment"
             android:exported="true" />
         <activity
-            android:name=".UserEventsActivity"
+            android:name=".nav_fragments.UserEventsFragment"
             android:exported="true" />
+        <activity
+            android:name=".QRCodeScannerActivity"
+            android:exported="true"/>
         <activity
             android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>

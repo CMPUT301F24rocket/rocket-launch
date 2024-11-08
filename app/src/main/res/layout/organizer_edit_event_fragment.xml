@@ -6,16 +6,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:padding="16dp">
 
-    <!-- Header for Edit Profile -->
     <TextView
-        android:id="@+id/create_new_event_header"
+        android:id="@+id/edit_event_header"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp"
         android:background="@color/tea_green"
         android:textSize="25sp"
         android:textAlignment="center"
-        android:text="Create New Event"
+        android:text="Edit Event Details"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -28,12 +27,12 @@
         android:layout_height="280dp"
         tools:srcCompat="@tools:sample/backgrounds/scenic"
 
-        app:layout_constraintTop_toBottomOf="@id/create_new_event_header"
+        app:layout_constraintTop_toBottomOf="@id/edit_event_header"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
     <ImageButton
-        android:id="@+id/cancel_create_new_event_button"
+        android:id="@+id/cancel_edit_event_button"
         style="@style/XButtonStyle"
 
         app:layout_constraintTop_toTopOf="parent"
@@ -158,11 +157,11 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/create_event_button"
+        android:id="@+id/save_event_edits_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         style="@style/ButtonStyleB"
-        android:text="Create Event"
+        android:text="Save Changes"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
