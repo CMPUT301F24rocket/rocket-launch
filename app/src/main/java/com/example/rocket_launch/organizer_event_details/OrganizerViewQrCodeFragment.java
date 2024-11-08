@@ -44,7 +44,7 @@ public class OrganizerViewQrCodeFragment extends Fragment {
         backButton.setOnClickListener(v -> closeFragment());
 
         // QR code
-        ImageView qrCodeImage = view.findViewById(R.id.qrCodeImageView);
+        ImageView qrCodeImage = view.findViewById(R.id.event_qr_code);
         Bitmap qrCodeBitmap = event.generateQRCode();
         if (qrCodeBitmap != null) {
             qrCodeImage.setImageBitmap(qrCodeBitmap);
