@@ -41,7 +41,7 @@
             android:name=".nav_fragments.UserEventsFragment"
             android:exported="true" />
         <activity
-            android:name=".QRCodeScannerActivity"
+            android:name=".entrant.QRCodeScannerActivity"
             android:exported="true"/>
         <activity
             android:name=".MainActivity"

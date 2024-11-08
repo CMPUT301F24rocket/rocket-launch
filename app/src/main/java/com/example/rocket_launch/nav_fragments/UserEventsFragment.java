@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.EventDetailsFragment;
-import com.example.rocket_launch.QRCodeScannerActivity;
+import com.example.rocket_launch.entrant.QRCodeScannerActivity;
 import com.example.rocket_launch.R;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.journeyapps.barcodescanner.ScanContract;
