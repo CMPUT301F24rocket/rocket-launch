@@ -1,7 +1,8 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.entrant;
 
 import android.widget.Button;
 
+import com.example.rocket_launch.R;
 import com.journeyapps.barcodescanner.CaptureActivity;
 import com.journeyapps.barcodescanner.DecoratedBarcodeView;
 

@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 public class EventDetailsFragment extends Fragment {
 
@@ -93,7 +92,7 @@ public class EventDetailsFragment extends Fragment {
         eventsdb.addUserToWaitingList(eventId, androidId);
 
         // add to user's joined events
-        usersDB.addJoinedEvent(androidId, eventId);
+        usersDB.addWaitlistedEvent(androidId, eventId);
         closeFragment();
     }
 

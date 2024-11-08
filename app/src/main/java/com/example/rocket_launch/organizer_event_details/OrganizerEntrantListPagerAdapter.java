@@ -5,11 +5,6 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.rocket_launch.admin.AdminEventsFragment;
-import com.example.rocket_launch.admin.AdminFacilitiesFragment;
-import com.example.rocket_launch.admin.AdminImagesFragment;
-import com.example.rocket_launch.admin.AdminProfilesFragment;
-import com.example.rocket_launch.admin.AdminQRDataFragment;
 
 public class OrganizerEntrantListPagerAdapter extends FragmentStateAdapter {
     public OrganizerEntrantListPagerAdapter(@NonNull FragmentActivity fragmentActivity) {

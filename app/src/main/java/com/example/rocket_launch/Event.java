@@ -92,7 +92,7 @@ public class Event {
 
     public boolean getGeolocationRequired() {return geolocationRequired;}
 
-    public boolean isGeolocationRequired() {return geolocationRequired;}
+    // public boolean isGeolocationRequired() {return geolocationRequired;}
 
     public Calendar getStartTime() {
         return startTime;
