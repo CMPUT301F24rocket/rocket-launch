@@ -1,23 +1,16 @@
 package com.example.rocket_launch;
 
-import android.util.Log;
-
-import com.google.firebase.firestore.FirebaseFirestore;
-
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class waitingListTest {
-    private EventDB db;
+    private EventsDB db;
     private String testEventID = "testEvent";
     private String testUserID = "testUser";
 
     @Before
     public void setUp() {
-        db = new EventDB();
+        db = new EventsDB();
         Event newEvent = new Event(testEventID, "Test Event1", "Testing adding event", null, null, 20, null, 3);
         //db.addEvent(newEvent);
     }

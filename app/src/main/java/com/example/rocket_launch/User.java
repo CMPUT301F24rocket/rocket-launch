@@ -31,6 +31,7 @@ public class User {
     public User() {
         this.roles = new Roles();
         this.eventsJoined = new ArrayList<>();
+        this.eventsCreated = new ArrayList<>();
         this.notifications = new ArrayList<>();
     }
 

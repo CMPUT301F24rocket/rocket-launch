@@ -20,7 +20,6 @@ public class Event {
     private int maxWaitlistSize; // Integer
 
     public Event(){
-
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}

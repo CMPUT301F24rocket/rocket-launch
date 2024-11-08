@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,15 +16,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.rocket_launch.Event;
+import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
 public class CreatedEventDetailsFragment extends Fragment {
-    private String androidId;
     private String eventId;
-    private FirebaseFirestore db;
+    private EventsDB eventsDB;
 
     public CreatedEventDetailsFragment() {
         // Required empty public constructor
@@ -34,10 +37,9 @@ public class CreatedEventDetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_created_event_details, container, false);
-
-        androidId = Settings.Secure.getString((requireContext()).getContentResolver(), Settings.Secure.ANDROID_ID);
         eventId = getArguments().getString("eventID");
-        loadEventFromID(androidId, eventId);
+        eventsDB = new EventsDB();
+        loadEventFromID(eventId);
 
         //back button
         ImageButton backButton = view.findViewById(R.id.organizer_event_details_back_button);
@@ -93,30 +95,25 @@ public class CreatedEventDetailsFragment extends Fragment {
         }
     }
 
-    //Loading Event based on a organizer's event by eventID
+
     //use this code in following fragments to display specific information
-    private void loadEventFromID(String androidId, String eventId){
-        db = FirebaseFirestore.getInstance();
-        DocumentReference eventRef = db.collection("organizer_events")
-                .document(androidId)
-                .collection("events")
-                .document(eventId);
+    private void loadEventFromID(String eventId){
+        eventsDB.loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()){
+                    Event event = documentSnapshot.toObject(Event.class);
 
-        eventRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()){
-                Event event = documentSnapshot.toObject(Event.class);
-
-                if (event != null){
-                    //display event name in menu
-                    TextView eventName = getView().findViewById(R.id.organizer_event_details_name);
-                    eventName.setText(event.getName());
+                    if (event != null){
+                        //display event name in menu
+                        TextView eventName = getView().findViewById(R.id.organizer_event_details_name);
+                        eventName.setText(event.getName());
+                    }
+                } else {
+                    Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
                 }
-            } else {
-                Toast.makeText(getContext(), "Event not found", Toast.LENGTH_SHORT).show();
             }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Error loading event", Toast.LENGTH_SHORT).show();
-        });
+        }, e -> Log.w("Firebase", "Error getting user", e));
     }
 
     private void pressButton(Fragment fragment){
