@@ -39,7 +39,7 @@ public class CreateNewEventFragment extends Fragment {
     }
 
     public interface onSuccessListener {
-        void onSuccess();
+        void onAddSuccess();
     }
     private onSuccessListener listener;
 
@@ -141,12 +141,6 @@ public class CreateNewEventFragment extends Fragment {
 
     // Close the fragment and return to the Created Activities view
     private void closeFragment() {
-        CreateEventFragment createEventFragment = new CreateEventFragment();
-
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_frame, createEventFragment)
-                .commit();
+        requireActivity().getSupportFragmentManager().popBackStack();
     }
 }

@@ -105,6 +105,7 @@ public class CreateEventFragment extends Fragment {
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
                 .replace(R.id.fragment_frame, createNewEventFragment)
+                .addToBackStack("")
                 .commit();
     }
 
@@ -126,12 +127,12 @@ public class CreateEventFragment extends Fragment {
                 assert user != null;
                 List<String> events = user.getEventsCreated();
                 if (events != null) {
-                    CreateEventFragment.this.events.clear();
-                    eventsDB.getAllEventsInList(events, new OnSuccessListener<Event>() {
+                    eventsDB.getAllEventsInList(events, new OnSuccessListener<List<Event>>() {
                         @Override
-                        public void onSuccess(Event event) {
+                        public void onSuccess(List<Event> events) {
                             //update list adapter data with fetched events
-                            CreateEventFragment.this.events.add(event);
+                            CreateEventFragment.this.events.clear();
+                            CreateEventFragment.this.events.addAll(events);
                             adapter.notifyDataSetChanged();
                         }
                     }, new OnFailureListener(){

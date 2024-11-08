@@ -8,11 +8,15 @@ import androidx.annotation.NonNull;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.checkerframework.checker.units.qual.A;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -107,19 +111,26 @@ public class EventsDB {
     }
 
     //get all events for a specific organizer via androidID
-    public void getAllEventsInList(List<String> eventsList, OnSuccessListener<Event> onSuccess, OnFailureListener onFailure) {
+    public void getAllEventsInList(List<String> eventsList, OnSuccessListener<List<Event>> onSuccess, OnFailureListener onFailure) {
+        List<Event> events = new ArrayList<>();
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
         for (String docTitle : eventsList) {
-            eventsRef.document(docTitle).get()
-                    .addOnCompleteListener(task -> {
-                        DocumentSnapshot doc = task.getResult();
-                        if (doc != null && doc.exists()) {
-                            Event event = doc.toObject(Event.class);
-                            if (event != null) {
-                                onSuccess.onSuccess(event);
-                            }
-                        }
-                    });
+            Task<DocumentSnapshot> task = eventsRef.document(docTitle).get();
+            tasks.add(task);
         }
+        Tasks.whenAllComplete(tasks).addOnCompleteListener(l -> {
+           for (Task<DocumentSnapshot> task : tasks) {
+               if (task.isSuccessful()) {
+                   DocumentSnapshot doc = task.getResult();
+                   if (doc != null && doc.exists()) {
+                       Event event = doc.toObject(Event.class);
+                       if (event != null) {
+                           events.add(event);
+                       }
+                   }
+               }
+           }
+        }).addOnCompleteListener(v -> {onSuccess.onSuccess(events);});
     }
 }
 
