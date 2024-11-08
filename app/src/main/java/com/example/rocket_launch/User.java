@@ -25,6 +25,7 @@ public class User {
 
     // event data
     private List<String> eventsJoined;
+    private List<String> eventsWaitlisted;
     private List<String> eventsCreated;
 
 
@@ -76,11 +77,17 @@ public class User {
     public List<String> getEventsJoined() {return eventsJoined;}
     public void setEventsJoined(List<String> eventsJoined) {this.eventsJoined = eventsJoined;}
     public void addJoinedEvent(String id) {eventsJoined.add(id);};
-    public void removeJoinedEvent(String id) {eventsJoined.remove(id);};
+    public void removeJoinedEvent(String id) {eventsJoined.remove(id);}
 
     // events created
     public List<String> getEventsCreated() {return eventsCreated;}
     public void setEventsCreated(List<String> eventsCreated) {this.eventsCreated = eventsCreated;}
     public void addCreatedEvent(String id) {eventsCreated.add(id);};
-    public void removeCreatedEvent(String id) {eventsCreated.remove(id);};
+    public void removeCreatedEvent(String id) {eventsCreated.remove(id);}
+
+    // events waitlisted
+    public List<String> getEventsWaitlisted() {return eventsWaitlisted;}
+    public void setEventsWaitlisted(List<String> eventsWaitlisted) {this.eventsWaitlisted = eventsWaitlisted;}
+    public void addWaitlistEvent(String id) {eventsWaitlisted.add(id);}
+    public void removeWaitlistEvent(String id) {eventsWaitlisted.remove(id);}
 }
