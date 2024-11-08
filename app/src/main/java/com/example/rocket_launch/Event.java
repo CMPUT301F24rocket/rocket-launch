@@ -30,7 +30,10 @@ public class Event {
     public void setGeolocationRequired(boolean geolocationRequired){this.geolocationRequired = geolocationRequired;}
     public void setStartTime(Calendar startTime){this.startTime = startTime;}
     public void setEndTime(Calendar endTime){this.endTime = endTime;}
-    public void setParticipants(int participants){this.participants = participants;}
+    public void setParticipants(Integer participants) {
+        this.participants = (participants != null) ? participants : 0; // Default to 0 if participants is null
+    }
+
     public void setPhoto(Image photo){this.photo = photo;}
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}

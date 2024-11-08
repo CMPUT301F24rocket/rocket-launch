@@ -55,9 +55,22 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
 
-    testImplementation(libs.junit)
-    androidTestImplementation(libs.ext.junit)
-    androidTestImplementation(libs.espresso.core)
+   // testImplementation(libs.junit)
+   // androidTestImplementation(libs.ext.junit)
+    //androidTestImplementation(libs.espresso.core)
+
+
+
+    // Espresso and JUnit for UI Testing
+    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("com.google.android.material:material:1.6.1")
+    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    //testImplementation 'junit:junit:4.13.2'
+    testImplementation ("org.junit.jupiter:junit-jupiter-api:5.0.1")
+    testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine:5.0.1")
+    androidTestImplementation ("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
+
 
 
 }
