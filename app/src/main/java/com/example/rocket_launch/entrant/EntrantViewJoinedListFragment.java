@@ -1,4 +1,4 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.entrant;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -9,7 +9,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.rocket_launch.R;
 
-public class EntrantListViewAllFragment extends Fragment {
+public class EntrantViewJoinedListFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.view_list, container, false);
