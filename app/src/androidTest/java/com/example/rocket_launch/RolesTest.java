@@ -8,51 +8,36 @@ import org.junit.Test;
 public class RolesTest {
 
     /**
-     * Is user entrant
+     * Test types of roles
      */
-    @Test
-    public void testEntrantRole() {
-        Roles roles = new Roles();
-        roles.setEntrant(true);
 
-        User user = new User();
-        user.setRoles(roles);
-
-        assertTrue(user.isEntrant());
-        assertFalse(user.isOrganizer());
-        assertFalse(user.isAdmin());
-    }
-
-    /**
-     * Is user admin
-     */
     @Test
     public void testAdminRole() {
-        Roles roles = new Roles();
-        roles.setAdmin(true);
+            Roles roles = new Roles();
+            roles.setAdmin(true);
+            assertTrue(roles.isAdmin());
+            assertFalse(roles.isEntrant());
+            assertFalse(roles.isOrganizer());
+        }
 
-        User user = new User();
-        user.setRoles(roles);
+        @Test
+        public void testEntrantRole() {
+            Roles roles = new Roles();
+            roles.setEntrant(true);
+            assertTrue(roles.isEntrant());
+            assertFalse(roles.isAdmin());
+            assertFalse(roles.isOrganizer());
+        }
 
-        assertTrue(user.isAdmin());
-        assertFalse(user.isEntrant());
-        assertFalse(user.isOrganizer());
+        @Test
+        public void testOrganizerRole() {
+            Roles roles = new Roles();
+            roles.setOrganizer(true);
+            assertTrue(roles.isOrganizer());
+            assertFalse(roles.isAdmin());
+            assertFalse(roles.isEntrant());
+        }
+
     }
 
-    /**
-     * Is user organizer
-     */
-    @Test
-    public void testOrganizerRole() {
-        Roles roles = new Roles();
-        roles.setOrganizer(true);
-
-        User user = new User();
-        user.setRoles(roles);
-
-        assertTrue(user.isOrganizer());
-        assertFalse(user.isEntrant());
-        assertFalse(user.isAdmin());
-    }
-}
 
