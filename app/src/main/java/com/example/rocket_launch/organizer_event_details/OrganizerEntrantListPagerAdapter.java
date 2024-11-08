@@ -20,15 +20,16 @@ public class OrganizerEntrantListPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
         switch (position) {
-            case 0: return new EntrantListViewInvitedFragment();
-            case 1: return new EntrantListViewCancelledFragment();
-            case 2: return new EntrantListViewFinalFragment();
-            default: return new EntrantListViewInvitedFragment();
+            case 0: return new EntrantListViewAllFragment();
+            case 1: return new EntrantListViewInvitedFragment();
+            case 2: return new EntrantListViewCancelledFragment();
+            case 3: return new EntrantListViewFinalFragment();
+            default: return new EntrantListViewAllFragment();
         }
     }
 
     @Override
     public int getItemCount() {
-        return 3; // total number of tabs
+        return 4; // total number of tabs
     }
 }
