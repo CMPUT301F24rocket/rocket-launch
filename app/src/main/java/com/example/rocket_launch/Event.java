@@ -58,7 +58,6 @@ public class Event {
         this.maxWaitlistSize = maxWaitlistSize;
     }
 
-
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;
     }
@@ -66,6 +65,7 @@ public class Event {
     public void addToWaitingList(String userID){
         waitingList.add(userID);
     }
+
     public void removeFromWaitingList(String userID) {waitingList.remove(userID);}
 
     public List<String> getWaitingList() {
@@ -92,6 +92,8 @@ public class Event {
 
     public boolean getGeolocationRequired() {return geolocationRequired;}
 
+    public boolean isGeolocationRequired() {return geolocationRequired;}
+
     public Calendar getStartTime() {
         return startTime;
     }
@@ -102,6 +104,18 @@ public class Event {
 
     public int getParticipants() {
         return participants;
+    }
+
+    public boolean canJoinWaitingList(){
+        return waitingList.size() < maxWaitlistSize;
+    }
+
+    public boolean acceptInvitation(String userID) {
+        return waitingList.contains(userID) && participants < capacity;
+    }
+
+    public void declineInvitation(String userID) {
+        removeFromWaitingList(userID);
     }
 
 
