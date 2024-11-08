@@ -1,8 +1,7 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.organizer_event_details;
 
 import android.os.Bundle;
 import android.provider.Settings;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,7 +11,14 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
+import com.example.rocket_launch.Event;
+import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.R;
+import com.example.rocket_launch.SelectRolesFragment;
+import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.nav_fragments.CreateEventFragment;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
@@ -20,7 +26,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class CreateNewEventFragment extends Fragment {
-    private FirebaseFirestore db;
+    private UsersDB usersDB;
+    private EventsDB eventsDB;
     private String androidId;
 
     interface AddEventDialogListener {
@@ -31,11 +38,17 @@ public class CreateNewEventFragment extends Fragment {
         // Required empty public constructor
     }
 
+    public interface onSuccessListener {
+        void onAddSuccess();
+    }
+    private onSuccessListener listener;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        db = FirebaseFirestore.getInstance();
+        usersDB = new UsersDB();
+        eventsDB = new EventsDB();
         androidId = Settings.Secure.getString((requireContext()).getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
@@ -46,7 +59,7 @@ public class CreateNewEventFragment extends Fragment {
         //Initializing Buttons
         ImageButton cancelButton = view.findViewById(R.id.cancel_create_new_event_button);
         ImageButton addEventPosterButton = view.findViewById(R.id.add_event_poster_button);
-        Button createEventButton = view.findViewById(R.id.save_event_edits_button);
+        Button createEventButton = view.findViewById(R.id.create_event_button);
 
         //hide setWaitlistLimit edit text field unless they check the setWaitlist box
         view.findViewById(R.id.edit_waitlist_limit_size).setVisibility(View.INVISIBLE);
@@ -68,10 +81,23 @@ public class CreateNewEventFragment extends Fragment {
         //If Buttons are pressed
         cancelButton.setOnClickListener(v -> closeFragment());
         addEventPosterButton.setOnClickListener(v ->{});
+
         //When Create Event Button is clicked
         createEventButton.setOnClickListener(v -> {
-            createEvent(view);
-            closeFragment();
+            //check if capacity is not null
+            EditText capacity = view.findViewById(R.id.edit_event_capacity);
+            String capacityInput = capacity.getText().toString().trim();
+
+            if (capacityInput.isEmpty()){
+                capacity.setError("Capacity cannot be empty");
+            } else {
+                try {
+                    int capacityInt = Integer.parseInt(capacityInput);
+                    createEvent(view);
+                } catch (NumberFormatException e){
+                    capacity.setError("Enter a valid Integer");
+                }
+            }
         });
 
         //TODO: choose event poster image
@@ -91,7 +117,6 @@ public class CreateNewEventFragment extends Fragment {
         CheckBox checkBoxWaitlistLimit = view.findViewById(R.id.checkbox_waitlist_limit);
 
         Event event = new Event();
-        Map<String, Object> eventMap = new HashMap<>();
 
         //getting input from edit fields
         String eventName = editEventName.getText().toString();
@@ -108,15 +133,10 @@ public class CreateNewEventFragment extends Fragment {
         event.setGeolocationRequired(geolocationRequired);
         event.setWaitingList();
 
-        eventMap.put("name", eventName);
-        eventMap.put("capacity", eventCapacity);
-        eventMap.put("waitlist_size_limit", waitlistSizeLimit);
-        eventMap.put("description", eventDescription);
-        eventMap.put("geolocation_required", geolocationRequired);
-        eventMap.put("waitingList", new ArrayList<>());
+        eventsDB.addCreatedEvent(event, androidId, v -> {
+            closeFragment();
+        });
 
-        EventDB eventDB = new EventDB(getContext());
-        eventDB.addEvent(event);
 
     }
 
