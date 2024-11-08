@@ -7,10 +7,7 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.model.mutation.ArrayTransformOperation;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class UsersDB {
     private FirebaseFirestore db;
@@ -22,15 +19,6 @@ public class UsersDB {
     }
 
     public void addUser(String androidId, User user) {
-//        Map<String, Object> userMap = new HashMap<>();
-//        userMap.put("android_id", androidId);
-//        userMap.put("userName", user.getUserName());
-//        userMap.put("userEmail", user.getUserEmail());
-//        userMap.put("userPhoneNumber", user.getUserPhoneNumber());
-//        userMap.put("profilePhoto", user.getProfilePhoto());
-//        userMap.put("userFacility", user.getUserFacility());
-//        userMap.put("roles", user.getRoles());
-
         usersRef.document(androidId).set(user)
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
@@ -50,31 +38,6 @@ public class UsersDB {
         usersRef.document(androidId).get()
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
-    }
-
-    public void updateUser(String androidId, User user){
-        Map<String, Object> userMap = new HashMap<>();
-        userMap.put("android_id", androidId);
-        userMap.put("userName", user.getUserName());
-        userMap.put("userEmail", user.getUserEmail());
-        userMap.put("userPhoneNumber", user.getUserPhoneNumber());
-        userMap.put("profilePhoto", user.getProfilePhoto());
-        userMap.put("userFacility", user.getUserFacility());
-        userMap.put("roles", user.getRoles());
-
-        usersRef.document(androidId).update(userMap)
-                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                    @Override
-                    public void onSuccess(Void unused) {
-                        Log.d("Firebase", "User added successfully");
-                    }
-                })
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(Exception e) {
-                        Log.w("Firebase", "Error updating user", e);
-                    }
-                });
     }
 
     public void addNotificationToUser(String androidID, String notification){
