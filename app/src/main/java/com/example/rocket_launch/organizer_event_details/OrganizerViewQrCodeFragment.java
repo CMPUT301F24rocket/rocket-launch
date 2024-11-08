@@ -14,14 +14,24 @@ import android.widget.ImageView;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.R;
 
-
+/**
+ * fragment that displays qr code to organizer
+ */
 public class OrganizerViewQrCodeFragment extends Fragment {
     Event event;
 
+    /**
+     * default constructor
+     */
     public OrganizerViewQrCodeFragment() {
         // Required empty public constructor
     }
 
+    /**
+     * constructor used for passing an event
+     * @param event
+     *  event of qr code to display
+     */
     public OrganizerViewQrCodeFragment(Event event) {
         this.event = event;
     }
@@ -53,7 +63,9 @@ public class OrganizerViewQrCodeFragment extends Fragment {
         return view;
     }
 
-    // Close the fragment and return to the Created Activities view
+    /**
+     * Close the fragment and return to the Created Activities view
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

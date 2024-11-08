@@ -30,6 +30,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
+/**
+ * fragment for organizer edit profile
+ */
 public class EditProfileFragment extends Fragment {
 
     private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
@@ -95,13 +98,17 @@ public class EditProfileFragment extends Fragment {
         return view;
     }
 
-    // Open the gallery to select a new profile picture
+    /**
+     * Open the gallery to select a new profile picture
+     */
     private void openGallery() {
         Intent intent = new Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         galleryLauncher.launch(intent);
     }
 
-    // Handle the result from the gallery
+    /**
+     * Handle the result from the gallery
+     */
     private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -122,7 +129,14 @@ public class EditProfileFragment extends Fragment {
             }
     );
 
-    // Save the image locally and return the file path
+    /**
+     * Save the image locally and return the file path
+     * @param bitmap
+     *  bitmap of image to save
+     * @return String of image path
+     * @throws IOException
+     *  if there was an error saving
+     */
     private String saveImageLocally(Bitmap bitmap) throws IOException {
         File storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
 
@@ -137,7 +151,11 @@ public class EditProfileFragment extends Fragment {
     }
 
 
-    // Save the image path to Firestore
+    /**
+     * Save the image path to Firestore
+     * @param imagePath
+     *  path to image in database
+     */
     private void saveImagePathToFirestore(String imagePath) {
         if (userRef != null) {
             userRef.update("profilePhotoPath", imagePath)
@@ -146,6 +164,11 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * handles image selection
+     * @param uri
+     *  resource identifier for image
+     */
     private void handleImageSelection(Uri uri) {
         try {
             Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
@@ -157,7 +180,11 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    // Load the profile picture using Glide
+    /**
+     * Load the profile picture using Glide
+     * @param imagePath
+     *  path to an image
+     */
     private void loadProfileImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
             Glide.with(this)
@@ -171,7 +198,11 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-
+    /**
+     * updates path to profile photo
+     * @param imagePath
+     *  path to profile photo to update
+     */
     private void updateProfilePhotoPath(String imagePath) {
         if (userRef != null) {
             userRef.update("profilePhotoPath", imagePath)
@@ -183,6 +214,9 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
+    /**
+     * deletes profile photo from database
+     */
     private void deleteProfilePhoto() {
         if (userRef != null) {
             // Remove the profile photo path from Firestore
@@ -198,10 +232,9 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-
-
-
-    // Load user details from Firestore
+    /**
+     * Load user details from Firestore
+     */
     private void loadUserDetails() {
         if (userRef != null) {
             userRef.get().addOnSuccessListener(documentSnapshot -> {
@@ -227,7 +260,9 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    // Update user details in Firestore
+    /**
+     * Update user details in Firestore
+     */
     private void updateUserDetails() {
         if (userRef != null) {
             String updatedName = nameEditText.getText().toString();
@@ -247,7 +282,9 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-    // Close the fragment
+    /**
+     * Close the fragment
+     */
     private void closeFragment() {
         UserProfileFragment userFragment = new UserProfileFragment();
         requireActivity().getSupportFragmentManager()
@@ -256,7 +293,9 @@ public class EditProfileFragment extends Fragment {
                 .commit();
     }
 
-    // Open the Roles Fragment
+    /**
+     * Open the Roles Fragment
+     */
     private void openRolesFragment() {
         SelectRolesFragment frag = new SelectRolesFragment(roles, userRef);
         frag.setOnSuccessListener(() -> loadUserDetails());

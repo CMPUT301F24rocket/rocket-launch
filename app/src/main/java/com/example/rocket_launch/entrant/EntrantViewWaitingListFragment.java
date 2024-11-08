@@ -27,6 +27,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * fragment used to view an event's waiting list
+ */
 public class EntrantViewWaitingListFragment extends Fragment {
     private EventsDB eventsDB;
     private UsersDB usersDB;
@@ -65,6 +68,11 @@ public class EntrantViewWaitingListFragment extends Fragment {
         fetchEvents();
     }
 
+    /**
+     * displays event details fragment. For use when event is clicked
+     * @param clickedEventDetailsFragment
+     *  fragment to go display
+     */
     private void openClickedEvent(CreatedEventDetailsFragment clickedEventDetailsFragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -74,6 +82,9 @@ public class EntrantViewWaitingListFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * gets all events that will be used in this fragment
+     */
     private void fetchEvents() {
         String androidID = Settings.Secure
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);

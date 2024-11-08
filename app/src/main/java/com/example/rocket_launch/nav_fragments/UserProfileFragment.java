@@ -24,6 +24,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+/**
+ * fragment for displaying all user profile information
+ */
 public class UserProfileFragment extends Fragment {
 
     private static final String TAG = "UserProfileFragment";
@@ -78,6 +81,9 @@ public class UserProfileFragment extends Fragment {
         fetchUserProfile();
     }
 
+    /**
+     * opens a fragment used for editing contents of a user's profile
+     */
     private void openEditProfileFragment() {
         Bundle bundle = new Bundle();
         bundle.putString("androidID", androidId);
@@ -96,6 +102,9 @@ public class UserProfileFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * function that gets and displays all contents of a user's profile
+     */
     private void fetchUserProfile() {
         db.collection("user_info")
                 .document(androidId)
@@ -131,7 +140,11 @@ public class UserProfileFragment extends Fragment {
                 });
     }
 
-
+    /**
+     * function that loads a user's profile photo
+     * @param imagePath
+     *  path to profile photo in database
+     */
     private void loadProfileImage(String imagePath) {
         Glide.with(this)
                 .load(imagePath)
@@ -140,8 +153,9 @@ public class UserProfileFragment extends Fragment {
     }
 
 
-
-
+    /**
+     * function used to update user interface if change occurred
+     */
     private void updateUI() {
         // Set the user details
         nameTextView.setText(currentName);

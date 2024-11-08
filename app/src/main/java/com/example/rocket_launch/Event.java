@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+
 public class Event {
     private String eventID;
     private String name;
@@ -23,6 +24,9 @@ public class Event {
     private int participants;
     private Image photo;
     private List<String> waitingList;
+    private List<String> cancelledEntrants;
+    private List<String> chosenEntrants;
+    private List<String> finalEntrants;
     private int maxWaitlistSize; // Integer
 
     public Event(){

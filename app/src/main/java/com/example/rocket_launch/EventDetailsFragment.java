@@ -14,6 +14,9 @@ import androidx.fragment.app.Fragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+/**
+ * fragment used to show details of an event
+ */
 public class EventDetailsFragment extends Fragment {
 
     String eventId;
@@ -27,11 +30,18 @@ public class EventDetailsFragment extends Fragment {
 
     Button joinWaitlistButton;
 
-
+    /**
+     * default constructor
+     */
     public EventDetailsFragment() {
         // needs to be empty
     }
 
+    /**
+     * constructor for passing an eventID
+     * @param eventId
+     *  id in database for an event
+     */
     public EventDetailsFragment(String eventId) {
         this.eventId = eventId;
     }
@@ -62,6 +72,9 @@ public class EventDetailsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * loads an event with eventId
+     */
     private void getEvent() {
         eventsdb.loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -83,6 +96,9 @@ public class EventDetailsFragment extends Fragment {
         });
     }
 
+    /**
+     * function to join waiting list and update databse accordingly
+     */
     private void joinWaitlist() {
         // get user id
         String androidId = Settings.Secure
@@ -96,6 +112,9 @@ public class EventDetailsFragment extends Fragment {
         closeFragment();
     }
 
+    /**
+     * closes fragment
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

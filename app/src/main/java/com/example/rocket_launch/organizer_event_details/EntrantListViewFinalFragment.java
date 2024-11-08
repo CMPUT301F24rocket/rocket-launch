@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment;
 
 import com.example.rocket_launch.R;
 
+/**
+ * fragment shown when the organizer wants to view a final list of entrants
+ */
 public class EntrantListViewFinalFragment  extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {

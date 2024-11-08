@@ -20,14 +20,17 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import com.journeyapps.barcodescanner.ScanContract;
 import com.journeyapps.barcodescanner.ScanOptions;
 
-import java.util.Objects;
-
-
+/**
+ * fragment used to display all events related to an entrant
+ */
 public class UserEventsFragment extends Fragment {
 
     FloatingActionButton addEvent;
     ActivityResultLauncher<ScanOptions> QRLauncher;
 
+    /**
+     * default constructor
+     */
     public UserEventsFragment() {
         // Required empty public constructor
     }
@@ -73,7 +76,9 @@ public class UserEventsFragment extends Fragment {
         });
     }
 
-
+    /**
+     * opens QR code scanner activity
+     */
     private void scanQR() {
         ScanOptions options = new ScanOptions();
         options.setOrientationLocked(true);

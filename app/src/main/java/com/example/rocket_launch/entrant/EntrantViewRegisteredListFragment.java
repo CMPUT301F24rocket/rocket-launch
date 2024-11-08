@@ -27,6 +27,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * fragment used for viewing list of all registered Entrants
+ */
 public class EntrantViewRegisteredListFragment extends Fragment {
     private EventsDB eventsDB;
     private UsersDB usersDB;
@@ -65,6 +68,11 @@ public class EntrantViewRegisteredListFragment extends Fragment {
         fetchEvents();
     }
 
+    /**
+     * displays event details fragment. For use when event is clicked
+     * @param clickedEventDetailsFragment
+     *  fragment to go display
+     */
     private void openClickedEvent(CreatedEventDetailsFragment clickedEventDetailsFragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
@@ -74,6 +82,9 @@ public class EntrantViewRegisteredListFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * gets all events that will be used in this fragment
+     */
     private void fetchEvents() {
         String androidID = Settings.Secure
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);

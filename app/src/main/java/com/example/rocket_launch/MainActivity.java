@@ -25,6 +25,9 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * main activity that gets loaded on startup
+ */
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
     BottomNavigationView bottomNav;
@@ -85,7 +88,11 @@ public class MainActivity extends AppCompatActivity {
         }, e -> Log.w("Firebase", "Error getting user", e));
     }
 
-    // check if the user has the admin role and navigate to AdminModeActivity if true
+    /**
+     * check if the user has the admin role and navigate to AdminModeActivity if true
+     * @param user
+     *  user to check for admin role
+     */
     private void checkUserRole(User user) {
         if (user.getRoles().isAdmin()) {
             Intent intent = new Intent(this, AdminModeActivity.class);
@@ -94,6 +101,11 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * function to properly set up navbar on load
+     * @param roles
+     *  a given user's roles
+     */
     private void setupNavBar(Roles roles) {
         bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {
             @Override
@@ -137,12 +149,9 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.navigation_create_events).setVisible(false);
         }
 
+        // likely not needed
         if (roles.isAdmin()) {
             bottomNav.setSelectedItemId(R.id.navigation_home);
-        } else if (roles.isOrganizer()) {
-            //bottomNav.setSelectedItemId(R.id.navigation_create_events);
-        } else if (roles.isEntrant()) {
-            bottomNav.setSelectedItemId(R.id.navigation_user_events);
         }
     }
 }

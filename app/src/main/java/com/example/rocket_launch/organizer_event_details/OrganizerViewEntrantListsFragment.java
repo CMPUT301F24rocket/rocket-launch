@@ -19,10 +19,12 @@ import java.util.Objects;
 
 public class OrganizerViewEntrantListsFragment extends Fragment {
 
+    /**
+     * Default constructor
+     */
     public OrganizerViewEntrantListsFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +61,9 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
         return view;
     }
 
-    // Close the fragment and return to the Created Activities view
+    /**
+     * Close the fragment and return to the Created Activities view
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

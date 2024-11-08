@@ -22,17 +22,31 @@ import org.checkerframework.checker.units.qual.A;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * class to help with firestore database
+ */
 public class EventsDB {
 
     private FirebaseFirestore db;
     private CollectionReference eventsRef;
 
+    /**
+     * constructor
+     */
     public EventsDB() {
         db = FirebaseFirestore.getInstance();
         eventsRef = db.collection("events");
     }
 
-
+    /**
+     * add a created event to database
+     * @param event
+     *  event to add
+     * @param androidId
+     *  androidId of who wants to add
+     * @param onCompleteListener
+     *  listener for what to do on completion
+     */
     public void addCreatedEvent(Event event, String androidId, OnCompleteListener<Void> onCompleteListener) {
         UsersDB usersDB = new UsersDB();
         DocumentReference newEventRef = eventsRef.document();
@@ -46,7 +60,13 @@ public class EventsDB {
                 .addOnCompleteListener(onCompleteListener);
     }
 
-    // Add user to waiting list and check max waiting list size
+    /**
+     * Add user to waiting list and check max waiting list size
+     * @param eventID
+     *  add user to event wit heventID
+     * @param userID
+     *  user to add to waitlist
+     */
     public void addUserToWaitingList(String eventID, String userID) {
         DocumentReference eventDocRef = eventsRef.document(eventID);
 
@@ -81,7 +101,13 @@ public class EventsDB {
         });
     }
 
-    // Remove user from waiting list
+    /**
+     * Remove user from waiting list
+     * @param eventID
+     *  id of event who's waitlist we want to remove from
+     * @param userID
+     *  id of user to remove from waitlist
+     */
     public void removeUserFromWaitingList(String eventID, String userID) {
         DocumentReference eventDocRef = eventsRef.document(eventID);
 
@@ -102,11 +128,21 @@ public class EventsDB {
 
     }
 
-    //TODO: Update Event
+    // TODO: update event
+    /**
+     * update eventDB
+     */
     public void updateEventDB() {
 
     }
 
+    /**
+     * loads a given event with eventID id
+     * @param id
+     *  id of event to load
+     * @param onSuccess
+     *  listener for what to do on successful load
+     */
     public void loadEvent(String id, OnSuccessListener<DocumentSnapshot> onSuccess) {
         eventsRef.document(id).get()
                 .addOnSuccessListener(onSuccess)
@@ -118,7 +154,15 @@ public class EventsDB {
                 });
     }
 
-    //get all events for a specific organizer via androidID
+    /**
+     * get all events for a specific organizer via androidID
+     * @param eventsList
+     *  list of events to get all from
+     * @param onSuccess
+     *  what to do on successful load
+     * @param onFailure
+     *  what to do on failed load
+     */
     public void getAllEventsInList(List<String> eventsList, OnSuccessListener<List<Event>> onSuccess, OnFailureListener onFailure) {
         List<Event> events = new ArrayList<>();
         List<Task<DocumentSnapshot>> tasks = new ArrayList<>();

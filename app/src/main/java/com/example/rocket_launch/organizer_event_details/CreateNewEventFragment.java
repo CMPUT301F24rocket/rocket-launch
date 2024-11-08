@@ -25,29 +25,26 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+
+/**
+ * fragment displayed to an organizer when they want to create an event
+ */
 public class CreateNewEventFragment extends Fragment {
-    private UsersDB usersDB;
     private EventsDB eventsDB;
     private String androidId;
 
-    interface AddEventDialogListener {
-        void addEvent(Event event);
-    }
-
+    /**
+     * default constructor
+     */
     public CreateNewEventFragment(){
         // Required empty public constructor
     }
 
-    public interface onSuccessListener {
-        void onAddSuccess();
-    }
-    private onSuccessListener listener;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        usersDB = new UsersDB();
         eventsDB = new EventsDB();
         androidId = Settings.Secure.getString((requireContext()).getContentResolver(), Settings.Secure.ANDROID_ID);
     }
@@ -107,7 +104,11 @@ public class CreateNewEventFragment extends Fragment {
         return view;
     }
 
-    //Create new event
+    /**
+     * function used to tell db to create a new event
+     * @param view
+     *  the current view holding all the data
+     */
     private void createEvent(View view){
         EditText editEventName = view.findViewById(R.id.edit_event_name);
         EditText editEventCapacity = view.findViewById(R.id.edit_event_capacity);
@@ -140,7 +141,9 @@ public class CreateNewEventFragment extends Fragment {
 
     }
 
-    // Close the fragment and return to the Created Activities view
+    /**
+     * Close the fragment and return to the Created Activities view
+     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }

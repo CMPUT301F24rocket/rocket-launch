@@ -12,10 +12,20 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.firestore.DocumentReference;
 
+/**
+ * fragment shown when the user wants to edit notification preferences
+ */
 public class NotificationPreferencesFragment  extends DialogFragment {
     private DocumentReference userRef;
     private boolean preferences;
 
+    /**
+     * constructor
+     * @param preferences
+     *  current preferences
+     * @param userRef
+     *  reference to user database
+     */
     public NotificationPreferencesFragment(Boolean preferences, DocumentReference userRef) {
         if (preferences == null) {
             this.preferences = true;
@@ -26,6 +36,9 @@ public class NotificationPreferencesFragment  extends DialogFragment {
         this.userRef = userRef;
     }
 
+    /**
+     * used for callback
+     */
     public interface onSuccessListener {
         void onSuccess();
     }
@@ -58,6 +71,11 @@ public class NotificationPreferencesFragment  extends DialogFragment {
 
     }
 
+    /**
+     * function to set the onSuccessListener
+     * @param listener
+     *  listener to be set
+     */
     public void setOnSuccessListener(NotificationPreferencesFragment.onSuccessListener listener) {
         this.listener = listener;
     }
