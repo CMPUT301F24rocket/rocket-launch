@@ -17,7 +17,7 @@ public class UserEventsPagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch(position) {
             case 0: return new EntrantViewWaitingListFragment();
-            case 1: return  new EntrantViewJoinedListFragment();
+            case 1: return  new EntrantViewRegisteredListFragment();
             default: return new EntrantViewWaitingListFragment();
         }
     }

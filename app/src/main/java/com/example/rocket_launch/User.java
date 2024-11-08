@@ -32,8 +32,14 @@ public class User {
     public User() {
         this.roles = new Roles();
         this.eventsRegistered = new ArrayList<>();
+        this.eventsWaitlisted = new ArrayList<>();
         this.eventsCreated = new ArrayList<>();
         this.notifications = new ArrayList<>();
+
+        this.userName = "";
+        this.userEmail = "";
+        this.userPhoneNumber = "";
+        this.userFacility = "";
     }
 
     // Username
