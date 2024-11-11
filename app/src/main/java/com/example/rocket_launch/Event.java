@@ -30,6 +30,11 @@ public class Event {
     private int maxWaitlistSize; // Integer
 
     public Event(){
+        // verify lists appear in database -> ensures no access to undefined attribute
+        this.waitingList = new ArrayList<>();
+        this.cancelledEntrants = new ArrayList<>();
+        this.chosenEntrants = new ArrayList<>();
+        this.finalEntrants = new ArrayList<>();
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -47,20 +52,6 @@ public class Event {
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
 
-
-
-
-    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo, int maxWaitlistSize) {
-        this.eventID = eventID;
-        this.name = name;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.participants = participants;
-        this.photo = photo;
-        this.waitingList = new ArrayList<>();
-        this.maxWaitlistSize = maxWaitlistSize;
-    }
 
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;
@@ -143,5 +134,29 @@ public class Event {
             Log.e("error creating qr code", e.toString());
         }
         return null;
+    }
+
+    public List<String> getCancelledEntrants() {
+        return cancelledEntrants;
+    }
+
+    public void setCancelledEntrants(List<String> cancelledEntrants) {
+        this.cancelledEntrants = cancelledEntrants;
+    }
+
+    public List<String> getChosenEntrants() {
+        return chosenEntrants;
+    }
+
+    public void setChosenEntrants(List<String> chosenEntrants) {
+        this.chosenEntrants = chosenEntrants;
+    }
+
+    public List<String> getFinalEntrants() {
+        return finalEntrants;
+    }
+
+    public void setFinalEntrants(List<String> finalEntrants) {
+        this.finalEntrants = finalEntrants;
     }
 }
