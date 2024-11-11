@@ -12,9 +12,9 @@ import com.example.rocket_launch.Event;
 import com.example.rocket_launch.R;
 
 /**
- * fragment to show details about an event
+ * fragment to show details about a newly scanned event
  */
-public class ClickedEventDetails extends Fragment {
+public class ScannedEventDetailsFragment extends Fragment {
     private Event event;
 
     @Override
