@@ -208,7 +208,15 @@ public class EventsDB {
                 });
     }
 
-
+    /**
+     * gets list of user Ids from an event's waitlist
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
     public void getWaitlistedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         eventsRef.document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -226,7 +234,15 @@ public class EventsDB {
                 .addOnFailureListener(onFailure);
     }
 
-
+    /**
+     * gets list of user Ids from an event's Invited list
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
     public void getInvitedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         eventsRef.document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -244,7 +260,15 @@ public class EventsDB {
                 .addOnFailureListener(onFailure);
     }
 
-
+    /**
+     * gets list of user Ids from an event's cancelled list
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
     public void getCancelledUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         eventsRef.document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -262,7 +286,15 @@ public class EventsDB {
                 .addOnFailureListener(onFailure);
     }
 
-
+    /**
+     * gets list of user Ids from an event's final list
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
     public void getFinalUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         eventsRef.document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
