@@ -121,32 +121,35 @@ public class CreateEventFragment extends Fragment {
     private void fetchEvents(){
         String androidID = Settings.Secure
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
+
+        usersDB.getUser(androidID, new OnSuccessListener<User>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                assert user != null;
+            public void onSuccess(User user) {
                 List<String> events = user.getEventsCreated();
                 if (events != null) {
-                    eventsDB.getAllEventsInList(events, new OnSuccessListener<List<Event>>() {
-                        @Override
-                        public void onSuccess(List<Event> events) {
-                            //update list adapter data with fetched events
-                            CreateEventFragment.this.events.clear();
-                            CreateEventFragment.this.events.addAll(events);
-                            adapter.notifyDataSetChanged();
-                        }
-                    }, new OnFailureListener(){
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(requireContext(), "Failed to load events into list", Toast.LENGTH_SHORT).show();
-                        }
-                    });
+                    loadEventList(events);
                 }
                 else {
                     user.setEventsCreated(new ArrayList<String>());
                 }
             }
         }, e -> Log.w("Firebase", "Error getting user", e));
+    }
+
+    private void loadEventList(List<String> events) {
+        eventsDB.getAllEventsInList(events, new OnSuccessListener<List<Event>>() {
+            @Override
+            public void onSuccess(List<Event> events) {
+                //update list adapter data with fetched events
+                CreateEventFragment.this.events.clear();
+                CreateEventFragment.this.events.addAll(events);
+                adapter.notifyDataSetChanged();
+            }
+        }, new OnFailureListener(){
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Toast.makeText(requireContext(), "Failed to load events into list", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

@@ -170,7 +170,7 @@ public class EventsDB {
             Task<DocumentSnapshot> task = eventsRef.document(docTitle).get();
             tasks.add(task);
         }
-        Tasks.whenAllComplete(tasks).addOnCompleteListener(l -> {
+        Tasks.whenAllComplete(tasks).addOnSuccessListener(l -> {
            for (Task<DocumentSnapshot> task : tasks) {
                if (task.isSuccessful()) {
                    DocumentSnapshot doc = task.getResult();
@@ -182,8 +182,10 @@ public class EventsDB {
                    }
                }
            }
-        }).addOnCompleteListener(v -> {onSuccess.onSuccess(events);});
+        })
+                .addOnSuccessListener(v -> {onSuccess.onSuccess(events);})
+                .addOnFailureListener(onFailure);
     }
+
+    public void getAllUserEventsInList() {}
 }
-
-
