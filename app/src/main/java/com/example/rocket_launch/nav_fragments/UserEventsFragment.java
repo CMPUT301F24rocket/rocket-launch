@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.rocket_launch.entrant_events_tab.EventDetailsFragment;
+import com.example.rocket_launch.entrant_events_tab.ScannedEventDetailsFragment;
 import com.example.rocket_launch.entrant_events_tab.QRCodeScannerActivity;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.entrant_events_tab.UserEventsPagerAdapter;
@@ -65,7 +65,7 @@ public class UserEventsFragment extends Fragment {
         QRLauncher = registerForActivityResult(new ScanContract(), result -> {
             if (result.getContents() != null) {
                 String eventId = result.getContents();
-                EventDetailsFragment showDetails = new EventDetailsFragment(eventId);
+                ScannedEventDetailsFragment showDetails = new ScannedEventDetailsFragment(eventId);
                 requireActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
