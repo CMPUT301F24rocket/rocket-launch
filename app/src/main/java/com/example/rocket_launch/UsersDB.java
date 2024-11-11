@@ -227,7 +227,7 @@ public class UsersDB {
      * @param androidId
      *  id of user to get events from
      */
-    public void getCreatedEvents(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+    public void getCreatedEventTitles(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         usersRef.document(androidId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     User user = null;
@@ -252,7 +252,7 @@ public class UsersDB {
      * @param androidId
      *  id of user to get events from
      */
-    public void getRegisteredEvents(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+    public void getRegisteredEventTitles(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         usersRef.document(androidId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     User user = null;
@@ -277,7 +277,7 @@ public class UsersDB {
      * @param androidId
      *  id of user to get events from
      */
-    public void getWaitlistedEvents(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+    public void getWaitlistedEventTitles(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         usersRef.document(androidId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     User user = null;

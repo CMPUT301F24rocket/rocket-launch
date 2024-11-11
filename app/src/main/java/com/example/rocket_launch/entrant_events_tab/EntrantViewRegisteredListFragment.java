@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -18,15 +17,9 @@ import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventArrayAdapter;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
-import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.nav_fragments.CreateEventFragment;
-import com.example.rocket_launch.organizer_events_tab.CreatedEventDetailsFragment;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * fragment used for viewing list of all registered Entrants
@@ -97,7 +90,7 @@ public class EntrantViewRegisteredListFragment extends Fragment {
      */
     private void fetchEvents(){
         // get created events and on success, get events from eventsDB
-        usersDB.getRegisteredEvents(androidID, eventTitleList ->
+        usersDB.getRegisteredEventTitles(androidID, eventTitleList ->
                         eventsDB.getAllEventsInList(eventTitleList, events -> {
                             EntrantViewRegisteredListFragment.this.events.clear();
                             EntrantViewRegisteredListFragment.this.events.addAll(events);

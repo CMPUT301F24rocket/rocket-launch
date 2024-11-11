@@ -9,11 +9,9 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.organizer_events_tab.CreateNewEventFragment;
 import com.example.rocket_launch.organizer_events_tab.CreatedEventDetailsFragment;
@@ -21,12 +19,9 @@ import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventArrayAdapter;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * fragment used for displaying events created by an organizer
@@ -122,7 +117,7 @@ public class CreateEventFragment extends Fragment {
      */
     private void fetchEvents(){
         // get created events and on success, get events from eventsDB
-        usersDB.getCreatedEvents(androidID, eventTitleList ->
+        usersDB.getCreatedEventTitles(androidID, eventTitleList ->
                 eventsDB.getAllEventsInList(eventTitleList, events -> {
                     CreateEventFragment.this.events.clear();
                     CreateEventFragment.this.events.addAll(events);
