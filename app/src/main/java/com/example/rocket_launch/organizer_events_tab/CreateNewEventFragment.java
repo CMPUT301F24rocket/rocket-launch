@@ -1,4 +1,4 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
 import android.provider.Settings;

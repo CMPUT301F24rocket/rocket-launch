@@ -13,11 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.rocket_launch.SelectRolesFragment;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.organizer_event_details.CreateNewEventFragment;
-import com.example.rocket_launch.organizer_event_details.CreatedEventDetailsFragment;
+import com.example.rocket_launch.organizer_events_tab.CreateNewEventFragment;
+import com.example.rocket_launch.organizer_events_tab.CreatedEventDetailsFragment;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventArrayAdapter;
 import com.example.rocket_launch.EventsDB;
@@ -25,7 +24,6 @@ import com.example.rocket_launch.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;

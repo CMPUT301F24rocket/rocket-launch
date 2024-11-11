@@ -11,9 +11,9 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.rocket_launch.EventDetailsFragment;
-import com.example.rocket_launch.entrant.QRCodeScannerActivity;
+import com.example.rocket_launch.entrant_events_tab.QRCodeScannerActivity;
 import com.example.rocket_launch.R;
-import com.example.rocket_launch.entrant.UserEventsPagerAdapter;
+import com.example.rocket_launch.entrant_events_tab.UserEventsPagerAdapter;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;

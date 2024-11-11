@@ -1,4 +1,4 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.organizer_events_tab;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

@@ -1,4 +1,4 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
 
@@ -13,8 +13,6 @@ import android.widget.ImageButton;
 import com.example.rocket_launch.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.Objects;
 
 
 public class OrganizerViewEntrantListsFragment extends Fragment {

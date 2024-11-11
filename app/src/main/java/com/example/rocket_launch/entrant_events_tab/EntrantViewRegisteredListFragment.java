@@ -1,4 +1,4 @@
-package com.example.rocket_launch.entrant;
+package com.example.rocket_launch.entrant_events_tab;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -19,7 +19,7 @@ import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.organizer_event_details.CreatedEventDetailsFragment;
+import com.example.rocket_launch.organizer_events_tab.CreatedEventDetailsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 

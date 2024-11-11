@@ -1,4 +1,4 @@
-package com.example.rocket_launch.entrant;
+package com.example.rocket_launch.entrant_events_tab;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
