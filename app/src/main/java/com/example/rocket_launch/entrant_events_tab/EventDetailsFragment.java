@@ -1,4 +1,4 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.entrant_events_tab;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -11,6 +11,10 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.rocket_launch.Event;
+import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.R;
+import com.example.rocket_launch.UsersDB;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 

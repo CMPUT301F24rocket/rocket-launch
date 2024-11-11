@@ -14,7 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.Settings.Secure;
 
-import com.example.rocket_launch.NotificationPreferencesFragment;
+import com.example.rocket_launch.notifications_tab.NotificationPreferencesFragment;
 import com.example.rocket_launch.R;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;

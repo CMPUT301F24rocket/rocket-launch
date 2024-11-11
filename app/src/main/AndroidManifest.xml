@@ -26,7 +26,7 @@
             android:name=".admin.AdminModeActivity"
             android:exported="false" />
         <activity
-            android:name=".EventDetailsFragment"
+            android:name=".entrant_events_tab.EventDetailsFragment"
             android:exported="false" />
         <activity
             android:name=".nav_fragments.UserProfileFragment"

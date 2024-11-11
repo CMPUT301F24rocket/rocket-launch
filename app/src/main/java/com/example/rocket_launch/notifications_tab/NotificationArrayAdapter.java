@@ -1,7 +1,9 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.notifications_tab;
 
 import android.content.Context;
 import android.widget.ArrayAdapter;
+
+import com.example.rocket_launch.Notification;
 
 import java.util.ArrayList;
 
