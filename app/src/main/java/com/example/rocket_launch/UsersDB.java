@@ -232,7 +232,7 @@ public class UsersDB {
                         user = documentSnapshot.toObject(User.class);
                     }
                     if (user != null) {
-                        List<String> events = user.getEventsWaitlisted();
+                        List<String> events = user.getEventsCreated();
                         if (events != null) {
                             onSuccess.onSuccess(events);
                         }
@@ -244,24 +244,53 @@ public class UsersDB {
                 .addOnFailureListener(onFailure);
     }
 
-    public void getWaitlistedEvents() {
-
-    }
-
-    public void getRegisteredEvents() {
-
-    }
-    /*
-    public void getUser(String androidId, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
+    /**
+     * gets list of event titles from user's created events list
+     * @param androidId
+     *  id of user to get events from
+     */
+    public void getRegisteredEvents(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         usersRef.document(androidId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     User user = null;
                     if (documentSnapshot.exists()) {
                         user = documentSnapshot.toObject(User.class);
                     }
-                    onSuccess.onSuccess(user);
+                    if (user != null) {
+                        List<String> events = user.getEventsRegistered();
+                        if (events != null) {
+                            onSuccess.onSuccess(events);
+                        }
+                        else {
+                            user.setEventsRegistered(new ArrayList<String>());
+                        }
+                    }
                 })
                 .addOnFailureListener(onFailure);
-    }*/
+    }
 
+    /**
+     * gets list of event titles from user's created events list
+     * @param androidId
+     *  id of user to get events from
+     */
+    public void getWaitlistedEvents(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        usersRef.document(androidId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    User user = null;
+                    if (documentSnapshot.exists()) {
+                        user = documentSnapshot.toObject(User.class);
+                    }
+                    if (user != null) {
+                        List<String> events = user.getEventsWaitlisted();
+                        if (events != null) {
+                            onSuccess.onSuccess(events);
+                        }
+                        else {
+                            user.setEventsWaitlisted(new ArrayList<String>());
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
 }

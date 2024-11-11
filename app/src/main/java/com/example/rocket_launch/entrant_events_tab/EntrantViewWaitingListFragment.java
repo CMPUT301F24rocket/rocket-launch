@@ -10,6 +10,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -19,6 +20,7 @@ import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.nav_fragments.CreateEventFragment;
 import com.example.rocket_launch.organizer_events_tab.CreatedEventDetailsFragment;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -35,6 +37,15 @@ public class EntrantViewWaitingListFragment extends Fragment {
     private ListView listView;
     private EventArrayAdapter adapter;
     private ArrayList<Event> events;
+    private String androidID;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        androidID = Settings.Secure
+                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -82,45 +93,18 @@ public class EntrantViewWaitingListFragment extends Fragment {
     }
 
     /**
-     * gets all events that will be used in this fragment
+     * function that fetches all events created by an organizer and loads them
      */
-    private void fetchEvents() {
-        String androidID = Settings.Secure
-                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        usersDB.getUser(androidID, new OnSuccessListener<User>() {
-            @Override
-            public void onSuccess(User user) {
-                List<String> events = user.getEventsWaitlisted();
-                if (events != null) {
-                    loadEventList(events);
-                }
-                else {
-                    user.setEventsCreated(new ArrayList<String>());
-                }
-            }
-        }, e -> Log.w("Firebase", "Error getting user", e));
-    }
-
-    /**
-     * given a list of events
-     * @param events
-     *  List<String> containing document titles for all events
-     */
-    private void loadEventList(List<String> events) {
-        eventsDB.getAllEventsInList(events, new OnSuccessListener<List<Event>>() {
-            @Override
-            public void onSuccess(List<Event> events) {
-                //update list adapter data with fetched events
-                EntrantViewWaitingListFragment.this.events.clear();
-                EntrantViewWaitingListFragment.this.events.addAll(events);
-                adapter.notifyDataSetChanged();
-            }
-        }, new OnFailureListener(){
-            @Override
-            public void onFailure(@NonNull Exception e) {
-                Toast.makeText(requireContext(), "Failed to load events into list", Toast.LENGTH_SHORT).show();
-            }
-        });
+    private void fetchEvents(){
+        // get created events and on success, get events from eventsDB
+        usersDB.getWaitlistedEvents(androidID, eventTitleList ->
+                        eventsDB.getAllEventsInList(eventTitleList, events -> {
+                            EntrantViewWaitingListFragment.this.events.clear();
+                            EntrantViewWaitingListFragment.this.events.addAll(events);
+                            adapter.notifyDataSetChanged();
+                        }, e -> {
+                            Log.w("Firebase", "Error getting user", e);
+                            Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();}),
+                e -> Log.w("Firebase", "Error getting events title list", e));
     }
 }
