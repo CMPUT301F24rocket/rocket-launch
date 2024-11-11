@@ -43,7 +43,7 @@ public class ScannedEventDetailsFragment extends Fragment {
 
     /**
      * constructor for passing an eventID
-     * @param eventId
+     * @param eventId   //
      *  id in database for an event
      */
     public ScannedEventDetailsFragment(String eventId) {

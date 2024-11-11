@@ -49,7 +49,7 @@ public class EntrantViewWaitingListFragment extends Fragment {
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             Event clickedEvent = events.get(position);
 
-            CreatedEventDetailsFragment clickedEventDetailsFragment = new CreatedEventDetailsFragment(clickedEvent);
+            WaitlistedEventDetailsFragment clickedEventDetailsFragment = new WaitlistedEventDetailsFragment(clickedEvent);
 
             openClickedEvent(clickedEventDetailsFragment);
         });
@@ -72,7 +72,7 @@ public class EntrantViewWaitingListFragment extends Fragment {
      * @param clickedEventDetailsFragment
      *  fragment to go display
      */
-    private void openClickedEvent(CreatedEventDetailsFragment clickedEventDetailsFragment){
+    private void openClickedEvent(WaitlistedEventDetailsFragment clickedEventDetailsFragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)

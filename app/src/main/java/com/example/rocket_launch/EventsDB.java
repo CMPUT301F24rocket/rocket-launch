@@ -115,7 +115,61 @@ public class EventsDB {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Firebase", "User removes from waiting list");
+                        Log.d("Firebase", "User removed from waiting list");
+                    }
+                })
+
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error removing user", e);
+                    }
+                });
+
+    }
+
+    /**
+     * Remove user from registered list
+     * @param eventID
+     *  id of event who's registered list we want to remove from
+     * @param userID
+     *  id of user to remove from registered list
+     */
+    public void addUserToRegisteredList(String eventID, String userID) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.update("eventsRegistered", FieldValue.arrayUnion(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User removed from registered list");
+                    }
+                })
+
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error removing user", e);
+                    }
+                });
+
+    }
+
+    /**
+     * Remove user from registered list
+     * @param eventID
+     *  id of event who's registered list we want to remove from
+     * @param userID
+     *  id of user to remove from registered list
+     */
+    public void removeUserFromRegisteredList(String eventID, String userID) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.update("eventsRegistered", FieldValue.arrayRemove(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User removed from registered list");
                     }
                 })
 

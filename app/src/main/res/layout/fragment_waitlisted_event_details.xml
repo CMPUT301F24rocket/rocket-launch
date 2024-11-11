@@ -137,7 +137,7 @@ android:padding="16dp">
 </LinearLayout>
 
 <Button
-    android:id="@+id/join_waitlist_button"
+    android:id="@+id/cancel_waitlist_button"
     style="@style/ButtonStyleB"
     app:layout_constraintTop_toTopOf="parent"
     app:layout_constraintBottom_toBottomOf="parent"
@@ -146,6 +146,6 @@ android:padding="16dp">
     app:layout_constraintVertical_bias="0.95"
     app:layout_constraintHorizontal_bias="0.5"
 
-    android:text="Join Waitlist"/>
+    android:text="cancel waitlist"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
