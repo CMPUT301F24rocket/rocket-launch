@@ -90,7 +90,7 @@ public class EntrantViewWaitingListFragment extends Fragment {
      */
     private void fetchEvents(){
         // get created events and on success, get events from eventsDB
-        usersDB.getWaitlistedEventTitles(androidID, eventTitleList ->
+        usersDB.getWaitlistedEventIds(androidID, eventTitleList ->
                         eventsDB.getAllEventsInList(eventTitleList, events -> {
                             EntrantViewWaitingListFragment.this.events.clear();
                             EntrantViewWaitingListFragment.this.events.addAll(events);

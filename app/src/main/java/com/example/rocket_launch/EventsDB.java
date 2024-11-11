@@ -208,6 +208,26 @@ public class EventsDB {
                 });
     }
 
+
+    public void getWaitlistedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+
+    }
+
+
+    public void getInvitedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+
+    }
+
+
+    public void getCancelledUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+
+    }
+
+
+    public void getFinalUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+
+    }
+
     /**
      * get all events in a string of eventId's
      * @param eventsList

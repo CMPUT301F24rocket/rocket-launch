@@ -117,7 +117,7 @@ public class CreateEventFragment extends Fragment {
      */
     private void fetchEvents(){
         // get created events and on success, get events from eventsDB
-        usersDB.getCreatedEventTitles(androidID, eventTitleList ->
+        usersDB.getCreatedEventIds(androidID, eventTitleList ->
                 eventsDB.getAllEventsInList(eventTitleList, events -> {
                     CreateEventFragment.this.events.clear();
                     CreateEventFragment.this.events.addAll(events);
