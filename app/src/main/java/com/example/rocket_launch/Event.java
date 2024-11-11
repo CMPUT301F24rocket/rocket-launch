@@ -27,6 +27,7 @@ public class Event {
     private List<String> cancelledEntrants;
     private List<String> chosenEntrants;
     private List<String> finalEntrants;
+    private List<String> registeredEntrants;
     private int maxWaitlistSize; // Integer
 
     public Event(){
@@ -35,6 +36,7 @@ public class Event {
         this.cancelledEntrants = new ArrayList<>();
         this.chosenEntrants = new ArrayList<>();
         this.finalEntrants = new ArrayList<>();
+        this.registeredEntrants = new ArrayList<>();
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -158,5 +160,13 @@ public class Event {
 
     public void setFinalEntrants(List<String> finalEntrants) {
         this.finalEntrants = finalEntrants;
+    }
+
+    public List<String> getRegisteredEntrants() {
+        return registeredEntrants;
+    }
+
+    public void setRegisteredEntrants(List<String> registeredEntrants) {
+        this.registeredEntrants = registeredEntrants;
     }
 }

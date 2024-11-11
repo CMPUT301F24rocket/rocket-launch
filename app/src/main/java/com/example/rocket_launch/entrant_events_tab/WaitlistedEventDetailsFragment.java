@@ -59,6 +59,10 @@ public class WaitlistedEventDetailsFragment extends Fragment {
         eventDescription = view.findViewById(R.id.view_event_description);
 
         cancelWaitlistButton = view.findViewById(R.id.cancel_waitlist_button);
+        cancelWaitlistButton.setOnClickListener(l -> {
+        leaveWaitlist();
+        });
+
         view.findViewById(R.id.cancel_button).setOnClickListener(l -> {
             closeFragment();
         });
@@ -100,10 +104,10 @@ public class WaitlistedEventDetailsFragment extends Fragment {
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // add to waitlist of event
-        eventsdb.removeUserFromWaitingList(eventId, androidId);
+        eventsdb.removeUserFromWaitingList(event.getEventID(), androidId);
 
         // add to user's joined events
-        usersDB.removeWaitlistedEvent(androidId, eventId);
+        usersDB.removeWaitlistedEvent(androidId, event.getEventID());
         closeFragment();
     }
 

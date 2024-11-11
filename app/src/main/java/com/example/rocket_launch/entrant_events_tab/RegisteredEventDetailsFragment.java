@@ -60,6 +60,10 @@ public class RegisteredEventDetailsFragment extends Fragment {
         eventDescription = view.findViewById(R.id.view_event_description);
 
         removeRegistrationButton = view.findViewById(R.id.cancel_registration_button);
+        removeRegistrationButton.setOnClickListener(l -> {
+            removeRegisterEvent();
+        });
+
         view.findViewById(R.id.cancel_button).setOnClickListener(l -> {
             closeFragment();
         });
@@ -101,10 +105,10 @@ public class RegisteredEventDetailsFragment extends Fragment {
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         // remove from registered events
-        eventsdb.removeUserFromRegisteredList(eventId, androidId);
+        eventsdb.removeUserFromRegisteredList(event.getEventID(), androidId);
 
         // remove from registered events
-        usersDB.removeRegisteredEvent(androidId, eventId);
+        usersDB.removeRegisteredEvent(androidId, event.getEventID());
         closeFragment();
     }
 

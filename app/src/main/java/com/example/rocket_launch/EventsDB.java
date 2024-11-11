@@ -138,7 +138,7 @@ public class EventsDB {
     public void addUserToRegisteredList(String eventID, String userID) {
         DocumentReference eventDocRef = eventsRef.document(eventID);
 
-        eventDocRef.update("eventsRegistered", FieldValue.arrayUnion(userID))
+        eventDocRef.update("registeredEntrants", FieldValue.arrayUnion(userID))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -165,7 +165,7 @@ public class EventsDB {
     public void removeUserFromRegisteredList(String eventID, String userID) {
         DocumentReference eventDocRef = eventsRef.document(eventID);
 
-        eventDocRef.update("eventsRegistered", FieldValue.arrayRemove(userID))
+        eventDocRef.update("registeredEntrants", FieldValue.arrayRemove(userID))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
