@@ -7,6 +7,9 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * databse class for interfacing with database
  */
@@ -215,5 +218,50 @@ public class UsersDB {
     public CollectionReference getUsersRef() {
         return usersRef;
     }
+
+    /**
+     * gets list of event titles from user's created events list
+     * @param androidId
+     *  id of user to get events from
+     */
+    public void getCreatedEvents(String androidId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        usersRef.document(androidId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    User user = null;
+                    if (documentSnapshot.exists()) {
+                        user = documentSnapshot.toObject(User.class);
+                    }
+                    if (user != null) {
+                        List<String> events = user.getEventsWaitlisted();
+                        if (events != null) {
+                            onSuccess.onSuccess(events);
+                        }
+                        else {
+                            user.setEventsCreated(new ArrayList<String>());
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    public void getWaitlistedEvents() {
+
+    }
+
+    public void getRegisteredEvents() {
+
+    }
+    /*
+    public void getUser(String androidId, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
+        usersRef.document(androidId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    User user = null;
+                    if (documentSnapshot.exists()) {
+                        user = documentSnapshot.toObject(User.class);
+                    }
+                    onSuccess.onSuccess(user);
+                })
+                .addOnFailureListener(onFailure);
+    }*/
 
 }
