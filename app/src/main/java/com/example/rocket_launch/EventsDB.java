@@ -240,6 +240,4 @@ public class EventsDB {
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(events);})
                 .addOnFailureListener(onFailure);
     }
-
-    public void getAllUserEventsInList() {}
 }
