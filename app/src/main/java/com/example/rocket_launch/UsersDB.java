@@ -20,7 +20,7 @@ public class UsersDB {
      */
     public UsersDB() {
         db = FirebaseFirestore.getInstance();
-        usersRef = db.collection("user_info");  // Reference the collection
+        usersRef = db.collection("user_info_dev");  // Reference the collection
     }
 
     /**

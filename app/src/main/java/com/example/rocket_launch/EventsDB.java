@@ -35,7 +35,7 @@ public class EventsDB {
      */
     public EventsDB() {
         db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
+        eventsRef = db.collection("events_dev");
     }
 
     /**
