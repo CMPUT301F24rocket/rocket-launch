@@ -24,19 +24,17 @@ public class Event {
     private int participants;
     private Image photo;
     private List<String> waitingList;
+    private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
-    private List<String> chosenEntrants;
     private List<String> finalEntrants;
-    private List<String> registeredEntrants;
     private int maxWaitlistSize; // Integer
 
     public Event(){
         // verify lists appear in database -> ensures no access to undefined attribute
         this.waitingList = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
-        this.chosenEntrants = new ArrayList<>();
         this.finalEntrants = new ArrayList<>();
-        this.registeredEntrants = new ArrayList<>();
+        this.invitedEntrants = new ArrayList<>();
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -146,14 +144,6 @@ public class Event {
         this.cancelledEntrants = cancelledEntrants;
     }
 
-    public List<String> getChosenEntrants() {
-        return chosenEntrants;
-    }
-
-    public void setChosenEntrants(List<String> chosenEntrants) {
-        this.chosenEntrants = chosenEntrants;
-    }
-
     public List<String> getFinalEntrants() {
         return finalEntrants;
     }
@@ -162,11 +152,11 @@ public class Event {
         this.finalEntrants = finalEntrants;
     }
 
-    public List<String> getRegisteredEntrants() {
-        return registeredEntrants;
+    public List<String> getInvitedEntrants() {
+        return invitedEntrants;
     }
 
-    public void setRegisteredEntrants(List<String> registeredEntrants) {
-        this.registeredEntrants = registeredEntrants;
+    public void setInvitedEntrants(List<String> invitedEntrants) {
+        this.invitedEntrants = invitedEntrants;
     }
 }

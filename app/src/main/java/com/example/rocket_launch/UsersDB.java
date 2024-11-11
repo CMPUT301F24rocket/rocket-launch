@@ -239,9 +239,6 @@ public class UsersDB {
                         if (events != null) {
                             onSuccess.onSuccess(events);
                         }
-                        else {
-                            user.setEventsCreated(new ArrayList<String>());
-                        }
                     }
                 })
                 .addOnFailureListener(onFailure);
@@ -264,9 +261,6 @@ public class UsersDB {
                         if (events != null) {
                             onSuccess.onSuccess(events);
                         }
-                        else {
-                            user.setEventsRegistered(new ArrayList<String>());
-                        }
                     }
                 })
                 .addOnFailureListener(onFailure);
@@ -288,9 +282,6 @@ public class UsersDB {
                         List<String> events = user.getEventsWaitlisted();
                         if (events != null) {
                             onSuccess.onSuccess(events);
-                        }
-                        else {
-                            user.setEventsWaitlisted(new ArrayList<String>());
                         }
                     }
                 })

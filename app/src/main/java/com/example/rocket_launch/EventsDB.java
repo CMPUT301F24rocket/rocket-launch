@@ -210,22 +210,74 @@ public class EventsDB {
 
 
     public void getWaitlistedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getWaitingList();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
     }
 
 
     public void getInvitedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getInvitedEntrants();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
     }
 
 
     public void getCancelledUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getCancelledEntrants();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
     }
 
 
     public void getFinalUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
-
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getFinalEntrants();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
     }
 
     /**
