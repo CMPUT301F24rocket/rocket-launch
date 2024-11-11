@@ -52,9 +52,7 @@ public class EntrantViewRegisteredListFragment extends Fragment {
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             Event clickedEvent = events.get(position);
-
             RegisteredEventDetailsFragment clickedEventDetailsFragment = new RegisteredEventDetailsFragment(clickedEvent);
-
             openClickedEvent(clickedEventDetailsFragment);
         });
 
@@ -95,7 +93,7 @@ public class EntrantViewRegisteredListFragment extends Fragment {
                             EntrantViewRegisteredListFragment.this.events.clear();
                             EntrantViewRegisteredListFragment.this.events.addAll(events);
                             adapter.notifyDataSetChanged();
-                        }, e -> {
+                            }, e -> {
                             Log.w("Firebase", "Error getting user", e);
                             Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();}),
                 e -> Log.w("Firebase", "Error getting events title list", e));

@@ -1,8 +1,16 @@
 package com.example.rocket_launch;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -158,5 +166,46 @@ public class Event {
 
     public void setInvitedEntrants(List<String> invitedEntrants) {
         this.invitedEntrants = invitedEntrants;
+    }
+
+    public static class UserArrayAdapter extends ArrayAdapter<User> {
+
+        /**
+         * constructor
+         * @param context
+         *  context of where fragment is
+         * @param users
+         *  users list to display
+         */
+        public UserArrayAdapter(Context context, ArrayList<User> users) {
+            super(context,0,users);
+        }
+
+        /**
+         * get current view
+         * @param position
+         *  position in array
+         * @param convertView
+         *  view to convert to
+         * @param parent
+         *  parent display
+         * @return
+         *  returns a view to display
+         */
+        @NonNull
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            User user = getItem(position);
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_list_content, parent, false);
+            }
+
+            TextView userName = convertView.findViewById(R.id.list_event_name);
+
+            assert user != null;
+            userName.setText(user.getUserName());
+
+            return convertView;
+        }
     }
 }
