@@ -52,7 +52,7 @@ public class User {
     }
 
     // Username
-    String getUserName() {
+    public String getUserName() {
         return this.userName;
     }
     public void setUserName(String userName) {
@@ -60,7 +60,7 @@ public class User {
     }
 
     // user email
-    String getUserEmail() {
+    public String getUserEmail() {
         return this.userEmail;
     }
     public void setUserEmail(String userEmail) {
@@ -68,7 +68,7 @@ public class User {
     }
 
     // user phone number
-    String getUserPhoneNumber() {
+    public String getUserPhoneNumber() {
         return this.userPhoneNumber;
     }
     public void setUserPhoneNumber(String userPhoneNumber) {
@@ -76,7 +76,7 @@ public class User {
     }
 
     // profile photo
-    Image getProfilePhoto() {
+    public Image getProfilePhoto() {
         return this.profilePhoto;
     }
     public void setProfilePhoto(Image profilePhoto){
@@ -84,7 +84,7 @@ public class User {
     }
 
     // facility
-    String getUserFacility(){
+    public String getUserFacility(){
         return this.userFacility;
     }
     public void setUserFacility(String userFacility){
