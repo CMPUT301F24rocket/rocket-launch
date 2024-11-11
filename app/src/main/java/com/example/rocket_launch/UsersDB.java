@@ -3,7 +3,10 @@ package com.example.rocket_launch;
 import android.util.Log;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.android.gms.tasks.Tasks;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -291,6 +294,39 @@ public class UsersDB {
                         }
                     }
                 })
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * get all users in a string if androidId's
+     * @param usersList
+     *  list of user to get
+     * @param onSuccess
+     *  what to do on successful load
+     * @param onFailure
+     *  what to do on failed load
+     */
+    public void getAllUsersInList(List<String> usersList, OnSuccessListener<List<User>> onSuccess, OnFailureListener onFailure) {
+        List<User> users = new ArrayList<>();
+        List<Task<DocumentSnapshot>> tasks = new ArrayList<>();
+        for (String docTitle : usersList) {
+            Task<DocumentSnapshot> task = usersRef.document(docTitle).get();
+            tasks.add(task);
+        }
+        Tasks.whenAllComplete(tasks).addOnSuccessListener(l -> {
+                    for (Task<DocumentSnapshot> task : tasks) {
+                        if (task.isSuccessful()) {
+                            DocumentSnapshot doc = task.getResult();
+                            if (doc != null && doc.exists()) {
+                                User user = doc.toObject(User.class);
+                                if (user != null) {
+                                    users.add(user);
+                                }
+                            }
+                        }
+                    }
+                })
+                .addOnSuccessListener(v -> {onSuccess.onSuccess(users);})
                 .addOnFailureListener(onFailure);
     }
 }

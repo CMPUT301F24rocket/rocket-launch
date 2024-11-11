@@ -211,7 +211,7 @@ public class EventsDB {
     /**
      * get all events in a string of eventId's
      * @param eventsList
-     *  list of events to get all from
+     *  list of events to get
      * @param onSuccess
      *  what to do on successful load
      * @param onFailure
