@@ -52,9 +52,7 @@ public class EntrantViewWaitingListFragment extends Fragment {
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             Event clickedEvent = events.get(position);
-
             WaitlistedEventDetailsFragment clickedEventDetailsFragment = new WaitlistedEventDetailsFragment(clickedEvent);
-
             openClickedEvent(clickedEventDetailsFragment);
         });
 
@@ -89,7 +87,7 @@ public class EntrantViewWaitingListFragment extends Fragment {
      * function that fetches all events created by an organizer and loads them
      */
     private void fetchEvents(){
-        // get created events and on success, get events from eventsDB
+        // get waitlisted events and on success, get events from eventsDB
         usersDB.getWaitlistedEventIds(androidID, eventTitleList ->
                         eventsDB.getAllEventsInList(eventTitleList, events -> {
                             EntrantViewWaitingListFragment.this.events.clear();

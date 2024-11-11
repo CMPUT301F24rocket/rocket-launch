@@ -89,7 +89,7 @@ public class EntrantViewRegisteredListFragment extends Fragment {
      * function that fetches all events created by an organizer and loads them
      */
     private void fetchEvents(){
-        // get created events and on success, get events from eventsDB
+        // get registered events and on success, get events from eventsDB
         usersDB.getRegisteredEventIds(androidID, eventTitleList ->
                         eventsDB.getAllEventsInList(eventTitleList, events -> {
                             EntrantViewRegisteredListFragment.this.events.clear();
