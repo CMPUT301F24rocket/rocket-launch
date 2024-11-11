@@ -13,16 +13,21 @@ import java.util.List;
 public class User {
 
     //Android ID
-    private String android_id;
+    private String androidId;
 
     //User Profile Information
     private String userName;
     private String userEmail;
     private String userPhoneNumber;
-    private Image profilePhoto;
     private String userFacility;
     private Location location;
     private Roles roles;
+
+    // profile photo
+    private String profilePhotoPath;
+    private Image profilePhoto;
+
+    // notifications
     private Boolean notificationPreferences;
     private List<String> notifications;
 
@@ -43,6 +48,7 @@ public class User {
         this.userEmail = "";
         this.userPhoneNumber = "";
         this.userFacility = "";
+        this.profilePhotoPath = "";
     }
 
     // Username
@@ -86,11 +92,12 @@ public class User {
     }
 
     // android id
-    String getAndroid_id() {
-        return this.android_id;
+    public String getAndroidId() {
+        return androidId;
     }
-    public void setAndroid_id(String android_id) {
-        this.android_id = android_id;
+
+    public void setAndroidId(String androidId) {
+        this.androidId = androidId;
     }
 
     // roles
@@ -176,5 +183,13 @@ public class User {
      */
     public void removeWaitlistEvent(String id) {
         eventsWaitlisted.remove(id);
+    }
+
+    public String getProfilePhotoPath() {
+        return profilePhotoPath;
+    }
+
+    public void setProfilePhotoPath(String profilePhotoPath) {
+        this.profilePhotoPath = profilePhotoPath;
     }
 }

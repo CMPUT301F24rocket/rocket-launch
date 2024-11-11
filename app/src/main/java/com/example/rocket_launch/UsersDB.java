@@ -4,7 +4,6 @@ import android.util.Log;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -20,7 +19,7 @@ public class UsersDB {
      */
     public UsersDB() {
         db = FirebaseFirestore.getInstance();
-        usersRef = db.collection("user_info");  // Reference the collection
+        usersRef = db.collection("user_info_dev");  // Reference the collection
     }
 
     /**
@@ -47,18 +46,45 @@ public class UsersDB {
     }
 
     /**
-     * gets user from databse
+     * gets user from database
+     *
      * @param androidId
      *  id of user
      * @param onSuccess
-     *  listener for onSuccess
+     *  listener for onSuccess, will pass a User user where if a user is in the db user != null
      * @param onFailure
      *  listener for onFailure
      */
-    public void getUser(String androidId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
+    public void getUser(String androidId, OnSuccessListener<User> onSuccess, OnFailureListener onFailure) {
         usersRef.document(androidId).get()
-                .addOnSuccessListener(onSuccess)
+                .addOnSuccessListener(documentSnapshot -> {
+                    User user = null;
+                    if (documentSnapshot.exists()) {
+                        user = documentSnapshot.toObject(User.class);
+                    }
+                    onSuccess.onSuccess(user);
+                })
                 .addOnFailureListener(onFailure);
+    }
+
+    public void updateUser(String androidId, User user, OnSuccessListener<Void> onSuccess, OnFailureListener onFailureListener) {
+        usersRef.document(androidId).set(user)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailureListener);
+    }
+
+    /**
+     * used for updating a user androidId with new contents contained in user
+     * @param androidId
+     *  id of user info to update
+     * @param roles
+     *  roles to update to
+     *  user info
+     */
+    public void setRoles(String androidId, Roles roles) {
+        usersRef.document(androidId).update("roles", roles)
+                .addOnSuccessListener(unused -> Log.d("Firebase", "roles update"))
+                .addOnFailureListener(e -> Log.w("Firebase", "roles update failed", e));
     }
 
     // notifications
