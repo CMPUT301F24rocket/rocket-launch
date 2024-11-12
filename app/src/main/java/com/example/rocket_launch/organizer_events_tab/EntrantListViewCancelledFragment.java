@@ -15,6 +15,7 @@ import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
+import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -48,6 +49,7 @@ public class EntrantListViewCancelledFragment extends Fragment {
         listView.setAdapter(adapter);
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
+            // TODO - maybe?
             User clickedUser = users.get(position);
         });
 
@@ -62,14 +64,14 @@ public class EntrantListViewCancelledFragment extends Fragment {
 
     /**
      * displays event details fragment. For use when event is clicked
-     * @param clickedEventDetailsFragment
+     * @param userDetailsFragment
      *  fragment to go display
      */
-    private void openClickedEvent(WaitlistedEventDetailsFragment clickedEventDetailsFragment){
+    private void openClickedUser(UserDetailsFragment userDetailsFragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_frame, clickedEventDetailsFragment)
+                .replace(R.id.fragment_frame, userDetailsFragment)
                 .addToBackStack(null)
                 .commit();
     }
