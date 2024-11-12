@@ -1,4 +1,4 @@
-package com.example.rocket_launch.entrant;
+package com.example.rocket_launch.entrant_events_tab;
 
 import android.os.Bundle;
 import android.provider.Settings;
@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -17,15 +17,9 @@ import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventArrayAdapter;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
-import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.organizer_event_details.CreatedEventDetailsFragment;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
-import java.util.List;
 
 /**
  * fragment used for viewing list of all registered Entrants
@@ -36,6 +30,15 @@ public class EntrantViewRegisteredListFragment extends Fragment {
     private ListView listView;
     private EventArrayAdapter adapter;
     private ArrayList<Event> events;
+    private String androidID;
+
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        androidID = Settings.Secure
+                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,9 +52,7 @@ public class EntrantViewRegisteredListFragment extends Fragment {
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             Event clickedEvent = events.get(position);
-
-            CreatedEventDetailsFragment clickedEventDetailsFragment = new CreatedEventDetailsFragment(clickedEvent);
-
+            RegisteredEventDetailsFragment clickedEventDetailsFragment = new RegisteredEventDetailsFragment(clickedEvent);
             openClickedEvent(clickedEventDetailsFragment);
         });
 
@@ -73,7 +74,7 @@ public class EntrantViewRegisteredListFragment extends Fragment {
      * @param clickedEventDetailsFragment
      *  fragment to go display
      */
-    private void openClickedEvent(CreatedEventDetailsFragment clickedEventDetailsFragment){
+    private void openClickedEvent(RegisteredEventDetailsFragment clickedEventDetailsFragment){
         requireActivity().getSupportFragmentManager()
                 .beginTransaction()
                 .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
@@ -83,37 +84,18 @@ public class EntrantViewRegisteredListFragment extends Fragment {
     }
 
     /**
-     * gets all events that will be used in this fragment
+     * function that fetches all events created by an organizer and loads them
      */
-    private void fetchEvents() {
-        String androidID = Settings.Secure
-                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-        usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user = documentSnapshot.toObject(User.class);
-                assert user != null;
-                List<String> events = user.getEventsRegistered();
-                if (events != null) {
-                    eventsDB.getAllEventsInList(events, new OnSuccessListener<List<Event>>() {
-                        @Override
-                        public void onSuccess(List<Event> events) {
-                            //update list adapter data with fetched events
+    private void fetchEvents(){
+        // get registered events and on success, get events from eventsDB
+        usersDB.getRegisteredEventIds(androidID, eventTitleList ->
+                        eventsDB.getAllEventsInList(eventTitleList, events -> {
                             EntrantViewRegisteredListFragment.this.events.clear();
                             EntrantViewRegisteredListFragment.this.events.addAll(events);
                             adapter.notifyDataSetChanged();
-                        }
-                    }, new OnFailureListener(){
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Toast.makeText(requireContext(), "Failed to load events into list", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                }
-                else {
-                    user.setEventsCreated(new ArrayList<String>());
-                }
-            }
-        }, e -> Log.w("Firebase", "Error getting user", e));
+                            }, e -> {
+                            Log.w("Firebase", "Error getting user", e);
+                            Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();}),
+                e -> Log.w("Firebase", "Error getting events title list", e));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
 
@@ -14,11 +14,9 @@ import com.example.rocket_launch.R;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
-import java.util.Objects;
-
 
 public class OrganizerViewEntrantListsFragment extends Fragment {
-
+    public String eventId;
     /**
      * Default constructor
      */
@@ -30,6 +28,9 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        // get eventID from bundle
+        assert getArguments() != null;
+        eventId = getArguments().getString("eventId");
     }
 
     @Override
@@ -41,7 +42,7 @@ public class OrganizerViewEntrantListsFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.entrant_list_tab_layout);
         ViewPager2 viewPager = view.findViewById(R.id.entrant_list_view_pager);
 
-        OrganizerEntrantListPagerAdapter adapter = new OrganizerEntrantListPagerAdapter(requireActivity());
+        OrganizerEntrantListPagerAdapter adapter = new OrganizerEntrantListPagerAdapter(requireActivity(), eventId);
         viewPager.setAdapter(adapter);
 
         new TabLayoutMediator(tabLayout, viewPager, (tab, position) -> {

@@ -35,7 +35,7 @@ public class EventsDB {
      */
     public EventsDB() {
         db = FirebaseFirestore.getInstance();
-        eventsRef = db.collection("events");
+        eventsRef = db.collection("events_dev");
     }
 
     /**
@@ -115,7 +115,61 @@ public class EventsDB {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Firebase", "User removes from waiting list");
+                        Log.d("Firebase", "User removed from waiting list");
+                    }
+                })
+
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error removing user", e);
+                    }
+                });
+
+    }
+
+    /**
+     * Remove user from registered list
+     * @param eventID
+     *  id of event who's registered list we want to remove from
+     * @param userID
+     *  id of user to remove from registered list
+     */
+    public void addUserToRegisteredList(String eventID, String userID) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.update("registeredEntrants", FieldValue.arrayUnion(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User removed from registered list");
+                    }
+                })
+
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w("Firebase", "Error removing user", e);
+                    }
+                });
+
+    }
+
+    /**
+     * Remove user from registered list
+     * @param eventID
+     *  id of event who's registered list we want to remove from
+     * @param userID
+     *  id of user to remove from registered list
+     */
+    public void removeUserFromRegisteredList(String eventID, String userID) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.update("registeredEntrants", FieldValue.arrayRemove(userID))
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d("Firebase", "User removed from registered list");
                     }
                 })
 
@@ -155,9 +209,113 @@ public class EventsDB {
     }
 
     /**
-     * get all events for a specific organizer via androidID
+     * gets list of user Ids from an event's waitlist
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
+    public void getWaitlistedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getWaitingList();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * gets list of user Ids from an event's Invited list
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
+    public void getInvitedUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getInvitedEntrants();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * gets list of user Ids from an event's cancelled list
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
+    public void getCancelledUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getCancelledEntrants();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * gets list of user Ids from an event's final list
+     * @param eventId
+     *  id of event
+     * @param onSuccess
+     *  what to do on success
+     * @param onFailure
+     *  what to do on failure
+     */
+    public void getFinalUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+        eventsRef.document(eventId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    if (event != null) {
+                        List<String> users = event.getFinalEntrants();
+                        if (users != null) {
+                            onSuccess.onSuccess(users);
+                        }
+                    }
+                })
+                .addOnFailureListener(onFailure);
+    }
+
+    /**
+     * get all events in a string of eventId's
      * @param eventsList
-     *  list of events to get all from
+     *  list of events to get
      * @param onSuccess
      *  what to do on successful load
      * @param onFailure
@@ -170,7 +328,7 @@ public class EventsDB {
             Task<DocumentSnapshot> task = eventsRef.document(docTitle).get();
             tasks.add(task);
         }
-        Tasks.whenAllComplete(tasks).addOnCompleteListener(l -> {
+        Tasks.whenAllComplete(tasks).addOnSuccessListener(l -> {
            for (Task<DocumentSnapshot> task : tasks) {
                if (task.isSuccessful()) {
                    DocumentSnapshot doc = task.getResult();
@@ -182,8 +340,8 @@ public class EventsDB {
                    }
                }
            }
-        }).addOnCompleteListener(v -> {onSuccess.onSuccess(events);});
+        })
+                .addOnSuccessListener(v -> {onSuccess.onSuccess(events);})
+                .addOnFailureListener(onFailure);
     }
 }
-
-

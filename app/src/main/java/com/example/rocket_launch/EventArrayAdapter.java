@@ -21,9 +21,9 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
      * @param context
      *  context of where fragment is
      * @param events
-     *  events list to displau
+     *  events list to display
      */
-    public EventArrayAdapter(Context context, ArrayList<Event> events){
+    public EventArrayAdapter(Context context, ArrayList<Event> events) {
         super(context,0,events);
     }
 
@@ -38,6 +38,7 @@ public class EventArrayAdapter extends ArrayAdapter<Event> {
      * @return
      *  returns a view to display
      */
+    @NonNull
     public View getView(int position, View convertView, @NonNull ViewGroup parent){
         Event event = getItem(position);
 

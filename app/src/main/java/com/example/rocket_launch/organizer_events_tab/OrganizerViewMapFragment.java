@@ -1,4 +1,4 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
 
@@ -12,14 +12,11 @@ import android.widget.ImageButton;
 import com.example.rocket_launch.R;
 
 /**
- * fragment that is shown when a user wants to edit an event
+ * Fragment used for displaying a map to an organizer
  */
-public class OrganizerEditEventFragment extends Fragment {
+public class OrganizerViewMapFragment extends Fragment {
 
-    /**
-     * default constructor
-     */
-    public OrganizerEditEventFragment() {
+    public OrganizerViewMapFragment() {
         // Required empty public constructor
     }
 
@@ -33,10 +30,10 @@ public class OrganizerEditEventFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.organizer_edit_event_fragment, container, false);
+        View view = inflater.inflate(R.layout.organizer_view_map_fragment, container, false);
 
         //back button
-        ImageButton backButton = view.findViewById(R.id.cancel_edit_event_button);
+        ImageButton backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> closeFragment());
 
         return view;

@@ -1,6 +1,5 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.organizer_events_tab;
 
-import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
@@ -9,33 +8,20 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 
-import com.example.rocket_launch.Event;
 import com.example.rocket_launch.R;
 
 /**
- * fragment that displays qr code to organizer
+ * fragment that is shown when a user wants to edit an event
  */
-public class OrganizerViewQrCodeFragment extends Fragment {
-    Event event;
+public class OrganizerEditEventFragment extends Fragment {
 
     /**
      * default constructor
      */
-    public OrganizerViewQrCodeFragment() {
+    public OrganizerEditEventFragment() {
         // Required empty public constructor
     }
-
-    /**
-     * constructor used for passing an event
-     * @param event
-     *  event of qr code to display
-     */
-    public OrganizerViewQrCodeFragment(Event event) {
-        this.event = event;
-    }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,18 +33,11 @@ public class OrganizerViewQrCodeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        View view = inflater.inflate(R.layout.organizer_view_qr_fragment, container, false);
+        View view = inflater.inflate(R.layout.organizer_edit_event_fragment, container, false);
 
         //back button
-        ImageButton backButton = view.findViewById(R.id.back_button);
+        ImageButton backButton = view.findViewById(R.id.cancel_edit_event_button);
         backButton.setOnClickListener(v -> closeFragment());
-
-        // QR code
-        ImageView qrCodeImage = view.findViewById(R.id.event_qr_code);
-        Bitmap qrCodeBitmap = event.generateQRCode();
-        if (qrCodeBitmap != null) {
-            qrCodeImage.setImageBitmap(qrCodeBitmap);
-        }
 
         return view;
     }

@@ -80,6 +80,16 @@
         <item name="android:padding">20sp</item>
         <item name="android:textColor">@color/fern_green</item> </style>
 
+    <!--Button C Style-->
+    <style name="ButtonStyleC">
+        <item name="android:backgroundTint">@color/coral_pink</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">20sp</item>
+        <item name="android:textSize">20sp</item>
+        <item name="android:padding">20sp</item>
+        <item name="android:textColor">@color/lavender</item> </style>
+
     <!--X button Style-->
     <style name="XButtonStyle">
         <item name="android:src">@drawable/close_thick</item>

@@ -1,24 +1,20 @@
-package com.example.rocket_launch.organizer_event_details;
+package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 
 /**
@@ -62,27 +58,35 @@ public class CreatedEventDetailsFragment extends Fragment {
         Button viewEntrantMapButton = view.findViewById(R.id.view_entrant_map_button);
         Button viewEventQrCodeButton = view.findViewById(R.id.view_event_qr_code_button);
 
+        // create bundle for passing eventID
+        Bundle bundle = new Bundle();
+        bundle.putString("eventId", event.getEventID());
+
         //edit button
         editEventButton.setOnClickListener(v -> {
             OrganizerEditEventFragment organizerEditEventFragment = new OrganizerEditEventFragment();
+            organizerEditEventFragment.setArguments(bundle);
             pressButton(organizerEditEventFragment);
         });
 
         //View entrant list button
         viewEntrantListsButton.setOnClickListener(v -> {
             OrganizerViewEntrantListsFragment organizerViewEntrantListsFragment = new OrganizerViewEntrantListsFragment();
+            organizerViewEntrantListsFragment.setArguments(bundle);
             pressButton(organizerViewEntrantListsFragment);
         });
 
         //View Entrant Map button
         viewEntrantMapButton.setOnClickListener(v -> {
             OrganizerViewMapFragment organizerViewMapFragment = new OrganizerViewMapFragment();
+            organizerViewMapFragment.setArguments(bundle);
             pressButton(organizerViewMapFragment);
         });
 
         //View QR Code Button
         viewEventQrCodeButton.setOnClickListener(v -> {
             OrganizerViewQrCodeFragment organizerViewQrCodeFragment = new OrganizerViewQrCodeFragment(event);
+            organizerViewQrCodeFragment.setArguments(bundle);
             pressButton(organizerViewQrCodeFragment);
         });
 

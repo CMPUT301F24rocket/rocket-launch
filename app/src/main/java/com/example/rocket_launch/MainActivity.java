@@ -61,25 +61,22 @@ public class MainActivity extends AppCompatActivity {
 
         String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        usersDB.getUser(androidID, new OnSuccessListener<DocumentSnapshot>() {
+        usersDB.getUser(androidID, new OnSuccessListener<User>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                User user;
-                if (documentSnapshot.exists()) {
-                    user = documentSnapshot.toObject(User.class);
+            public void onSuccess(User user) {
+                if (user != null) {
                     checkUserRole(user);
                     setupNavBar(user.getRoles());
                 } else {
                     user = new User();
-                    user.setAndroid_id(androidID);
+                    user.setAndroidId(androidID);
                     usersDB.addUser(androidID, user);
-                    FirebaseFirestore db = FirebaseFirestore.getInstance();
-                    DocumentReference userRef = db.collection("user_info").document(androidID);  // Reference the collection
-                    SelectRolesFragment frag = new SelectRolesFragment(user.getRoles(), userRef);
+                    SelectRolesFragment frag = new SelectRolesFragment(user.getRoles());
                     frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {
                         @Override
-                        public void onSuccess() {
-                            setupNavBar(user.getRoles());
+                        public void onSuccess(Roles roles) {
+                            usersDB.setRoles(androidID, roles);
+                            setupNavBar(roles);
                         }
                     });
                     frag.show(getSupportFragmentManager(), "Create New User");
@@ -147,11 +144,6 @@ public class MainActivity extends AppCompatActivity {
         if (!roles.isOrganizer()) {
             // if not organizer, don't show create events
             menu.findItem(R.id.navigation_create_events).setVisible(false);
-        }
-
-        // likely not needed
-        if (roles.isAdmin()) {
-            bottomNav.setSelectedItemId(R.id.navigation_home);
         }
     }
 }

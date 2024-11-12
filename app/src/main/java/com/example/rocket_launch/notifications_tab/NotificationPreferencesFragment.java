@@ -1,4 +1,4 @@
-package com.example.rocket_launch;
+package com.example.rocket_launch.notifications_tab;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.widget.SwitchCompat;
 import androidx.fragment.app.DialogFragment;
 
+import com.example.rocket_launch.R;
 import com.google.firebase.firestore.DocumentReference;
 
 /**

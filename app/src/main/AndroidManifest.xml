@@ -26,7 +26,7 @@
             android:name=".admin.AdminModeActivity"
             android:exported="false" />
         <activity
-            android:name=".EventDetailsFragment"
+            android:name=".entrant_events_tab.ScannedEventDetailsFragment"
             android:exported="false" />
         <activity
             android:name=".nav_fragments.UserProfileFragment"
@@ -42,7 +42,7 @@
             android:name=".nav_fragments.UserEventsFragment"
             android:exported="true" />
         <activity
-            android:name=".entrant.QRCodeScannerActivity"
+            android:name=".entrant_events_tab.QRCodeScannerActivity"
             android:exported="true"/>
         <activity
             android:name=".MainActivity"
