@@ -82,10 +82,10 @@ public class UserTest {
      */
     public void testAddAndRemoveJoinedEvent() {
         user.addJoinedEvent("event1");
-        assertTrue(user.getEventsJoined().contains("event1"));
+        assertTrue(user.getEventsRegistered().contains("event1"));
 
         user.removeJoinedEvent("event1");
-        assertFalse(user.getEventsJoined().contains("event1"));
+        assertFalse(user.getEventsRegistered().contains("event1"));
     }
 
     @Test
