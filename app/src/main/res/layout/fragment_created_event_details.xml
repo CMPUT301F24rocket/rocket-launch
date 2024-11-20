@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".organizer_event_details.CreatedEventDetailsFragment">
+    tools:context=".organizer_events_tab.CreatedEventDetailsFragment">
 
     <TextView 
         android:id="@+id/organizer_event_details_header"

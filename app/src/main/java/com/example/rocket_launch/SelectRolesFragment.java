@@ -14,17 +14,31 @@ import androidx.annotation.Nullable;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 
+import java.util.Objects;
+
+/**
+ * fragment displayed when a user wants to edit their roles
+ */
 public class SelectRolesFragment extends DialogFragment {
     private Roles roles;
-    private DocumentReference userRef;
+    private UsersDB usersDB;
+    private String androidID;
 
-    SelectRolesFragment(Roles roles, DocumentReference userRef) {
+    /**
+     * constructor
+     * @param roles
+     *  current roles
+     */
+    SelectRolesFragment(Roles roles) {
         this.roles = roles;
-        this.userRef = userRef;
+        usersDB = new UsersDB();
     }
 
+    /**
+     * interface for callback
+     */
     public interface onSuccessListener {
-        void onSuccess();
+        void onSuccess(Roles roles);
     }
     private onSuccessListener listener;
 
@@ -46,34 +60,26 @@ public class SelectRolesFragment extends DialogFragment {
                 .setPositiveButton("Ok", (dialog, which) -> {
                     roles.setEntrant(entrant_switch.isChecked());
                     roles.setOrganizer(organizer_switch.isChecked());
-                    if (userRef != null) {
-                        userRef.update("roles", roles);
 
-                        BottomNavigationView bottomNav = getActivity().findViewById(R.id.bottom_nav_view);
-                        if (bottomNav != null) {
-                            Menu menu = bottomNav.getMenu();
+                    BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_nav_view);
 
-                            if (!roles.isEntrant()) {
-                                // if not entrant, don't show user events
-                                menu.findItem(R.id.navigation_user_events).setVisible(false);
-                            }
-                            else {
-                                menu.findItem(R.id.navigation_user_events).setVisible(true);
-                            }
-                            if (!roles.isOrganizer()) {
-                                // if not organizer don't show create events
-                                menu.findItem(R.id.navigation_create_events).setVisible(false);
-                            }
-                            else {
-                                menu.findItem(R.id.navigation_create_events).setVisible(true);
-                            }
-                        }
+                    if (bottomNav != null) {
+                        Menu menu = bottomNav.getMenu();
+                        // update navbar
+                        menu.findItem(R.id.navigation_user_events).setVisible(roles.isEntrant());
+                        menu.findItem(R.id.navigation_create_events).setVisible(roles.isOrganizer());
                     }
-                    listener.onSuccess();
+
+                    listener.onSuccess(roles);
                 })
                 .create();
     }
 
+    /**
+     * sets the onSuccessListener to a given listener
+     * @param listener
+     *  listener to be set to
+     */
     public void setOnSuccessListener(onSuccessListener listener) {
         this.listener = listener;
     }
