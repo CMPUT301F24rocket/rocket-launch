@@ -2,12 +2,14 @@ package com.example.rocket_launch.entrant_events_tab;
 
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -23,6 +25,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
  */
 public class ScannedEventDetailsFragment extends Fragment {
 
+    String androidId;
     String eventId;
     Event event;
     EventsDB eventsdb;
@@ -55,7 +58,8 @@ public class ScannedEventDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         eventsdb = new EventsDB();
         usersDB = new UsersDB();
-
+        androidId = Settings.Secure
+                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     @Override
@@ -104,15 +108,18 @@ public class ScannedEventDetailsFragment extends Fragment {
      * function to join waiting list and update databse accordingly
      */
     private void joinWaitlist() {
-        // get user id
-        String androidId = Settings.Secure
-                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        // -1 specifies that it the waitlist is unlimited
+        if (event.getWaitingList().size() < event.getMaxWaitlistSize() || event.getMaxWaitlistSize() == -1) {
+            // add to waitlist of event
+            eventsdb.addUserToWaitingList(eventId, androidId);
 
-        // add to waitlist of event
-        eventsdb.addUserToWaitingList(eventId, androidId);
-
-        // add to user's joined events
-        usersDB.addWaitlistedEvent(androidId, eventId);
+            // add to user's joined events
+            usersDB.addWaitlistedEvent(androidId, eventId);
+        }
+        else {
+            Toast.makeText(requireContext(), "Waitlist full", Toast.LENGTH_LONG).show();
+            Log.d("Firebase", "Waiting list is full");
+        }
         closeFragment();
     }
 
