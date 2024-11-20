@@ -120,17 +120,23 @@ public class ScannedEventDetailsFragment extends Fragment {
     private void joinWaitlist() {
         // -1 specifies that it the waitlist is unlimited
         if (event.getWaitingList().size() < event.getMaxWaitlistSize() || event.getMaxWaitlistSize() == -1) {
-            // add to waitlist of event
-            eventsdb.addUserToWaitingList(eventId, androidId);
+            if (!event.getWaitingList().contains(androidId)) {
+                // add to waitlist of event
+                eventsdb.addUserToWaitingList(eventId, androidId);
 
-            // add to user's joined events
-            usersDB.addWaitlistedEvent(androidId, eventId);
+                // add to user's joined events
+                usersDB.addWaitlistedEvent(androidId, eventId);
+                closeFragment();
+            }
+            else {
+                Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
+                Log.d("joinWaitlist", "user already in waitlist");
+            }
         }
         else {
-            Toast.makeText(requireContext(), "Waitlist full", Toast.LENGTH_LONG).show();
-            Log.d("Firebase", "Waiting list is full");
+            Toast.makeText(requireContext(), "Waitlist Full", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "Waitlist is Full");
         }
-        closeFragment();
     }
 
     /**
