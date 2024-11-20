@@ -1,8 +1,16 @@
 package com.example.rocket_launch;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.media.Image;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.TextView;
+
+import androidx.annotation.NonNull;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
@@ -11,6 +19,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+
 
 public class Event {
     private String eventID;
@@ -23,9 +32,17 @@ public class Event {
     private int participants;
     private Image photo;
     private List<String> waitingList;
+    private List<String> invitedEntrants;
+    private List<String> cancelledEntrants;
+    private List<String> finalEntrants;
     private int maxWaitlistSize; // Integer
 
     public Event(){
+        // verify lists appear in database -> ensures no access to undefined attribute
+        this.waitingList = new ArrayList<>();
+        this.cancelledEntrants = new ArrayList<>();
+        this.finalEntrants = new ArrayList<>();
+        this.invitedEntrants = new ArrayList<>();
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -43,20 +60,6 @@ public class Event {
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
 
-
-
-
-    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo, int maxWaitlistSize) {
-        this.eventID = eventID;
-        this.name = name;
-        this.description = description;
-        this.startTime = startTime;
-        this.endTime = endTime;
-        this.participants = participants;
-        this.photo = photo;
-        this.waitingList = new ArrayList<>();
-        this.maxWaitlistSize = maxWaitlistSize;
-    }
 
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;
@@ -139,5 +142,70 @@ public class Event {
             Log.e("error creating qr code", e.toString());
         }
         return null;
+    }
+
+    public List<String> getCancelledEntrants() {
+        return cancelledEntrants;
+    }
+
+    public void setCancelledEntrants(List<String> cancelledEntrants) {
+        this.cancelledEntrants = cancelledEntrants;
+    }
+
+    public List<String> getFinalEntrants() {
+        return finalEntrants;
+    }
+
+    public void setFinalEntrants(List<String> finalEntrants) {
+        this.finalEntrants = finalEntrants;
+    }
+
+    public List<String> getInvitedEntrants() {
+        return invitedEntrants;
+    }
+
+    public void setInvitedEntrants(List<String> invitedEntrants) {
+        this.invitedEntrants = invitedEntrants;
+    }
+
+    public static class UserArrayAdapter extends ArrayAdapter<User> {
+
+        /**
+         * constructor
+         * @param context
+         *  context of where fragment is
+         * @param users
+         *  users list to display
+         */
+        public UserArrayAdapter(Context context, ArrayList<User> users) {
+            super(context,0,users);
+        }
+
+        /**
+         * get current view
+         * @param position
+         *  position in array
+         * @param convertView
+         *  view to convert to
+         * @param parent
+         *  parent display
+         * @return
+         *  returns a view to display
+         */
+        @NonNull
+        public View getView(int position, View convertView, @NonNull ViewGroup parent) {
+            User user = getItem(position);
+
+            if (convertView == null) {
+                convertView = LayoutInflater.from(getContext()).inflate(R.layout.event_list_content, parent, false);
+            }
+
+            TextView userName = convertView.findViewById(R.id.list_event_name);
+
+            assert user != null;
+            userName.setText(user.getUserName());
+
+            return convertView;
+        }
     }
 }

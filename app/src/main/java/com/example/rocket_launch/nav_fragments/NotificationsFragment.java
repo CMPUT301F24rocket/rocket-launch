@@ -14,8 +14,9 @@ import androidx.fragment.app.Fragment;
 
 import android.provider.Settings.Secure;
 
-import com.example.rocket_launch.NotificationPreferencesFragment;
+import com.example.rocket_launch.notifications_tab.NotificationPreferencesFragment;
 import com.example.rocket_launch.R;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
@@ -24,6 +25,9 @@ import java.util.ArrayList;
 import java.util.List;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * fragment used to display all of a user's notifications
+ */
 public class NotificationsFragment extends Fragment {
 
     private ListView notificationsListView;
@@ -40,6 +44,9 @@ public class NotificationsFragment extends Fragment {
 
     private FloatingActionButton notificationSettingsButton;
 
+    /**
+     * default constructor
+     */
     public NotificationsFragment(){
         // we are required to have (an) empty constructor
     }
@@ -78,29 +85,25 @@ public class NotificationsFragment extends Fragment {
 
     }
 
+    /**
+     * function used to load and display all notifications
+     */
     private void loadNotifications() {
 
         usersDB = new UsersDB();
         // reference https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
         String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
 
-        usersDB.getUser(androidID, documentSnapshot -> {
-            user = documentSnapshot.toObject(User.class);
-
-            assert user != null;
-            List<String> notifications = user.getNotifications();
-            if (notifications != null) {
+        usersDB.getUser(androidID, new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User newUser) {
+                user = newUser;
+                List<String> notifications = user.getNotifications();
                 notificationList.clear();
                 notificationList.addAll(notifications);
                 notificationsAdapter.notifyDataSetChanged();
-            } else {
-                Log.d("NotificationFragment", "No notifications found");
+
             }
-
-        }, e -> {
-            // Handle the failure case
-            Log.e("NotificationFragment", "Error fetching user", e);
-        }); // <-- Closing parenthesis and semicolon added here
-
+        }, e -> Log.e("NotificationFragment", "Error fetching user", e));
     }
 }

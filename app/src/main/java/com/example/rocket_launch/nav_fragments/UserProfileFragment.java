@@ -20,16 +20,25 @@ import com.bumptech.glide.Glide;
 import com.example.rocket_launch.EditProfileFragment;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.Roles;
+import com.example.rocket_launch.User;
+import com.example.rocket_launch.UsersDB;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+/**
+ * fragment for displaying all user profile information
+ */
 public class UserProfileFragment extends Fragment {
 
     private static final String TAG = "UserProfileFragment";
-    private FirebaseFirestore db;
+    // user data
+    private UsersDB usersDB;
     private String androidId;
-    private String currentName, currentEmail, currentPhone, currentFacility, profilePhotoPath;
+    private User user;
+
+    // user interface items
     private TextView nameTextView;
     private TextView emailTextView;
     private TextView phoneTextView;
@@ -37,7 +46,6 @@ public class UserProfileFragment extends Fragment {
     private LinearLayout facilityLayout;
     private ConstraintLayout profileBodyView;
     private ImageView profileImageView;
-    private Roles roles;
     private ImageView profilePictureView;
 
 
@@ -71,20 +79,16 @@ public class UserProfileFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         // Initialize Firestore
-        db = FirebaseFirestore.getInstance();
+        usersDB = new UsersDB();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
-
-        // Fetch initial user data from Firestore
-        fetchUserProfile();
     }
 
+    /**
+     * opens a fragment used for editing contents of a user's profile
+     */
     private void openEditProfileFragment() {
         Bundle bundle = new Bundle();
         bundle.putString("androidID", androidId);
-        bundle.putString("name", currentName);
-        bundle.putString("email", currentEmail);
-        bundle.putString("phone", currentPhone);
-        bundle.putString("facility", currentFacility);
 
         EditProfileFragment editProfileFragment = new EditProfileFragment();
         editProfileFragment.setArguments(bundle);
@@ -96,42 +100,37 @@ public class UserProfileFragment extends Fragment {
                 .commit();
     }
 
+    /**
+     * function that gets and displays all contents of a user's profile
+     */
     private void fetchUserProfile() {
-        db.collection("user_info")
-                .document(androidId)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        DocumentSnapshot document = task.getResult();
+        usersDB.getUser(androidId, new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User newUser) {
+                user = newUser;
+                if (user.getRoles() != null && user.getRoles().isOrganizer()) {
+                    facilityLayout.setVisibility(View.VISIBLE);
+                    facilityTextView.setText(user.getUserFacility());
+                }
 
-                        currentName = document.getString("userName");
-                        currentEmail = document.getString("userEmail");
-                        currentPhone = document.getString("userPhoneNumber");
-                        currentFacility = document.getString("userFacility");
-                        String profilePhotoPath = document.getString("profilePhotoPath");
+                nameTextView.setText(user.getUserName());
+                emailTextView.setText(user.getUserEmail());
+                phoneTextView.setText(user.getUserPhoneNumber());
 
-                        roles = document.get("roles", Roles.class);
-                        if (roles != null && roles.isOrganizer()) {
-                            facilityLayout.setVisibility(View.VISIBLE);
-                            facilityTextView.setText(currentFacility);
-                        }
-
-                        nameTextView.setText(currentName);
-                        emailTextView.setText(currentEmail);
-                        phoneTextView.setText(currentPhone);
-
-                        if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
-                            loadProfileImage(profilePhotoPath);
-                        } else {
-                            profilePictureView.setImageResource(R.drawable.default_image);
-                        }
-                    } else {
-                        Log.e(TAG, "No matching document found or task failed", task.getException());
-                    }
-                });
+                if (user.getProfilePhotoPath() != null && !user.getProfilePhotoPath().isEmpty()) {
+                    loadProfileImage(user.getProfilePhotoPath());
+                } else {
+                    profilePictureView.setImageResource(R.drawable.default_image);
+                }
+            }
+        }, e -> Log.e(TAG, "No matching document found or task failed", e));
     }
 
-
+    /**
+     * function that loads a user's profile photo
+     * @param imagePath
+     *  path to profile photo in database
+     */
     private void loadProfileImage(String imagePath) {
         Glide.with(this)
                 .load(imagePath)
@@ -140,26 +139,27 @@ public class UserProfileFragment extends Fragment {
     }
 
 
-
-
+    /**
+     * function used to update user interface if change occurred
+     */
     private void updateUI() {
         // Set the user details
-        nameTextView.setText(currentName);
-        emailTextView.setText(currentEmail);
-        phoneTextView.setText(currentPhone);
+        nameTextView.setText(user.getUserName());
+        emailTextView.setText(user.getUserEmail());
+        phoneTextView.setText(user.getUserPhoneNumber());
 
         // Display facility if user is an organizer
-        if (roles != null && roles.isOrganizer()) {
+        if (user.getRoles() != null && user.getRoles().isOrganizer()) {
             facilityLayout.setVisibility(View.VISIBLE);
-            facilityTextView.setText(currentFacility);
+            facilityTextView.setText(user.getUserFacility());
         } else {
             facilityLayout.setVisibility(View.GONE);
         }
 
         // Load profile picture using Glide
-        if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
+        if (user.getProfilePhotoPath() != null && !user.getProfilePhotoPath().isEmpty()) {
             Glide.with(this)
-                    .load(profilePhotoPath)
+                    .load(user.getProfilePhoto())
                     .placeholder(R.drawable.default_image) // Optional placeholder image
                     .error(R.drawable.default_image) // Optional error image
                     .into(profileImageView);
