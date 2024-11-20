@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
@@ -18,6 +19,8 @@ import com.example.rocket_launch.UsersDB;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.Locale;
+
 /**
  * fragment to show details about a waitlisted event
  */
@@ -27,9 +30,10 @@ public class WaitlistedEventDetailsFragment extends Fragment {
     EventsDB eventsdb;
     UsersDB usersDB;
     TextView eventNameView;
-    TextView eventCapacityView;
+    TextView eventWaitlistCapacityView;
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
+    LinearLayout eventCapacityLayout;
 
     Button cancelWaitlistButton;
 
@@ -54,9 +58,10 @@ public class WaitlistedEventDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_waitlisted_event_details, container, false);
 
         eventNameView = view.findViewById(R.id.view_event_name);
-        eventCapacityView = view.findViewById(R.id.view_event_capacity);
+        eventWaitlistCapacityView = view.findViewById(R.id.view_waitlist_capacity);
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
+        eventCapacityLayout = view.findViewById(R.id.waitlist_capacity_layout);
 
         cancelWaitlistButton = view.findViewById(R.id.cancel_waitlist_button);
         cancelWaitlistButton.setOnClickListener(l -> {
@@ -82,7 +87,12 @@ public class WaitlistedEventDetailsFragment extends Fragment {
                     event = documentSnapshot.toObject(Event.class);
                     if (event != null) {
                         eventNameView.setText(event.getName());
-                        eventCapacityView.setText(String.valueOf( event.getCapacity() ));
+                        if (event.getMaxWaitlistSize() != -1) {
+                            eventCapacityLayout.setVisibility(View.VISIBLE);
+                            eventWaitlistCapacityView.setText(String.format(
+                                    Locale.CANADA, "%d / %d", event.getWaitingList().size(),
+                                    event.getCapacity()));
+                        }
                         eventGeolocationRequired.setChecked(event.getGeolocationRequired());
                         eventDescription.setText(event.getDescription());
                         // in get event so we cant press before we have event
