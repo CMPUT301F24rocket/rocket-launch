@@ -40,10 +40,12 @@
     <!--Style for Bottom Navigation bar-->
     <style name="BottomNavBarStyle">
 
-        <item name="android:layout_width">0sp</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginStart">0sp</item>
         <item name="android:layout_marginEnd">0sp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginTop">0dp</item>
         <item name="android:background">@color/periwinkle</item> </style>
 
     <!--Linear Layout Profile Style-->
@@ -89,6 +91,16 @@
         <item name="android:textSize">20sp</item>
         <item name="android:padding">20sp</item>
         <item name="android:textColor">@color/lavender</item> </style>
+
+    <!--Button D Style-->
+    <style name="ButtonStyleD">
+        <item name="android:backgroundTint">@color/tea_green</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">20sp</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">10sp</item>
+        <item name="android:textColor">@color/fern_green</item> </style>
 
     <!--X button Style-->
     <style name="XButtonStyle">

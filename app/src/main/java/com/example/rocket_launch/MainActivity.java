@@ -6,6 +6,7 @@ import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -47,6 +48,21 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        View fragmentView = findViewById(R.id.fragment_frame);
+        ViewCompat.setOnApplyWindowInsetsListener(fragmentView, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0,0,0, 0);
+            return insets;
+        });
+
+        View navBarView = findViewById((R.id.bottom_nav_view));
+        ViewCompat.setOnApplyWindowInsetsListener(navBarView, (v,insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+            return insets;
+        });
+
 
         // load fragments for navigation
         createEvent = new CreateEventFragment();
