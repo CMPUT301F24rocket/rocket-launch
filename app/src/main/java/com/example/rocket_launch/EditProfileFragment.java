@@ -36,7 +36,7 @@ import java.io.IOException;
  */
 public class EditProfileFragment extends Fragment {
 
-    private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
+    private EditText nameEditText, emailEditText, phoneEditText, facilityEditText, facilityAddressEditText;
     private LinearLayout facilityLayout;
     private ImageView profileImageView;
     private Button changeProfilePictureButton, deleteProfilePictureButton;
@@ -68,6 +68,7 @@ public class EditProfileFragment extends Fragment {
         emailEditText = view.findViewById(R.id.edit_user_email);
         phoneEditText = view.findViewById(R.id.edit_user_phone);
         facilityEditText = view.findViewById(R.id.edit_user_facility);
+        facilityAddressEditText = view.findViewById(R.id.edit_user_facility_address);
         profileImageView = view.findViewById(R.id.profile_image_view);
         changeProfilePictureButton = view.findViewById(R.id.change_profile_picture_button);
         deleteProfilePictureButton = view.findViewById(R.id.delete_profile_picture_button);
@@ -245,6 +246,8 @@ public class EditProfileFragment extends Fragment {
         if (user.getRoles().isOrganizer()) {
             facilityLayout.setVisibility(View.VISIBLE);
             facilityEditText.setText(user.getUserFacility());
+
+            facilityAddressEditText.setText(user.getUserFacilityAddress());
         }
         else {
             facilityLayout.setVisibility(View.GONE);
@@ -262,6 +265,7 @@ public class EditProfileFragment extends Fragment {
         user.setUserEmail(emailEditText.getText().toString());
         user.setUserPhoneNumber(phoneEditText.getText().toString());
         user.setUserFacility(facilityEditText.getText().toString());
+        user.setUserFacilityAddress(facilityAddressEditText.getText().toString());
         usersDB.updateUser(androidID, user,
                 success -> {Log.d(TAG, "user details updated"); closeFragment();},
                 error -> Log.e(TAG, "failed to update user details", error));
