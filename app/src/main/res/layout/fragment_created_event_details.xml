@@ -58,6 +58,10 @@
             style="@style/OrganizerEventDetailsButtons"
             android:text="View Event QR Code"/>
 
+        <Button
+            android:id="@+id/view_event_notification_button"
+            style="@style/OrganizerEventDetailsButtons"
+            android:text="Notify Waitlist"/>
 
     </LinearLayout>
 
