@@ -339,4 +339,22 @@ public class EventsDB {
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(events);})
                 .addOnFailureListener(onFailure);
     }
+
+    public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
+        // load event
+        loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Event event = documentSnapshot.toObject(Event.class);
+                    if (event != null) {
+                        event.sampleWaitlist(sampleAmount);
+                        eventsRef.document(eventId).set(event)
+                                .addOnSuccessListener(onSuccessListener)
+                                .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
+                    }
+                }
+            }
+        });
+    }
 }

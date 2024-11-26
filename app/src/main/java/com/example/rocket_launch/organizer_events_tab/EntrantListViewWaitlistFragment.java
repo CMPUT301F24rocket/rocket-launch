@@ -20,6 +20,7 @@ import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.entrant_events_tab.EntrantViewWaitingListFragment;
 import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
@@ -103,6 +104,9 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     }
 
     void sampleWaitlist() {
-
+        eventsDB.sampleWaitlist(eventId, users.size(), l -> {
+            Log.d("Firebase", "sample success");
+            fetchUsers();
+        });
     }
 }
