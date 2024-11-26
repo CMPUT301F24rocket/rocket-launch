@@ -36,7 +36,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.9"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintVertical_bias="0.02" />
 
     <ImageButton
@@ -50,5 +50,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.02"
         app:layout_constraintVertical_bias="0.02"/>
+
+    <!--Frame for map options-->
+    <FrameLayout
+        android:id="@+id/map_options_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="100dp"
+        android:layout_marginHorizontal="10dp"
+        android:padding="10dp"
+
+        app:layout_constraintTop_toTopOf="@+id/map_view_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -102,6 +102,16 @@
         <item name="android:padding">10sp</item>
         <item name="android:textColor">@color/fern_green</item> </style>
 
+    <!--Button E Style-->
+    <style name="ButtonStyleE">
+        <item name="android:backgroundTint">@color/thistle</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="cornerRadius">20sp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textColor">@color/gunmetal</item> </style>
+
     <!--X button Style-->
     <style name="XButtonStyle">
         <item name="android:src">@drawable/close_thick</item>
@@ -134,6 +144,31 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">@color/gunmetal</item>
         <item name="android:padding">10sp</item> </style>
+
+    <!--Map Options Linear Layout Horizontal Constants-->
+    <style name="MapOptionsHorizontalLinearLayoutConstants">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <!--Map Options Text Constants-->
+    <style name="MapOptionsTextConstants">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+    <!--A Line, that's it, a line because it looks nice~-->
+    <style name="DividerLineStyle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/gunmetal</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_marginBottom">15dp</item>
+    </style>
 
     <!--Listview header constants-->
     <style name="ListViewHeaderA">

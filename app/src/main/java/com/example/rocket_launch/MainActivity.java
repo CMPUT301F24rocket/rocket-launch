@@ -74,7 +74,6 @@ public class MainActivity extends AppCompatActivity {
                 "osmdroid_preferences",
                 Context.MODE_PRIVATE
         );
-
         Configuration.getInstance().load(context, sharedPreferences);
         Configuration.getInstance().setUserAgentValue(context.getPackageName());
 
