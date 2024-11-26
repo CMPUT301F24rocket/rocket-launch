@@ -136,14 +136,14 @@
                     <TextView
                         style="@style/MapOptionsTextConstants"
                         android:textStyle="italic"
-                        android:text="Radius (meters): "/>
+                        android:text="Radius (km): "/>
 
                     <EditText
                         android:id="@+id/edit_radius"
                         style="@style/MapOptionsTextConstants"
                         android:paddingEnd="10dp"
                         android:textStyle="italic"
-                        android:text="Enter Radius"/>
+                        android:hint="Enter Radius"/>
 
                 </LinearLayout>
 
