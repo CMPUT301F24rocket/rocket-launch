@@ -19,6 +19,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 
 public class Event {
@@ -142,6 +143,28 @@ public class Event {
             Log.e("error creating qr code", e.toString());
         }
         return null;
+    }
+
+    /**
+     * Author: Kaiden
+     * get sampleAmount of random userId's from event waitlist and remove and return them
+     * @param sampleAmount
+     *  (int) amount of entrants to remove and return
+     * @return sampledList
+     *  list of users removed
+     */
+    public List<String> sampleWaitlist(int sampleAmount) {
+        List<String> sampledList = new ArrayList<>();
+        if (sampleAmount < waitingList.size()) {
+            Random rand = new Random();
+            // sample sampleAmount from waitlist
+            for (int i = 0; i < sampleAmount; i++) {
+                int index = rand.nextInt(waitingList.size());
+                sampledList.add(waitingList.get(index));
+                waitingList.remove(index);
+            }
+        }
+        return sampledList;
     }
 
     public List<String> getCancelledEntrants() {
