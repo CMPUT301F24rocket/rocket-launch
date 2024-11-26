@@ -3,6 +3,7 @@ package com.example.rocket_launch.organizer_events_tab;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.os.Handler;
 import android.os.Looper;
@@ -11,7 +12,10 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ZoomButtonsController;
 
 import com.example.rocket_launch.NominatimGeocode;
 import com.example.rocket_launch.R;
@@ -23,8 +27,10 @@ import org.json.JSONException;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
+import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.ScaleBarOverlay;
 
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
@@ -40,16 +46,28 @@ import java.util.concurrent.Executors;
 public class OrganizerViewMapFragment extends Fragment {
     private String androidId;
     private MapView mapView = null;
+    private ScaleBarOverlay mapScaleBarOverlay;
     private UsersDB userDB;
     private User user;
     private String addressFacility;
     private GeoPoint facilityGeoPoint;
 
     //TODO: display coordinates of entrants
-    // get facility coordinates from address (entered in userProfile) --> geocoding
-    // make sure the address entered is valid
-    // add extra options: entrants within a specified range of facility & those outside
+    // get facility coordinates from address (entered in userProfile) --> geocoding - DONE
+    // make sure the address entered is valid --> Set a default instead: DONE
+    // Get Entrant Locations on event sign up
+    //                      --> ask location permission
+    //                      --> put all entrant coordinates & Names into a list in EventDB
+    //                      --> for geoplotting and list views
+    // Enable edit facility address in mapView for convenience
+    //                      --> and update facility address in DB
+    //                      --> Create fragment for editing address
+    //                      --> put hint: "address not showing up? try simplifying it
+    //                      --> eg. ETLC University of Alberta Edmonton (no commas, special characters, or postal codes)
+    // Add range functionality:
+    //                      --> entrants within a specified range of facility & those outside
     //                      --> display it in a list so its easier to read
+    //                      --> XML - DONE
 
     public OrganizerViewMapFragment() {
         // Required empty public constructor
@@ -71,21 +89,19 @@ public class OrganizerViewMapFragment extends Fragment {
 
         //Setting up mapView
         mapView = view.findViewById(R.id.organizer_map_view);
-
         mapView.setTileSource(TileSourceFactory.MAPNIK);
 
         IMapController mapController = mapView.getController();
-        mapController.setZoom(15.0);
+        mapController.setZoom(15.0); //setting zoom on launch
         mapView.setMultiTouchControls(true); //allows finger pinch zooming
+        setMapScaleBarOverlay(); //create scale bar
 
         //Set default coordinate for map
         GeoPoint defaultStartPoint = new GeoPoint(53.52741517718694, -113.52959166397568); //ETLC coordinates
         String defaultAddress = "Engineering Teaching and Learning Complex Edmonton";
 
-        //String addressFacilityTest = defaultAddress; //TODO: replace this with organizer facility address later
-
         //use the callback to fetch data from database asynchronously
-        //geocode address to get geopoint
+        //geocode address to get geopoint for location on view start
         getFacilityAddress(addressFetched -> {
             if (addressFetched != null){
                 addressFacility = addressFetched;
@@ -102,6 +118,20 @@ public class OrganizerViewMapFragment extends Fragment {
         //back button
         ImageButton backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> closeFragment());
+
+        //map options button
+        ImageButton mapOptionsButton = view.findViewById(R.id.organizer_map_options_button);
+        mapOptionsButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                OrganizerMapViewOptionsFragment mapOptions = new OrganizerMapViewOptionsFragment();
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.map_options_frame, mapOptions)
+                        .addToBackStack(null)
+                        .commit();
+            }
+        });
 
         return view;
     }
@@ -146,6 +176,15 @@ public class OrganizerViewMapFragment extends Fragment {
                 throw new RuntimeException(e);
             }
         });
+    }
+
+    private void setMapScaleBarOverlay(){
+        //setting up scale bar attributes
+        mapScaleBarOverlay = new ScaleBarOverlay(mapView);
+        mapScaleBarOverlay.setAlignRight(true);
+        mapScaleBarOverlay.setScaleBarOffset(350,50);
+        mapScaleBarOverlay.setTextSize(40);
+        mapView.getOverlays().add(mapScaleBarOverlay);
     }
 
     private void createMapMarker(String name, GeoPoint geoPoint){
