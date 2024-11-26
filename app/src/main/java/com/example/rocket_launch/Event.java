@@ -147,24 +147,20 @@ public class Event {
 
     /**
      * Author: Kaiden
-     * get sampleAmount of random userId's from event waitlist and remove and return them
+     * remove sampleAmount of users from waitlist and add them to invited list
      * @param sampleAmount
      *  (int) amount of entrants to remove and return
-     * @return sampledList
-     *  list of users removed
      */
-    public List<String> sampleWaitlist(int sampleAmount) {
-        List<String> sampledList = new ArrayList<>();
+    public void sampleWaitlist(int sampleAmount) {
         if (sampleAmount < waitingList.size()) {
             Random rand = new Random();
             // sample sampleAmount from waitlist
             for (int i = 0; i < sampleAmount; i++) {
                 int index = rand.nextInt(waitingList.size());
-                sampledList.add(waitingList.get(index));
+                invitedEntrants.add(waitingList.get(index));
                 waitingList.remove(index);
             }
         }
-        return sampledList;
     }
 
     public List<String> getCancelledEntrants() {
