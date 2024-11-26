@@ -1,11 +1,14 @@
 package com.example.rocket_launch;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
@@ -24,6 +27,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+
+import org.osmdroid.config.Configuration;
 
 /**
  * main activity that gets loaded on startup
@@ -47,6 +52,30 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+
+        View fragmentView = findViewById(R.id.fragment_frame);
+        ViewCompat.setOnApplyWindowInsetsListener(fragmentView, (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(0,0,0, 0);
+            return insets;
+        });
+
+        View navBarView = findViewById((R.id.bottom_nav_view));
+        ViewCompat.setOnApplyWindowInsetsListener(navBarView, (v,insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+            return insets;
+        });
+
+        //Referenced: https://github.com/osmdroid/osmdroid/wiki/How-to-use-the-osmdroid-library-(Java), accessed 2024-11-24
+        //Initializing osmdroid configuration
+        Context context = getApplicationContext();
+        SharedPreferences sharedPreferences = context.getSharedPreferences(
+                "osmdroid_preferences",
+                Context.MODE_PRIVATE
+        );
+        Configuration.getInstance().load(context, sharedPreferences);
+        Configuration.getInstance().setUserAgentValue(context.getPackageName());
 
         // load fragments for navigation
         createEvent = new CreateEventFragment();

@@ -57,6 +57,14 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
 
+    //OSM
+    implementation("org.osmdroid:osmdroid-android:6.1.11")
+    implementation("org.osmdroid:osmdroid-wms:6.1.11")
+    implementation("org.osmdroid:osmdroid-mapsforge:6.1.11")
+    implementation("org.osmdroid:osmdroid-geopackage:6.1.11")
+
+    //Nominatim (For Geocoding)
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
 
     // Espresso and JUnit for UI Testing
     implementation ("androidx.appcompat:appcompat:1.6.1")
