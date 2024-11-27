@@ -71,32 +71,30 @@ android:padding="16dp">
         android:layout_height="wrap_content">
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Event Name: "/>
-
-        <TextView
             android:id="@+id/view_event_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
+            android:textSize="24sp"
+            android:textStyle="bold"
             android:padding="16dp"/> </LinearLayout>
 
-    <!--Set Event Capacity Size-->
+    <!--Set Event Waitlist Capacity Size-->
     <LinearLayout
+        android:id="@+id/waitlist_capacity_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:orientation="horizontal">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="20dp"
-            android:text="Event Capacity: "/>
+            android:text="waitlist capacity: "/>
 
         <TextView
-            android:id="@+id/view_event_capacity"
+            android:id="@+id/view_waitlist_capacity"
             android:layout_width="100dp"
             android:textAlignment="center"
             android:textSize="20dp"

@@ -15,10 +15,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Consumer;
 
 /**
- * database class for interfacing with database
+ * databse class for interfacing with database
  */
 public class UsersDB {
     private FirebaseFirestore db;
@@ -328,21 +327,5 @@ public class UsersDB {
                 })
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(users);})
                 .addOnFailureListener(onFailure);
-    }
-
-    public void getAllProfiles(Consumer<List<User>> onSuccess, Consumer<Exception> onFailure) {
-        usersRef.get()
-                .addOnSuccessListener(querySnapshot -> {
-                    List<User> userList = new ArrayList<>();
-                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
-                        User user = doc.toObject(User.class);
-                        if (user != null) {
-                            user.setAndroidId(doc.getId());
-                            userList.add(user);
-                        }
-                    }
-                    onSuccess.accept(userList);
-                })
-                .addOnFailureListener(onFailure::accept);
     }
 }

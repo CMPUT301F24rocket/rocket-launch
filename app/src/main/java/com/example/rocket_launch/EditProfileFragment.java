@@ -3,6 +3,10 @@ package com.example.rocket_launch;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +24,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -30,13 +35,23 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 /**
  * fragment for organizer edit profile
  */
 public class EditProfileFragment extends Fragment {
 
-    private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
+    private EditText nameEditText, emailEditText, phoneEditText, facilityEditText, facilityAddressEditText;
     private LinearLayout facilityLayout;
     private ImageView profileImageView;
     private Button changeProfilePictureButton, deleteProfilePictureButton;
@@ -68,6 +83,7 @@ public class EditProfileFragment extends Fragment {
         emailEditText = view.findViewById(R.id.edit_user_email);
         phoneEditText = view.findViewById(R.id.edit_user_phone);
         facilityEditText = view.findViewById(R.id.edit_user_facility);
+        facilityAddressEditText = view.findViewById(R.id.edit_user_facility_address);
         profileImageView = view.findViewById(R.id.profile_image_view);
         changeProfilePictureButton = view.findViewById(R.id.change_profile_picture_button);
         deleteProfilePictureButton = view.findViewById(R.id.delete_profile_picture_button);
@@ -77,9 +93,8 @@ public class EditProfileFragment extends Fragment {
         Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
         Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
         Button generateProfileButton = view.findViewById(R.id.generate_profile_picture_button);
-        generateProfileButton.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Implementation in progress...", Toast.LENGTH_SHORT).show()
-        );
+        generateProfileButton.setOnClickListener(v -> loadFixedProfilePicture());
+
 
         // Load and display existing user details
         loadUserDetails();
@@ -93,6 +108,105 @@ public class EditProfileFragment extends Fragment {
 
         return view;
     }
+    private void setDefaultProfilePicture(String userName) {
+        // Default background color and text settings
+        int width = 200;  // Width of the Bitmap
+        int height = 200; // Height of the Bitmap
+        int textColor = Color.BLACK;
+        float textSize = 80f;
+
+        // Load the background image (new_image) from resources
+        Bitmap backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.new_image);
+        Bitmap scaledBackground = Bitmap.createScaledBitmap(backgroundBitmap, width, height, false);
+
+        // Create a new Bitmap and Canvas to draw
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Draw the background image
+        canvas.drawBitmap(scaledBackground, 0, 0, null);
+
+        // Set up Paint for the text
+        Paint paint = new Paint();
+        paint.setColor(textColor);
+        paint.setTextSize(textSize);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+
+        // Use a premium built-in font (example: sans-serif-medium)
+        paint.setTypeface(Typeface.create("serif", Typeface.NORMAL));
+
+        // Draw the first letter of the user's name
+        if (userName != null && !userName.isEmpty()) {
+            String firstLetter = userName.substring(0, 1).toUpperCase();
+            Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+            float x = width / 2f;
+            float y = (height / 2f) - ((fontMetrics.ascent + fontMetrics.descent) / 2f);
+            canvas.drawText(firstLetter, x, y, paint);
+        }
+
+        // Set the final Bitmap to the ImageView
+        profileImageView.setImageBitmap(bitmap);
+    }
+
+
+    private void loadFixedProfilePicture() {
+        // List of fixed URLs
+        String[] fixedImageUrls = {
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage1.png?alt=media&token=ee6fc585-b355-4d48-8b67-154f82565637",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage2.png?alt=media&token=9266bc82-ac24-4edf-96ec-4478bfba1a11",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage3.png?alt=media&token=25d2b9cc-6a8e-4628-aa86-82e8e956d95f",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage4.png?alt=media&token=d1103424-9484-496f-9bb1-f911a7e7d080",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage5.png?alt=media&token=d5f35574-b5df-44e7-b599-8e5fa4c0804c",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage6.png?alt=media&token=776215f7-3c13-4cca-9d77-2661730830ad",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage10.png?alt=media&token=92e10f80-77b8-4e26-8a5f-7e60f008602d",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage7.png?alt=media&token=dee7f8b0-9302-41cc-a401-2d324fb7f19f",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage8.png?alt=media&token=882e7cfe-a523-4a5b-94c5-71228070dcee",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage9.png?alt=media&token=8d9e548a-a3df-4c80-ba0c-25615343c04b"
+        };
+
+        // Generate a random index
+        int randomIndex = (int) (Math.random() * fixedImageUrls.length);
+
+        // Get a random URL from the list
+        String randomUrl = fixedImageUrls[randomIndex];
+
+        // Load the image using Picasso
+        Picasso.get()
+                .load(randomUrl)
+                .into(profileImageView, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Successfully loaded
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        setDefaultProfilePicture(user.getUserName());
+                    }
+                });
+
+        saveProfilePictureUrlToFirestore(randomUrl);
+
+        // Log for debugging purposes
+        Log.d(TAG, "Loaded random image URL: " + randomUrl);
+    }
+
+
+    /**
+     * Save the selected profile picture URL to Firestore
+     * @param imageUrl The URL of the selected image
+     */
+    private void saveProfilePictureUrlToFirestore(String imageUrl) {
+        // Update the user's profile photo path
+        user.setProfilePhotoPath(imageUrl);
+
+        // Save the updated user details in Firestore
+        usersDB.updateUser(androidID, user,
+                success -> Log.d(TAG, "Profile picture URL saved to Firestore."),
+                error -> Log.e(TAG, "Failed to save profile picture URL to Firestore.", error));
+    }
+
 
     /**
      * Open the gallery to select a new profile picture
@@ -180,7 +294,7 @@ public class EditProfileFragment extends Fragment {
     private void deleteProfilePhoto() {
         user.setProfilePhotoPath("");
         usersDB.updateUser(androidID, user, s -> {
-            profileImageView.setImageResource(R.drawable.default_image);
+            setDefaultProfilePicture(user.getUserName());
             Snackbar.make(requireView(), "Profile photo removed from cloud", Snackbar.LENGTH_SHORT).show();
             Log.d(TAG, "Profile photo path set to null in Firestore");
         }, e -> Log.e(TAG, "Failed to update Firestore", e));
@@ -217,7 +331,7 @@ public class EditProfileFragment extends Fragment {
                     .into(profileImageView);
         } else {
             // Set default image if no path is available
-            profileImageView.setImageResource(R.drawable.default_image);
+            setDefaultProfilePicture(user.getUserName());
         }
     }
 
@@ -242,17 +356,27 @@ public class EditProfileFragment extends Fragment {
         nameEditText.setText(user.getUserName());
         emailEditText.setText(user.getUserEmail());
         phoneEditText.setText(user.getUserPhoneNumber());
+
         if (user.getRoles().isOrganizer()) {
             facilityLayout.setVisibility(View.VISIBLE);
             facilityEditText.setText(user.getUserFacility());
-        }
-        else {
+            facilityAddressEditText.setText(user.getUserFacilityAddress());
+        } else {
             facilityLayout.setVisibility(View.GONE);
         }
-        if (user.getProfilePhotoPath() != null) {
-            loadProfileImage(user.getProfilePhotoPath());
+
+        // Load the profile picture URL from Firestore
+        String profilePhotoPath = user.getProfilePhotoPath();
+        if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
+            Picasso.get()
+                    .load(profilePhotoPath)
+                    .into(profileImageView);
+        } else {
+            // Generate dynamic default profile picture
+            setDefaultProfilePicture(user.getUserName());
         }
     }
+
 
     /**
      * Update user details in Firestore
@@ -262,6 +386,7 @@ public class EditProfileFragment extends Fragment {
         user.setUserEmail(emailEditText.getText().toString());
         user.setUserPhoneNumber(phoneEditText.getText().toString());
         user.setUserFacility(facilityEditText.getText().toString());
+        user.setUserFacilityAddress(facilityAddressEditText.getText().toString());
         usersDB.updateUser(androidID, user,
                 success -> {Log.d(TAG, "user details updated"); closeFragment();},
                 error -> Log.e(TAG, "failed to update user details", error));

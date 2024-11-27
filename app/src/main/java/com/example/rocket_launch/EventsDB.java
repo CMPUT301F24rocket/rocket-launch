@@ -1,8 +1,7 @@
 package com.example.rocket_launch;
 
-import android.content.Context;
-import android.provider.Settings;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -17,10 +16,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Random;
+import java.util.UUID;
 
 /**
  * class to help with firestore database
@@ -75,25 +76,19 @@ public class EventsDB {
                 Event event = documentSnapshot.toObject(Event.class);
 
                 if (event != null) {
-                    int currentSize = event.getWaitingList().size();
-
-                    if (currentSize < event.getMaxWaitlistSize()) {
-                        eventsRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Firebase", "User added to waiting list");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("Firebase", "Error adding user", e);
-                                    }
-                                });
-                    } else {
-                        Log.d("Firebase", "Waiting list is full");
-                    }
+                    eventsRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Firebase", "User added to waiting list");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Firebase", "Error adding user", e);
+                                }
+                            });
                 }
             } else {
                 Log.w("Firebase", "Event document does not exist");
@@ -343,5 +338,107 @@ public class EventsDB {
         })
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(events);})
                 .addOnFailureListener(onFailure);
+    }
+
+    // Add a notification to an event
+    // Updated addNotificationToEvent Method
+    public void addNotificationToEvent(String eventID, Notification notification) {
+        // Convert Notification object to a Map
+        Map<String, Object> notificationMap = new HashMap<>();
+        notificationMap.put("id", notification.getId());
+        notificationMap.put("title", notification.getTitle());
+        notificationMap.put("message", notification.getMessage());
+       // notificationMap.put("timestamp", notification.getTimestamp());
+
+        // Update Firebase with the notification map
+        eventsRef.document(eventID)
+                .update("notifications", FieldValue.arrayUnion(notificationMap))
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Notification added to event"))
+                .addOnFailureListener(e -> Log.w("Firebase", "Error adding notification", e));
+    }
+
+
+    // Remove a notification from an event
+    public void removeNotificationFromEvent(String eventID, Notification notification) {
+        eventsRef.document(eventID)
+                .update("notifications", FieldValue.arrayRemove(notification))
+                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Notification removed from event"))
+                .addOnFailureListener(e -> Log.w("Firebase", "Error removing notification", e));
+    }
+
+    // Retrieve notifications for an event
+    public void getNotificationsForEvent(String eventID, OnSuccessListener<List<Notification>> onSuccess) {
+        eventsRef.document(eventID).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        List<Map<String, Object>> notificationMaps = (List<Map<String, Object>>) documentSnapshot.get("notifications");
+                        List<Notification> notifications = new ArrayList<>();
+
+                        if (notificationMaps != null) {
+                            for (Map<String, Object> map : notificationMaps) {
+                                String id = (String) map.get("id");
+                                String title = (String) map.get("title");
+                                String message = (String) map.get("message");
+                                Notification notification = new Notification(id, title, message);
+                                notifications.add(notification);
+                            }
+                        }
+
+                        onSuccess.onSuccess(notifications);
+                    }
+                })
+                .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
+    }
+
+    public void pickAndNotifyUser(String eventID) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Event event = documentSnapshot.toObject(Event.class);
+
+                if (event != null && event.getWaitingList() != null && !event.getWaitingList().isEmpty()) {
+                    List<String> waitingList = event.getWaitingList();
+                    Random random = new Random();
+                    String selectedUserID = waitingList.get(random.nextInt(waitingList.size()));
+
+                    eventDocRef.update("waitingList", FieldValue.arrayRemove(selectedUserID));
+                    eventDocRef.update("registeredEntrants", FieldValue.arrayUnion(selectedUserID));
+
+                    Notification notification = new Notification(
+                            UUID.randomUUID().toString(),
+                            "Lottery Winner",
+                            "Congratulations! You've been selected for event: " + event.getName()
+                    );
+
+                    UsersDB usersDB = new UsersDB();
+                    usersDB.addNotification(selectedUserID, notification);
+
+                    Log.d("Lottery", "User " + selectedUserID + " selected and notified.");
+                } else {
+                    Log.d("Lottery", "Waiting list is empty or event not found.");
+                }
+            } else {
+                Log.w("Lottery", "Event document does not exist.");
+            }
+        }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
+    }
+
+    public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
+        // load event
+        loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Event event = documentSnapshot.toObject(Event.class);
+                    if (event != null) {
+                        event.sampleWaitlist(sampleAmount);
+                        eventsRef.document(eventId).set(event)
+                                .addOnSuccessListener(onSuccessListener)
+                                .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
+                    }
+                }
+            }
+        });
     }
 }

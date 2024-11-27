@@ -13,18 +13,36 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
-    <TextView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:text="View Map Fragment"
-    android:textSize="30sp"
-        android:gravity="center"/>
+    <org.osmdroid.views.MapView
+        android:id="@+id/organizer_map_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
 
-    
+        app:layout_constraintTop_toBottomOf="@id/map_view_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <ImageButton
+        android:id="@+id/organizer_map_options_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
+        android:src="@drawable/map_plus"
+        android:padding="20dp"
+        android:backgroundTint="@color/desert_sand"
+
+        app:layout_constraintTop_toBottomOf="@id/map_view_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.95"
+        app:layout_constraintVertical_bias="0.02" />
 
     <ImageButton
         android:id="@+id/back_button"
         style="@style/ArrowLeftButtonStyle"
+        android:backgroundTint="@color/desert_sand"
 
         app:layout_constraintTop_toBottomOf="@id/map_view_header"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -32,5 +50,19 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.02"
         app:layout_constraintVertical_bias="0.02"/>
+
+    <!--Frame for map options-->
+    <FrameLayout
+        android:id="@+id/map_options_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginVertical="100dp"
+        android:layout_marginHorizontal="10dp"
+        android:padding="10dp"
+
+        app:layout_constraintTop_toTopOf="@+id/map_view_header"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

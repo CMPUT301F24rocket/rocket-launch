@@ -14,6 +14,7 @@ import androidx.fragment.app.Fragment;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.NotificationHelper;
 import com.example.rocket_launch.R;
 
 
@@ -97,6 +98,7 @@ public class CreateNewEventFragment extends Fragment {
                 try {
                     int capacityInt = Integer.parseInt(capacityInput); // verifies input is int
                     createEvent();
+                    sendEventNotification(androidId);
                 } catch (NumberFormatException e){
                     editEventCapacity.setError("Enter a valid Integer");
                 }
@@ -124,7 +126,8 @@ public class CreateNewEventFragment extends Fragment {
 
         event.setName(eventName);
         event.setCapacity(Integer.parseInt(eventCapacity));
-        event.setMaxWaitlistSize(waitlistSizeLimit != null ? Integer.parseInt(waitlistSizeLimit) : 0);
+        // set MaxWaitlistSize to be -1 if not specified
+        event.setMaxWaitlistSize(waitlistSizeLimit != null ? Integer.parseInt(waitlistSizeLimit) : -1);
         event.setDescription(eventDescription);
         event.setGeolocationRequired(geolocationRequired);
         event.setWaitingList();
@@ -139,5 +142,25 @@ public class CreateNewEventFragment extends Fragment {
      */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
+    }
+
+    private void sendEventNotification(String androidId) {
+        // Ensure the notification channel is created
+        NotificationHelper.createNotificationChannel(requireContext());
+
+        // Show the notification
+        NotificationHelper.showNotification(
+                requireContext(),
+                "Event Created",
+                "Your event has been successfully created!",
+                1 // Unique notification ID
+        );
+
+        // Add notification to the user's database entry
+        NotificationHelper.addNotificationToDatabase(
+                androidId,
+                "Event Created",
+                "Your event has been successfully created!"
+        );
     }
 }

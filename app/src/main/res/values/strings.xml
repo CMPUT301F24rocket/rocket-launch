@@ -21,4 +21,9 @@
     <string name="cmput301_event_lottery_system_application">CMPUT301 Event Lottery System Application\n</string>
 
 
+    <!-- Notification Channel Strings -->
+    <string name="channel_name">Event Notifications</string> <!-- Added -->
+    <string name="channel_description">Notifications for actions related to event creation and management.</string> <!-- Added -->
+
+
 </resources>

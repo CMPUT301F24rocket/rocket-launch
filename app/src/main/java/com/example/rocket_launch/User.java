@@ -20,6 +20,7 @@ public class User {
     private String userEmail;
     private String userPhoneNumber;
     private String userFacility;
+    private String userFacilityAddress;
     private Location location;
     private Roles roles;
 
@@ -29,7 +30,7 @@ public class User {
 
     // notifications
     private Boolean notificationPreferences;
-    private List<String> notifications;
+    private List<Notification> notifications;
 
     // event data
     private List<String> eventsRegistered;
@@ -48,6 +49,7 @@ public class User {
         this.userEmail = "";
         this.userPhoneNumber = "";
         this.userFacility = "";
+        this.userFacilityAddress = "";
         this.profilePhotoPath = "";
     }
 
@@ -91,6 +93,9 @@ public class User {
         this.userFacility = userFacility;
     }
 
+    public String getUserFacilityAddress() {return  this.userFacilityAddress;}
+    public void setUserFacilityAddress(String userFacilityAddress) {this.userFacilityAddress = userFacilityAddress;}
+
     // android id
     public String getAndroidId() {
         return androidId;
@@ -109,15 +114,11 @@ public class User {
     }
 
     // notifications
-    public List<String> getNotifications() {
+    public List<Notification> getNotifications() {
         return notifications;
     }
-    public void setNotifications(List<String> notifications) {
-        this.notifications = notifications;
-    }
-    public void addNotification(String notification){
-        notifications.add(notification);
-    }
+    public void setNotifications(List<Notification> notifications) {this.notifications = notifications;}
+    public void addNotification(Notification notification){notifications.add(notification);}
 
     // notification preferences
     public Boolean getNotificationPreferences() {
