@@ -63,6 +63,14 @@ public class EventsDB {
     }
 
     /**
+     * Get the reference to the events collection.
+     * @return CollectionReference to the events collection
+     */
+    public CollectionReference getEventsRef() {
+        return eventsRef;
+    }
+
+    /**
      * Add user to waiting list and check max waiting list size
      * @param eventID
      *  add user to event wit heventID
