@@ -24,6 +24,7 @@ import java.util.Random;
 
 public class Event {
     private String eventID;
+    private String QRCode;
     private String name;
     private String description;
     private int capacity;
@@ -53,6 +54,7 @@ public class Event {
         this.entrantLocationDataList = new ArrayList<>();
 
         this.notifications = new ArrayList<>(); // initialize notification list
+        this.QRCode = "";
 
     }
 
@@ -154,15 +156,23 @@ public class Event {
         removeFromWaitingList(userID);
     }
 
-
-    public Bitmap generateQRCode() {
+    /**
+     * loads QRCode hash as bitmap and returns it
+     * author: kaiden
+     * @return
+     *  bitmap of QRCode if successful and hash exists, null if not
+     */
+    public Bitmap loadQRCode() {
+        // verify that QRCode is not empty
+        if (QRCode.isEmpty()) {
+            return null;
+        }
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
-            // Adjust the width and height of the QR code as needed
             int width = 500, height = 500;
             Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
-            com.google.zxing.common.BitMatrix bitMatrix = qrCodeWriter.encode(getEventID(), BarcodeFormat.QR_CODE, width, height);
+            com.google.zxing.common.BitMatrix bitMatrix = qrCodeWriter.encode(getQRCode(), BarcodeFormat.QR_CODE, width, height);
 
             // Convert the BitMatrix into a bitmap
             for (int x = 0; x < width; x++) {
@@ -183,16 +193,21 @@ public class Event {
      * @param sampleAmount
      *  (int) amount of entrants to remove and return
      */
-    public void sampleWaitlist(int sampleAmount) {
+    public List<String> sampleWaitlist(int sampleAmount) {
+        List<String> sampledUsers = new ArrayList<>();
+
         if (sampleAmount <= capacity) {
             Random rand = new Random();
             // sample sampleAmount from waitlist
             for (int i = 0; i < sampleAmount; i++) {
                 int index = rand.nextInt(waitingList.size());
-                invitedEntrants.add(waitingList.get(index));
-                waitingList.remove(index);
+
+                sampledUsers.add(waitingList.get(index)); // add to list to return
+                invitedEntrants.add(waitingList.get(index)); // add to invited entrants list
+                waitingList.remove(index); // remove from waiting list
             }
         }
+        return sampledUsers;
     }
 
     public List<String> getCancelledEntrants() {
@@ -217,6 +232,14 @@ public class Event {
 
     public void setInvitedEntrants(List<String> invitedEntrants) {
         this.invitedEntrants = invitedEntrants;
+    }
+
+    public String getQRCode() {
+        return QRCode;
+    }
+
+    public void setQRCode(String QRCode) {
+        this.QRCode = QRCode;
     }
 
     public static class UserArrayAdapter extends ArrayAdapter<User> {
