@@ -81,7 +81,19 @@ public class QRCodesDB {
                 .addOnFailureListener(e -> Log.e("error removing from database", "error", e));
     }
 
-    public void updateCode(String code, String eventId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+
+    /**
+     * regenerates the QR code and updates the event, eventsDB and qr codes database
+     * @param code
+     *  QR code string of which we wish to update
+     * @param eventId
+     *  should not be required, refactoring ahead :(
+     * @param onSuccess
+     *  passes the on string as a parameter so we can redisplay proper data
+     * @param onFailure
+     *  is called if we encounter a failure
+     */
+    public void reGenerateCode(String code, String eventId, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
         eventsDB.loadEvent(eventId, event -> {
             if (event != null) {
                 DocumentReference newQRRef = qRRef.document();
@@ -92,7 +104,7 @@ public class QRCodesDB {
                         .addOnSuccessListener(l -> {
                             // if we successfully add a new one, remove the old (code)
                             removeCodeFromDatabase(code, j -> {
-                                onSuccess.onSuccess(null);
+                                onSuccess.onSuccess(event.getQRCode());
                             });
                         })
                         .addOnFailureListener(onFailure);
