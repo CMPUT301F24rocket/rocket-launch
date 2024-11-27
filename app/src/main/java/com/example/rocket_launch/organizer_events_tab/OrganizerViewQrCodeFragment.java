@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
@@ -53,14 +54,26 @@ public class OrganizerViewQrCodeFragment extends Fragment {
         ImageButton backButton = view.findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> closeFragment());
 
+        Button generateButton = view.findViewById(R.id.generateCode);
+        generateButton.setOnClickListener(l -> generateQRCode());
+
+
         // QR code
         ImageView qrCodeImage = view.findViewById(R.id.event_qr_code);
-        Bitmap qrCodeBitmap = event.generateQRCode();
+        Bitmap qrCodeBitmap = event.loadQRCode();
         if (qrCodeBitmap != null) {
             qrCodeImage.setImageBitmap(qrCodeBitmap);
         }
 
         return view;
+    }
+
+    /**
+     *
+     */
+    public void generateQRCode() {
+        int hashcode = event.hashCode(); // generate hash of event data
+
     }
 
     /**
