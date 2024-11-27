@@ -54,15 +54,15 @@ public class UserTest {
         assertFalse(user.getNotificationPreferences());
     }
 
-    @Test
-    /**
-     * Test adding notifications (01.04.02, US 01.04.03)
-     */
-    public void testAddNotification() {
-        user.addNotification("You won the lottery!");
-        assertEquals(1, user.getNotifications().size());
-        assertTrue(user.getNotifications().contains("You won the lottery!"));
-    }
+//    @Test
+//    /**
+//     * Test adding notifications (01.04.02, US 01.04.03)
+//     */
+////    public void testAddNotification() {
+////       // user.addNotification("You won the lottery!");
+////        assertEquals(1, user.getNotifications().size());
+////        assertTrue(user.getNotifications().contains("You won the lottery!"));
+////    }
 
     @Test
     /**

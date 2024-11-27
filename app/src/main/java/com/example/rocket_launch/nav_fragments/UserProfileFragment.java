@@ -1,5 +1,12 @@
 package com.example.rocket_launch.nav_fragments;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.util.Log;
@@ -12,11 +19,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.transition.Transition;
 import com.example.rocket_launch.EditProfileFragment;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.Roles;
@@ -26,6 +35,8 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * fragment for displaying all user profile information
@@ -126,7 +137,7 @@ public class UserProfileFragment extends Fragment {
                 if (user.getProfilePhotoPath() != null && !user.getProfilePhotoPath().isEmpty()) {
                     loadProfileImage(user.getProfilePhotoPath());
                 } else {
-                    profilePictureView.setImageResource(R.drawable.default_image);
+                    setDefaultProfilePicture(user.getUserName());
                 }
             }
         }, e -> Log.e(TAG, "No matching document found or task failed", e));
@@ -140,8 +151,64 @@ public class UserProfileFragment extends Fragment {
     private void loadProfileImage(String imagePath) {
         Glide.with(this)
                 .load(imagePath)
-                .placeholder(R.drawable.default_image) // Use a default image if the path is null
-                .into(profilePictureView);
+                .into(new com.bumptech.glide.request.target.CustomTarget<Drawable>() {
+                    @Override
+                    public void onResourceReady(@NonNull Drawable resource, @Nullable Transition<? super Drawable> transition) {
+                        profilePictureView.setImageDrawable(resource); // Set the loaded image to the ImageView
+                    }
+
+                    @Override
+                    public void onLoadFailed(@Nullable Drawable errorDrawable) {
+                        // If the image fails to load, generate a default profile picture
+                        setDefaultProfilePicture(user.getUserName());
+                    }
+
+                    @Override
+                    public void onLoadCleared(@Nullable Drawable placeholder) {
+                        // Handle if the image resource needs to be cleared (optional)
+                        setDefaultProfilePicture(user.getUserName());
+                    }
+                });
+    }
+
+    private void setDefaultProfilePicture(String userName) {
+        // Default background color and text settings
+        int width = 200;  // Width of the Bitmap
+        int height = 200; // Height of the Bitmap
+        int textColor = Color.BLACK;
+        float textSize = 80f;
+
+        // Load the background image (new_image) from resources
+        Bitmap backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.new_image);
+        Bitmap scaledBackground = Bitmap.createScaledBitmap(backgroundBitmap, width, height, false);
+
+        // Create a new Bitmap and Canvas to draw
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Draw the background image
+        canvas.drawBitmap(scaledBackground, 0, 0, null);
+
+        // Set up Paint for the text
+        Paint paint = new Paint();
+        paint.setColor(textColor);
+        paint.setTextSize(textSize);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+        // Use a premium built-in font (example: sans-serif-medium)
+        paint.setTypeface(Typeface.create("serif", Typeface.NORMAL));
+
+        // Draw the first letter of the user's name
+        if (userName != null && !userName.isEmpty()) {
+            String firstLetter = userName.substring(0, 1).toUpperCase();
+            Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+            float x = width / 2f;
+            float y = (height / 2f) - ((fontMetrics.ascent + fontMetrics.descent) / 2f);
+            canvas.drawText(firstLetter, x, y, paint);
+        }
+
+        // Set the final Bitmap to the ImageView
+        profilePictureView.setImageBitmap(bitmap);
     }
 
 

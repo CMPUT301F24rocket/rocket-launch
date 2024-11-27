@@ -3,6 +3,10 @@ package com.example.rocket_launch;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -37,6 +41,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 import com.squareup.picasso.Picasso;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 
 /**
  * fragment for organizer edit profile
@@ -100,6 +108,48 @@ public class EditProfileFragment extends Fragment {
 
         return view;
     }
+    private void setDefaultProfilePicture(String userName) {
+        // Default background color and text settings
+        int width = 200;  // Width of the Bitmap
+        int height = 200; // Height of the Bitmap
+        int textColor = Color.BLACK;
+        float textSize = 80f;
+
+        // Load the background image (new_image) from resources
+        Bitmap backgroundBitmap = BitmapFactory.decodeResource(getResources(), R.drawable.new_image);
+        Bitmap scaledBackground = Bitmap.createScaledBitmap(backgroundBitmap, width, height, false);
+
+        // Create a new Bitmap and Canvas to draw
+        Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(bitmap);
+
+        // Draw the background image
+        canvas.drawBitmap(scaledBackground, 0, 0, null);
+
+        // Set up Paint for the text
+        Paint paint = new Paint();
+        paint.setColor(textColor);
+        paint.setTextSize(textSize);
+        paint.setTextAlign(Paint.Align.CENTER);
+
+
+        // Use a premium built-in font (example: sans-serif-medium)
+        paint.setTypeface(Typeface.create("serif", Typeface.NORMAL));
+
+        // Draw the first letter of the user's name
+        if (userName != null && !userName.isEmpty()) {
+            String firstLetter = userName.substring(0, 1).toUpperCase();
+            Paint.FontMetrics fontMetrics = paint.getFontMetrics();
+            float x = width / 2f;
+            float y = (height / 2f) - ((fontMetrics.ascent + fontMetrics.descent) / 2f);
+            canvas.drawText(firstLetter, x, y, paint);
+        }
+
+        // Set the final Bitmap to the ImageView
+        profileImageView.setImageBitmap(bitmap);
+    }
+
+
     private void loadFixedProfilePicture() {
         // List of fixed URLs
         String[] fixedImageUrls = {
@@ -124,9 +174,18 @@ public class EditProfileFragment extends Fragment {
         // Load the image using Picasso
         Picasso.get()
                 .load(randomUrl)
-                .placeholder(R.drawable.default_image) // Placeholder while loading
-                .error(R.drawable.default_image)       // Error image if loading fails
-                .into(profileImageView);
+                .into(profileImageView, new com.squareup.picasso.Callback() {
+                    @Override
+                    public void onSuccess() {
+                        // Successfully loaded
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        setDefaultProfilePicture(user.getUserName());
+                    }
+                });
+
         saveProfilePictureUrlToFirestore(randomUrl);
 
         // Log for debugging purposes
@@ -235,7 +294,7 @@ public class EditProfileFragment extends Fragment {
     private void deleteProfilePhoto() {
         user.setProfilePhotoPath("");
         usersDB.updateUser(androidID, user, s -> {
-            profileImageView.setImageResource(R.drawable.default_image);
+            setDefaultProfilePicture(user.getUserName());
             Snackbar.make(requireView(), "Profile photo removed from cloud", Snackbar.LENGTH_SHORT).show();
             Log.d(TAG, "Profile photo path set to null in Firestore");
         }, e -> Log.e(TAG, "Failed to update Firestore", e));
@@ -272,7 +331,7 @@ public class EditProfileFragment extends Fragment {
                     .into(profileImageView);
         } else {
             // Set default image if no path is available
-            profileImageView.setImageResource(R.drawable.default_image);
+            setDefaultProfilePicture(user.getUserName());
         }
     }
 
@@ -311,13 +370,13 @@ public class EditProfileFragment extends Fragment {
         if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
             Picasso.get()
                     .load(profilePhotoPath)
-                    .placeholder(R.drawable.default_image)
-                    .error(R.drawable.default_image)
                     .into(profileImageView);
         } else {
-            profileImageView.setImageResource(R.drawable.default_image);
+            // Generate dynamic default profile picture
+            setDefaultProfilePicture(user.getUserName());
         }
     }
+
 
     /**
      * Update user details in Firestore
