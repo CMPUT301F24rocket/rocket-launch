@@ -19,8 +19,6 @@ import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.entrant_events_tab.EntrantViewWaitingListFragment;
-import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
@@ -29,18 +27,26 @@ import java.util.Locale;
 
 /**
  * fragment shown when the organizer wants to show a list of entrants in the waitlist
+ *
+ * Authors: Kaiden
  */
 public class EntrantListViewWaitlistFragment extends Fragment {
     private EventsDB eventsDB;
     private UsersDB usersDB;
-    private ListView listView;
+    private Event event;
     private Event.UserArrayAdapter adapter;
     private ArrayList<User> users;
-    private String eventId;
-    private Button sampleButton;
-    private TextView spotsAvailable;
-    private Event event;
     private int availableSpots;
+    private int sampleAmount;
+    private int replaceAmount;
+
+    // UI
+    private ListView listView;
+    private String eventId;
+    private Button notifyButton;
+    private Button sampleButton;
+    private Button replaceButton;
+    private TextView spotsAvailable;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -49,34 +55,82 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         assert getArguments() != null;
         eventId = getArguments().getString("eventId");
 
-        listView = view.findViewById(R.id.view_list_listview);
-        spotsAvailable = view.findViewById(R.id.spotsAvailable);
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
         users = new ArrayList<>();
-        adapter = new Event.UserArrayAdapter(requireContext(), users);
 
+        listView = view.findViewById(R.id.view_list_listview); // Users list
+        spotsAvailable = view.findViewById(R.id.spotsAvailable); // text above list
+
+        // buttons
         sampleButton = view.findViewById(R.id.sampleWaitlistButton);
+        replaceButton = view.findViewById(R.id.replaceButton);
+        notifyButton = view.findViewById(R.id.sendNotification);
 
+        adapter = new Event.UserArrayAdapter(requireContext(), users);
         listView.setAdapter(adapter);
-//        listView.setOnItemClickListener((parent, itemView, position, id) -> {
-//            // TODO - maybe?
-//            User clickedUser = users.get(position);
-//        });
+        listView.setOnItemClickListener((parent, itemView, position, id) -> {
+            // TODO - do something on clicking a user
+            User clickedUser = users.get(position);
+        });
 
         eventsDB.loadEvent(eventId, loadedEvent -> {
             if (loadedEvent!= null) {
                 event = loadedEvent;
 
+                if (event.getWaitingList().isEmpty()) {
+                    notifyButton.setVisibility(View.GONE);
+                } else {
+                    notifyButton.setOnClickListener(l -> {
+                        // TODO - send notification to all
+                    });
+                }
+
+                // amount of space available total
                 availableSpots = event.getCapacity() -
                         (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
-                spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots",
-                        availableSpots));
+                // set text for amount of spots available in total
+                spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots", availableSpots));
 
-                // add listener only if we successfully loaded waitlist
-                sampleButton.setOnClickListener(l -> {
-                    sampleWaitlist();
-                });
+                // takes into account if waitlist does not have that many
+                int realAvailableSpots = Math.min(event.getWaitingList().size(), availableSpots);
+
+                if (realAvailableSpots < event.getCancelledEntrants().size()) {
+                    replaceAmount = realAvailableSpots; // replacement amount is all the spots
+                    sampleAmount = 0; // implies sampleAmount = 0
+                }
+                else {
+                    replaceAmount = event.getCancelledEntrants().size(); //
+                    sampleAmount = realAvailableSpots - replaceAmount;
+                }
+
+                if (sampleAmount > 0) {
+                    // set text on button
+                    sampleButton.setText(String.format(Locale.CANADA, "Sample %d Users", sampleAmount));
+                    sampleButton.setOnClickListener(l -> {
+                        sampleWaitlist(sampleAmount, sampledUsers -> {
+                            // TODO - send notifications to all sampledUsers saying they were chosen
+                            // TODO - send notifications to all in waitlist saying they were not chosen
+                        });
+                    });
+                } else {
+                    sampleButton.setVisibility(View.GONE);
+                }
+
+                if (replaceAmount > 0) {
+                    // set text on button
+                    replaceButton.setText(String.format(Locale.CANADA, "Replace %d Users", replaceAmount));
+                    replaceButton.setOnClickListener(l -> {
+                        sampleWaitlist(replaceAmount, sampledUsers -> {
+                            // TODO - send notifications to all sampledUsers saying they were chosen in a redraw
+                            // TODO - send notifications to all in waitlist saying they were not chosen
+                        });
+                    });
+                } else {
+                    replaceButton.setVisibility(View.GONE);
+                }
+            } else {
+                Log.e("WaitingList fragment", "invalid event");
             }
         });
 
@@ -93,10 +147,10 @@ public class EntrantListViewWaitlistFragment extends Fragment {
 
                 availableSpots = event.getCapacity() -
                         (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
-                spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots",
+                spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots in Event",
                         availableSpots));
             }
-        }); // reload event aswell as to show proper values
+        }); // reload event as well as to show proper values
     }
 
     /**
@@ -131,19 +185,17 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 e -> Log.w("Firebase", "Error getting events", e));
     }
 
-    void sampleWaitlist() {
-        if (availableSpots > 0) {
-            List<String> sampledUsers = event.sampleWaitlist(users.size());
+    void sampleWaitlist(int spots, OnSuccessListener<List<String>> onSuccess) {
+        if (spots > 0) {
+            List<String> sampledUsers = event.sampleWaitlist(spots);
             eventsDB.updateEvent(eventId, event, l -> {
                 Log.d("Firebase", "sample success");
-                Toast.makeText(requireContext(), String.format(Locale.CANADA, "invited %d entrant(s)", users.size()), Toast.LENGTH_SHORT).show();
+                Toast.makeText(requireContext(), String.format(Locale.CANADA, "invited %d entrant(s)", spots), Toast.LENGTH_SHORT).show();
 
-                // send notificatin to all sampledUsers
+                onSuccess.onSuccess(sampledUsers);
 
                 fetchUsers();
-            }, l -> {
-                Log.d("Firebase", "sample fail :(");
-            });
+            }, l -> Log.d("Firebase", "sample fail :("));
             adapter.notifyDataSetChanged();
         }
         else {
