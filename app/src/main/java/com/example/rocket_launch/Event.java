@@ -19,6 +19,7 @@ import com.google.zxing.qrcode.QRCodeWriter;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Random;
 
 
 public class Event {
@@ -35,8 +36,8 @@ public class Event {
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
     private List<String> finalEntrants;
-    private int maxWaitlistSize; // Integer
-    private List<EntrantLocationData> entrantLocationDataList;
+    private int maxWaitlistSize;// Integer
+    private List<Notification> notifications; // new notification list
 
     public Event(){
         // verify lists appear in database -> ensures no access to undefined attribute
@@ -44,8 +45,25 @@ public class Event {
         this.cancelledEntrants = new ArrayList<>();
         this.finalEntrants = new ArrayList<>();
         this.invitedEntrants = new ArrayList<>();
-        this.entrantLocationDataList = new ArrayList<>();
+        this.notifications = new ArrayList<>(); // initialize notification list
+
     }
+
+    // ############################ //
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotifications(List<Notification> notifications){
+        this.notifications = notifications;
+    }
+
+    // ############################ //
+
 
     public void setEventID(String eventID){this.eventID = eventID;}
     public void setName(String name){this.name = name;}
@@ -62,11 +80,6 @@ public class Event {
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
 
-    //For Entrant Location Data List
-    public void setEntrantLocationDataList(){this.entrantLocationDataList = new ArrayList<>();}
-    public void addToEntrantLocationDataList(EntrantLocationData entrantLocationData) {entrantLocationDataList.add(entrantLocationData);}
-    public List<EntrantLocationData> getEntrantLocationDataList(){return entrantLocationDataList;}
-    public void removeFromEntrantLocationDataList(EntrantLocationData entrantLocationData){entrantLocationDataList.remove(entrantLocationData);}
 
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;
@@ -149,6 +162,24 @@ public class Event {
             Log.e("error creating qr code", e.toString());
         }
         return null;
+    }
+
+    /**
+     * Author: Kaiden
+     * remove sampleAmount of users from waitlist and add them to invited list
+     * @param sampleAmount
+     *  (int) amount of entrants to remove and return
+     */
+    public void sampleWaitlist(int sampleAmount) {
+        if (sampleAmount <= capacity) {
+            Random rand = new Random();
+            // sample sampleAmount from waitlist
+            for (int i = 0; i < sampleAmount; i++) {
+                int index = rand.nextInt(waitingList.size());
+                invitedEntrants.add(waitingList.get(index));
+                waitingList.remove(index);
+            }
+        }
     }
 
     public List<String> getCancelledEntrants() {

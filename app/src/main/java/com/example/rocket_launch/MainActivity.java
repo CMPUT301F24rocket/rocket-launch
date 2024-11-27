@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     checkUserRole(user);
                     setupNavBar(user.getRoles());
-                } else {
+                    } else {
                     user = new User();
                     user.setAndroidId(androidID);
                     usersDB.addUser(androidID, user);
