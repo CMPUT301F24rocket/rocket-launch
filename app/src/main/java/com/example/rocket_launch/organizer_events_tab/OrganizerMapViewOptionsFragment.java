@@ -38,7 +38,9 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
 
         //edit location button
         Button editLocationButton = view.findViewById(R.id.map_options_edit_facility_location_button);
-        editLocationButton.setOnClickListener(v -> );
+        editLocationButton.setOnClickListener(v -> {
+            //edit location in fragment
+        });
 
         //collapsable options for radius menu
         LinearLayout defineRadiusOptions = view.findViewById(R.id.radius_options_header);
