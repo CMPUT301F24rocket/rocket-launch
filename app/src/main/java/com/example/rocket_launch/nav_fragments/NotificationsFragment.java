@@ -1,9 +1,9 @@
 package com.example.rocket_launch.nav_fragments;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.provider.Settings;
-
+import android.provider.Settings.Secure;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,18 +12,16 @@ import android.widget.ListView;
 
 import androidx.fragment.app.Fragment;
 
-import android.provider.Settings.Secure;
-
-import com.example.rocket_launch.notifications_tab.NotificationPreferencesFragment;
+import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.notifications_tab.NotificationPreferencesFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * fragment used to display all of a user's notifications
@@ -63,7 +61,7 @@ public class NotificationsFragment extends Fragment {
         notificationSettingsButton = view.findViewById(R.id.notification_settings_button);
         notificationSettingsButton.setOnClickListener(v -> {
             NotificationPreferencesFragment notifPreferences = new NotificationPreferencesFragment(user.getNotificationPreferences(), usersDB.getUsersRef().document(androidId));
-            notifPreferences.setOnSuccessListener(new NotificationPreferencesFragment.onSuccessListener() {
+            notifPreferences.setOnSuccessListener(new NotificationPreferencesFragment.OnSuccessListener() {
                 @Override
                 public void onSuccess() {
                     // this is def inefficient but it works
@@ -89,21 +87,44 @@ public class NotificationsFragment extends Fragment {
      * function used to load and display all notifications
      */
     private void loadNotifications() {
-
         usersDB = new UsersDB();
-        // reference https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
         String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
 
-        usersDB.getUser(androidID, new OnSuccessListener<User>() {
-            @Override
-            public void onSuccess(User newUser) {
-                user = newUser;
-                List<String> notifications = user.getNotifications();
-                notificationList.clear();
-                notificationList.addAll(notifications);
-                notificationsAdapter.notifyDataSetChanged();
+        usersDB.getUser(androidID, newUser -> {
+            user = newUser;
 
+            // Clear current list and load new notifications
+            notificationList.clear();
+
+            // Check and iterate over user notifications
+            if (user.getNotifications() != null) {
+                for (Notification notification : user.getNotifications()) {
+                    // Concatenate title and message for display
+                    notificationList.add(notification.getTitle() + ": " + notification.getMessage());
+                }
             }
-        }, e -> Log.e("NotificationFragment", "Error fetching user", e));
+
+            // Notify adapter of data change
+            notificationsAdapter.notifyDataSetChanged();
+        }, e -> Log.e(TAG, "Error fetching user", e));
     }
 }
+
+//    private void loadNotifications() {
+//
+//        usersDB = new UsersDB();
+//        // reference https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
+//        String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
+//
+//        usersDB.getUser(androidID, new OnSuccessListener<User>() {
+//            @Override
+//            public void onSuccess(User newUser) {
+//                user = newUser;
+//                List<String> notifications = user.getNotifications();
+//                notificationList.clear();
+//                notificationList.addAll(notifications);
+//                notificationsAdapter.notifyDataSetChanged();
+//
+//            }
+//        }, e -> Log.e("NotificationFragment", "Error fetching user", e));
+//    }

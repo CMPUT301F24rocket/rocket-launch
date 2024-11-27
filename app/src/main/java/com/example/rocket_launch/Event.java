@@ -35,7 +35,8 @@ public class Event {
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
     private List<String> finalEntrants;
-    private int maxWaitlistSize; // Integer
+    private int maxWaitlistSize;// Integer
+    private List<Notification> notifications; // new notification list
 
     public Event(){
         // verify lists appear in database -> ensures no access to undefined attribute
@@ -43,7 +44,25 @@ public class Event {
         this.cancelledEntrants = new ArrayList<>();
         this.finalEntrants = new ArrayList<>();
         this.invitedEntrants = new ArrayList<>();
+        this.notifications = new ArrayList<>(); // initialize notification list
+
     }
+
+    // ############################ //
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotifications(List<Notification> notifications){
+        this.notifications = notifications;
+    }
+
+    // ############################ //
+
 
     public void setEventID(String eventID){this.eventID = eventID;}
     public void setName(String name){this.name = name;}

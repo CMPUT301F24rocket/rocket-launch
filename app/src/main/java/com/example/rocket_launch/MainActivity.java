@@ -21,9 +21,6 @@ import com.example.rocket_launch.nav_fragments.UserEventsFragment;
 import com.example.rocket_launch.nav_fragments.UserProfileFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * main activity that gets loaded on startup
@@ -67,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     checkUserRole(user);
                     setupNavBar(user.getRoles());
-                } else {
+                    } else {
                     user = new User();
                     user.setAndroidId(androidID);
                     usersDB.addUser(androidID, user);

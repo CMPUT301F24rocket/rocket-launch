@@ -29,7 +29,7 @@ public class User {
 
     // notifications
     private Boolean notificationPreferences;
-    private List<String> notifications;
+    private List<Notification> notifications;
 
     // event data
     private List<String> eventsRegistered;
@@ -109,15 +109,11 @@ public class User {
     }
 
     // notifications
-    public List<String> getNotifications() {
+    public List<Notification> getNotifications() {
         return notifications;
     }
-    public void setNotifications(List<String> notifications) {
-        this.notifications = notifications;
-    }
-    public void addNotification(String notification){
-        notifications.add(notification);
-    }
+    public void setNotifications(List<Notification> notifications) {this.notifications = notifications;}
+    public void addNotification(Notification notification){notifications.add(notification);}
 
     // notification preferences
     public Boolean getNotificationPreferences() {
