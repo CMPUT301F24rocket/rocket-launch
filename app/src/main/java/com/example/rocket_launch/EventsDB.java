@@ -431,19 +431,4 @@ public class EventsDB {
             }
         }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
     }
-
-    public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
-        // load event
-        loadEvent(eventId, new OnSuccessListener<Event>() {
-            @Override
-            public void onSuccess(Event event) {
-                if (event != null) {
-                    event.sampleWaitlist(sampleAmount);
-                    eventsRef.document(eventId).set(event)
-                            .addOnSuccessListener(onSuccessListener)
-                            .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
-                }
-            }
-        });
-    }
 }

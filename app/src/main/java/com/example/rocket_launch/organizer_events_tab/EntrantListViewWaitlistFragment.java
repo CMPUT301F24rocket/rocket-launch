@@ -24,6 +24,7 @@ import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragme
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 
 /**
@@ -132,10 +133,13 @@ public class EntrantListViewWaitlistFragment extends Fragment {
 
     void sampleWaitlist() {
         if (availableSpots > 0) {
-            eventsDB.sampleWaitlist(eventId, users.size(), l -> {
+            List<String> sampledUsers = event.sampleWaitlist(users.size());
+            eventsDB.updateEvent(eventId, event, l -> {
                 Log.d("Firebase", "sample success");
-                fetchUsers();
+            }, l -> {
+                Log.d("Firebase", "sample fail :(");
             });
+            adapter.notifyDataSetChanged();
         }
         else {
             Toast.makeText(requireContext(), "no spots available", Toast.LENGTH_SHORT).show();
