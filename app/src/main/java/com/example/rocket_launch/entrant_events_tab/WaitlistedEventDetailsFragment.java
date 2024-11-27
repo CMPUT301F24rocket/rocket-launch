@@ -90,7 +90,7 @@ public class WaitlistedEventDetailsFragment extends Fragment {
                         eventCapacityLayout.setVisibility(View.VISIBLE);
                         eventWaitlistCapacityView.setText(String.format(
                                 Locale.CANADA, "%d / %d", event.getWaitingList().size(),
-                                event.getCapacity()));
+                                event.getMaxWaitlistSize()));
                     }
                     eventGeolocationRequired.setChecked(event.getGeolocationRequired());
                     eventDescription.setText(event.getDescription());

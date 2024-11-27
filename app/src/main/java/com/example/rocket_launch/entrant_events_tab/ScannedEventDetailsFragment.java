@@ -98,7 +98,7 @@ public class ScannedEventDetailsFragment extends Fragment {
                         eventCapacityLayout.setVisibility(View.VISIBLE);
                         eventWaitlistCapacityView.setText(String.format(
                                 Locale.CANADA, "%d / %d", event.getWaitingList().size(),
-                                event.getCapacity()));
+                                event.getMaxWaitlistSize()));
                     }
                     eventNameView.setText(event.getName());
                     eventGeolocationRequired.setChecked(event.getGeolocationRequired());

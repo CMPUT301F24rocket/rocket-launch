@@ -136,6 +136,11 @@ public class EntrantListViewWaitlistFragment extends Fragment {
             List<String> sampledUsers = event.sampleWaitlist(users.size());
             eventsDB.updateEvent(eventId, event, l -> {
                 Log.d("Firebase", "sample success");
+                Toast.makeText(requireContext(), String.format(Locale.CANADA, "invited %d entrant(s)", users.size()), Toast.LENGTH_SHORT).show();
+
+                // send notificatin to all sampledUsers
+
+                fetchUsers();
             }, l -> {
                 Log.d("Firebase", "sample fail :(");
             });
