@@ -43,7 +43,9 @@ public class UserProfileFragment extends Fragment {
     private TextView emailTextView;
     private TextView phoneTextView;
     private TextView facilityTextView;
+    private TextView facilityAddressTextView;
     private LinearLayout facilityLayout;
+    private LinearLayout facilityAddressLayout;
     private ConstraintLayout profileBodyView;
     private ImageView profileImageView;
     private ImageView profilePictureView;
@@ -58,8 +60,10 @@ public class UserProfileFragment extends Fragment {
         emailTextView = view.findViewById(R.id.user_email_textview);
         phoneTextView = view.findViewById(R.id.user_phone_textview);
         facilityTextView = view.findViewById(R.id.user_facility_textview);
+        facilityAddressTextView = view.findViewById(R.id.user_facility_address_textview);
         profilePictureView = view.findViewById(R.id.profile_picture_display); // Initialize ImageView
         facilityLayout = view.findViewById(R.id.display_profile_facility);
+        facilityAddressLayout = view.findViewById(R.id.display_profile_facility_address);
 
         Button editProfileButton = view.findViewById(R.id.edit_profile_button);
         editProfileButton.setOnClickListener(v -> {
@@ -110,7 +114,9 @@ public class UserProfileFragment extends Fragment {
                 user = newUser;
                 if (user.getRoles() != null && user.getRoles().isOrganizer()) {
                     facilityLayout.setVisibility(View.VISIBLE);
+                    facilityAddressLayout.setVisibility(View.VISIBLE);
                     facilityTextView.setText(user.getUserFacility());
+                    facilityAddressTextView.setText(user.getUserFacilityAddress());
                 }
 
                 nameTextView.setText(user.getUserName());
@@ -152,8 +158,12 @@ public class UserProfileFragment extends Fragment {
         if (user.getRoles() != null && user.getRoles().isOrganizer()) {
             facilityLayout.setVisibility(View.VISIBLE);
             facilityTextView.setText(user.getUserFacility());
+
+            facilityAddressLayout.setVisibility(View.VISIBLE);
+            facilityAddressTextView.setText(user.getUserFacilityAddress());
         } else {
             facilityLayout.setVisibility(View.GONE);
+            facilityAddressLayout.setVisibility(View.GONE);
         }
 
         // Load profile picture using Glide

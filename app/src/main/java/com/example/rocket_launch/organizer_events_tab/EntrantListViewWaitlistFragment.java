@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -19,6 +20,7 @@ import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.entrant_events_tab.EntrantViewWaitingListFragment;
 import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragment;
+import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
 
@@ -32,10 +34,11 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     private Event.UserArrayAdapter adapter;
     private ArrayList<User> users;
     private String eventId;
+    private Button sampleButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_list, container, false);
+        View view = inflater.inflate(R.layout.organizer_view_waitlist_layout, container, false);
 
         assert getArguments() != null;
         eventId = getArguments().getString("eventId");
@@ -45,8 +48,10 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         usersDB = new UsersDB();
         users = new ArrayList<>();
         adapter = new Event.UserArrayAdapter(requireContext(), users);
-        listView.setAdapter(adapter);
 
+        sampleButton = view.findViewById(R.id.sampleWaitlistButton);
+
+        listView.setAdapter(adapter);
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             // TODO - maybe?
             User clickedUser = users.get(position);
@@ -58,7 +63,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        fetchUsers();
+        fetchUsers(); // make sure we reload list in case items updated
     }
 
     /**
@@ -85,10 +90,23 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                             EntrantListViewWaitlistFragment.this.users.clear();
                             EntrantListViewWaitlistFragment.this.users.addAll(users);
                             adapter.notifyDataSetChanged();
+
+                            // add listener only if we successfully loaded waitlist
+                            sampleButton.setOnClickListener(l -> {
+                                sampleWaitlist();
+                            });
+
                         }, e -> {
                             Log.w("Firebase", "Error getting users", e);
                             Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show();
                         }),
                 e -> Log.w("Firebase", "Error getting events", e));
+    }
+
+    void sampleWaitlist() {
+        eventsDB.sampleWaitlist(eventId, users.size(), l -> {
+            Log.d("Firebase", "sample success");
+            fetchUsers();
+        });
     }
 }

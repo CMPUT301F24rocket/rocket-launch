@@ -126,7 +126,8 @@ public class CreateNewEventFragment extends Fragment {
 
         event.setName(eventName);
         event.setCapacity(Integer.parseInt(eventCapacity));
-        event.setMaxWaitlistSize(waitlistSizeLimit != null ? Integer.parseInt(waitlistSizeLimit) : 0);
+        // set MaxWaitlistSize to be -1 if not specified
+        event.setMaxWaitlistSize(waitlistSizeLimit != null ? Integer.parseInt(waitlistSizeLimit) : -1);
         event.setDescription(eventDescription);
         event.setGeolocationRequired(geolocationRequired);
         event.setWaitingList();

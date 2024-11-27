@@ -1,6 +1,7 @@
 package com.example.rocket_launch;
 
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -75,25 +76,19 @@ public class EventsDB {
                 Event event = documentSnapshot.toObject(Event.class);
 
                 if (event != null) {
-                    int currentSize = event.getWaitingList().size();
-
-                    if (currentSize < event.getMaxWaitlistSize()) {
-                        eventsRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
-                                .addOnSuccessListener(new OnSuccessListener<Void>() {
-                                    @Override
-                                    public void onSuccess(Void aVoid) {
-                                        Log.d("Firebase", "User added to waiting list");
-                                    }
-                                })
-                                .addOnFailureListener(new OnFailureListener() {
-                                    @Override
-                                    public void onFailure(@NonNull Exception e) {
-                                        Log.w("Firebase", "Error adding user", e);
-                                    }
-                                });
-                    } else {
-                        Log.d("Firebase", "Waiting list is full");
-                    }
+                    eventsRef.document(eventID).update("waitingList", FieldValue.arrayUnion(userID))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Firebase", "User added to waiting list");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Firebase", "Error adding user", e);
+                                }
+                            });
                 }
             } else {
                 Log.w("Firebase", "Event document does not exist");
@@ -429,4 +424,21 @@ public class EventsDB {
         }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
     }
 
+    public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
+        // load event
+        loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Event event = documentSnapshot.toObject(Event.class);
+                    if (event != null) {
+                        event.sampleWaitlist(sampleAmount);
+                        eventsRef.document(eventId).set(event)
+                                .addOnSuccessListener(onSuccessListener)
+                                .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
+                    }
+                }
+            }
+        });
+    }
 }

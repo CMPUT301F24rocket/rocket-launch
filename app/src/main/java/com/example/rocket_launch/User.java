@@ -20,6 +20,7 @@ public class User {
     private String userEmail;
     private String userPhoneNumber;
     private String userFacility;
+    private String userFacilityAddress;
     private Location location;
     private Roles roles;
 
@@ -48,6 +49,7 @@ public class User {
         this.userEmail = "";
         this.userPhoneNumber = "";
         this.userFacility = "";
+        this.userFacilityAddress = "";
         this.profilePhotoPath = "";
     }
 
@@ -90,6 +92,9 @@ public class User {
     public void setUserFacility(String userFacility){
         this.userFacility = userFacility;
     }
+
+    public String getUserFacilityAddress() {return  this.userFacilityAddress;}
+    public void setUserFacilityAddress(String userFacilityAddress) {this.userFacilityAddress = userFacilityAddress;}
 
     // android id
     public String getAndroidId() {

@@ -2,12 +2,15 @@ package com.example.rocket_launch.entrant_events_tab;
 
 import android.os.Bundle;
 import android.provider.Settings;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -18,19 +21,23 @@ import com.example.rocket_launch.UsersDB;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
+import java.util.Locale;
+
 /**
  * fragment used to show details of an event
  */
 public class ScannedEventDetailsFragment extends Fragment {
 
+    String androidId;
     String eventId;
     Event event;
     EventsDB eventsdb;
     UsersDB usersDB;
     TextView eventNameView;
-    TextView eventCapacityView;
+    TextView eventWaitlistCapacityView;
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
+    LinearLayout eventCapacityLayout;
 
     Button joinWaitlistButton;
 
@@ -55,7 +62,8 @@ public class ScannedEventDetailsFragment extends Fragment {
         super.onCreate(savedInstanceState);
         eventsdb = new EventsDB();
         usersDB = new UsersDB();
-
+        androidId = Settings.Secure
+                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     @Override
@@ -63,9 +71,10 @@ public class ScannedEventDetailsFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_new_event_details, container, false);
 
         eventNameView = view.findViewById(R.id.view_event_name);
-        eventCapacityView = view.findViewById(R.id.view_event_capacity);
+        eventWaitlistCapacityView = view.findViewById(R.id.view_waitlist_capacity);
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
+        eventCapacityLayout = view.findViewById(R.id.waitlist_capacity_layout);
 
         joinWaitlistButton = view.findViewById(R.id.join_waitlist_button);
         view.findViewById(R.id.cancel_button).setOnClickListener(l -> {
@@ -86,8 +95,13 @@ public class ScannedEventDetailsFragment extends Fragment {
                 if (documentSnapshot.exists()) {
                     event = documentSnapshot.toObject(Event.class);
                     if (event != null) {
+                        if (event.getMaxWaitlistSize() != -1) {
+                            eventCapacityLayout.setVisibility(View.VISIBLE);
+                            eventWaitlistCapacityView.setText(String.format(
+                                    Locale.CANADA, "%d / %d", event.getWaitingList().size(),
+                                    event.getCapacity()));
+                        }
                         eventNameView.setText(event.getName());
-                        eventCapacityView.setText(String.valueOf( event.getCapacity() ));
                         eventGeolocationRequired.setChecked(event.getGeolocationRequired());
                         eventDescription.setText(event.getDescription());
                         // in get event so we cant press before we have event
@@ -104,16 +118,25 @@ public class ScannedEventDetailsFragment extends Fragment {
      * function to join waiting list and update databse accordingly
      */
     private void joinWaitlist() {
-        // get user id
-        String androidId = Settings.Secure
-                .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        // -1 specifies that it the waitlist is unlimited
+        if (event.getWaitingList().size() < event.getMaxWaitlistSize() || event.getMaxWaitlistSize() == -1) {
+            if (!event.getWaitingList().contains(androidId)) {
+                // add to waitlist of event
+                eventsdb.addUserToWaitingList(eventId, androidId);
 
-        // add to waitlist of event
-        eventsdb.addUserToWaitingList(eventId, androidId);
-
-        // add to user's joined events
-        usersDB.addWaitlistedEvent(androidId, eventId);
-        closeFragment();
+                // add to user's joined events
+                usersDB.addWaitlistedEvent(androidId, eventId);
+                closeFragment();
+            }
+            else {
+                Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
+                Log.d("joinWaitlist", "user already in waitlist");
+            }
+        }
+        else {
+            Toast.makeText(requireContext(), "Waitlist Full", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "Waitlist is Full");
+        }
     }
 
     /**
