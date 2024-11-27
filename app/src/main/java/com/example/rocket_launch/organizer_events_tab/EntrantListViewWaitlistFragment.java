@@ -123,7 +123,6 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                     replaceButton.setOnClickListener(l -> {
                         sampleWaitlist(replaceAmount, sampledUsers -> {
                             // TODO - send notifications to all sampledUsers saying they were chosen in a redraw
-                            // TODO - send notifications to all in waitlist saying they were not chosen
                         });
                     });
                 } else {
@@ -137,6 +136,9 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         return view;
     }
 
+    /**
+     * each time we resume or load this fragment we want to use fresh data
+     */
     @Override
     public void onResume() {
         super.onResume();
@@ -185,6 +187,13 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 e -> Log.w("Firebase", "Error getting events", e));
     }
 
+    /**
+     * samples a certain amount of spots form the waitlist
+     * @param spots
+     *  amount of people to sponsor
+     * @param onSuccess
+     *  used mainly for notifying users which are passed to this function in a list
+     */
     void sampleWaitlist(int spots, OnSuccessListener<List<String>> onSuccess) {
         if (spots > 0) {
             List<String> sampledUsers = event.sampleWaitlist(spots);
