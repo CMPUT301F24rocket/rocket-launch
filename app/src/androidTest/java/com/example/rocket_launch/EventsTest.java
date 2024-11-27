@@ -97,9 +97,9 @@ public class EventsTest {
      * Generate QR code for event (US 02.01.01)
      */
     @Test
-    public void testGenerateQRCode() {
+    public void testLoadQRCode() {
         Event event = mockEvent();
-        Bitmap qrCode = event.generateQRCode();
+        Bitmap qrCode = event.loadQRCode();
         assertNotNull("QR Code should be generated", qrCode);
     }
 
