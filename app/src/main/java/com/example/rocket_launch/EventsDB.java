@@ -177,12 +177,14 @@ public class EventsDB {
 
     }
 
-    // TODO: update event
+
     /**
      * update eventDB
      */
-    public void updateEventDB() {
-
+    public void updateEvent(String eventId, Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailureListener) {
+        eventsRef.document(eventId).set(event)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailureListener);
     }
 
     /**
