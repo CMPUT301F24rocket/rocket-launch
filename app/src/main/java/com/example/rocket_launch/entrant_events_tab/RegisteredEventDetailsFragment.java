@@ -76,11 +76,12 @@ public class RegisteredEventDetailsFragment extends Fragment {
      * loads an event with eventId
      */
     private void getEvent() {
-        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<Event>() {
+        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<DocumentSnapshot>() {
             @Override
-            public void onSuccess(Event loadedEvent) {
-                    if (loadedEvent != null) {
-                        event = loadedEvent;
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    event = documentSnapshot.toObject(Event.class);
+                    if (event != null) {
                         eventNameView.setText(event.getName());
                         eventCapacityView.setText(String.valueOf( event.getCapacity() ));
                         eventGeolocationRequired.setChecked(event.getGeolocationRequired());
@@ -90,6 +91,7 @@ public class RegisteredEventDetailsFragment extends Fragment {
 
                         });
                     }
+                }
             }
         });
     }

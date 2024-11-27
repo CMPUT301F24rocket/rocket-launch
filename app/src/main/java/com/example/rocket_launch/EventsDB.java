@@ -186,14 +186,12 @@ public class EventsDB {
 
     }
 
-
+    // TODO: update event
     /**
      * update eventDB
      */
-    public void updateEvent(String eventId, Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailureListener) {
-        eventsRef.document(eventId).set(event)
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailureListener);
+    public void updateEventDB() {
+
     }
 
     /**
@@ -203,15 +201,9 @@ public class EventsDB {
      * @param onSuccess
      *  listener for what to do on successful load
      */
-    public void loadEvent(String id, OnSuccessListener<Event> onSuccess) {
+    public void loadEvent(String id, OnSuccessListener<DocumentSnapshot> onSuccess) {
         eventsRef.document(id).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    Event event = null;
-                    if (documentSnapshot.exists()) {
-                        event = documentSnapshot.toObject(Event.class);
-                    }
-                    onSuccess.onSuccess(event);
-                })
+                .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -478,7 +470,7 @@ public class EventsDB {
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
     }
-    /*
+
     public void pickAndNotifyUser(String eventID) {
                 Event event = documentSnapshot.toObject(Event.class);
 
@@ -508,5 +500,22 @@ public class EventsDB {
             }
         }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
     }
-    */
+
+    public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
+        // load event
+        loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
+            @Override
+            public void onSuccess(DocumentSnapshot documentSnapshot) {
+                if (documentSnapshot.exists()) {
+                    Event event = documentSnapshot.toObject(Event.class);
+                    if (event != null) {
+                        event.sampleWaitlist(sampleAmount);
+                        eventsRef.document(eventId).set(event)
+                                .addOnSuccessListener(onSuccessListener)
+                                .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
+                    }
+                }
+            }
+        });
+    }
 }
