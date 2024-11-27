@@ -130,27 +130,25 @@ public class ScannedEventDetailsFragment extends Fragment {
      * loads an event with eventId
      */
     private void getEvent() {
-        eventsdb.loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
+        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<Event>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        if (event.getMaxWaitlistSize() != -1) {
-                            eventCapacityLayout.setVisibility(View.VISIBLE);
-                            eventWaitlistCapacityView.setText(String.format(
-                                    Locale.CANADA, "%d / %d", event.getWaitingList().size(),
-                                    event.getCapacity()));
-                        }
-                        eventNameView.setText(event.getName());
-                        eventGeolocationRequired.setChecked(event.getGeolocationRequired());
-                        eventDescription.setText(event.getDescription());
-                        geolocationDataRequired = event.getGeolocationRequired();
-                        // in get event so we cant press before we have event
-                        joinWaitlistButton.setOnClickListener(l -> {
-                            joinWaitlist();
-                        });
+            public void onSuccess(Event loadedEvent) {
+                if (loadedEvent != null) {
+                    event = loadedEvent;
+                    if (event.getMaxWaitlistSize() != -1) {
+                        eventCapacityLayout.setVisibility(View.VISIBLE);
+                        eventWaitlistCapacityView.setText(String.format(
+                                Locale.CANADA, "%d / %d", event.getWaitingList().size(),
+                                event.getCapacity()));
                     }
+                    eventNameView.setText(event.getName());
+                    eventGeolocationRequired.setChecked(event.getGeolocationRequired());
+                    eventDescription.setText(event.getDescription());
+                    geolocationDataRequired = event.getGeolocationRequired();
+                    // in get event so we cant press before we have event
+                    joinWaitlistButton.setOnClickListener(l -> {
+                        joinWaitlist();
+                    });
                 }
             }
         });

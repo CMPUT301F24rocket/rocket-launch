@@ -76,21 +76,19 @@ public class RegisteredEventDetailsFragment extends Fragment {
      * loads an event with eventId
      */
     private void getEvent() {
-        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<DocumentSnapshot>() {
+        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<Event>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        eventNameView.setText(event.getName());
-                        eventCapacityView.setText(String.valueOf( event.getCapacity() ));
-                        eventGeolocationRequired.setChecked(event.getGeolocationRequired());
-                        eventDescription.setText(event.getDescription());
-                        // in get event so we cant press before we have event
-                        removeRegistrationButton.setOnClickListener(l -> {
+            public void onSuccess(Event loadedEvent) {
+                if (loadedEvent != null) {
+                    event = loadedEvent;
+                    eventNameView.setText(event.getName());
+                    eventCapacityView.setText(String.valueOf( event.getCapacity() ));
+                    eventGeolocationRequired.setChecked(event.getGeolocationRequired());
+                    eventDescription.setText(event.getDescription());
+                    // in get event so we cant press before we have event
+                    removeRegistrationButton.setOnClickListener(l -> {
 
-                        });
-                    }
+                    });
                 }
             }
         });
