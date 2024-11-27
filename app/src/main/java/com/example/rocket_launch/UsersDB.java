@@ -1,6 +1,7 @@
 package com.example.rocket_launch;
 
 import android.util.Log;
+
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -11,10 +12,13 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
- * databse class for interfacing with database
+ * database class for interfacing with database
  */
 public class UsersDB {
     private FirebaseFirestore db;
@@ -102,10 +106,15 @@ public class UsersDB {
      * @param notification
      *  notification data to add
      */
-    public void addNotification(String androidID, String notification){
-        usersRef.document(androidID).update("notifications", FieldValue.arrayUnion(notification))
-                .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added"))
-                .addOnFailureListener(e -> Log.w("Firebase", "notfication added failed", e));
+    public void addNotification(String androidID, Notification notification){
+        Map<String, Object> notificationMap = new HashMap<>();
+        notificationMap.put("id", notification.getId());
+        notificationMap.put("title", notification.getTitle());
+        notificationMap.put("message", notification.getMessage());
+        usersRef.document(androidID)
+                .update("notifications", FieldValue.arrayUnion(notificationMap))
+                .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added successfully"))
+                .addOnFailureListener(e -> Log.w("Firebase", "Error adding notification", e));
     }
 
     /**
@@ -319,5 +328,21 @@ public class UsersDB {
                 })
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(users);})
                 .addOnFailureListener(onFailure);
+    }
+
+    public void getAllProfiles(Consumer<List<User>> onSuccess, Consumer<Exception> onFailure) {
+        usersRef.get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<User> userList = new ArrayList<>();
+                    for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        User user = doc.toObject(User.class);
+                        if (user != null) {
+                            user.setAndroidId(doc.getId());
+                            userList.add(user);
+                        }
+                    }
+                    onSuccess.accept(userList);
+                })
+                .addOnFailureListener(onFailure::accept);
     }
 }
