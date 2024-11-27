@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
@@ -23,6 +24,7 @@ import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragme
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
+import java.util.Locale;
 
 /**
  * fragment shown when the organizer wants to show a list of entrants in the waitlist
@@ -35,6 +37,9 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     private ArrayList<User> users;
     private String eventId;
     private Button sampleButton;
+    private TextView spotsAvailable;
+    private Event event;
+    private int availableSpots;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -44,6 +49,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         eventId = getArguments().getString("eventId");
 
         listView = view.findViewById(R.id.view_list_listview);
+        spotsAvailable = view.findViewById(R.id.spotsAvailable);
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
         users = new ArrayList<>();
@@ -52,9 +58,25 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         sampleButton = view.findViewById(R.id.sampleWaitlistButton);
 
         listView.setAdapter(adapter);
-        listView.setOnItemClickListener((parent, itemView, position, id) -> {
-            // TODO - maybe?
-            User clickedUser = users.get(position);
+//        listView.setOnItemClickListener((parent, itemView, position, id) -> {
+//            // TODO - maybe?
+//            User clickedUser = users.get(position);
+//        });
+
+        eventsDB.loadEvent(eventId, loadedEvent -> {
+            if (loadedEvent!= null) {
+                event = loadedEvent;
+
+                availableSpots = event.getCapacity() -
+                        (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
+                spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots",
+                        availableSpots));
+
+                // add listener only if we successfully loaded waitlist
+                sampleButton.setOnClickListener(l -> {
+                    sampleWaitlist();
+                });
+            }
         });
 
         return view;
@@ -64,6 +86,16 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fetchUsers(); // make sure we reload list in case items updated
+        eventsDB.loadEvent(eventId, loadedEvent -> {
+            if (loadedEvent != null) {
+                event = loadedEvent;
+
+                availableSpots = event.getCapacity() -
+                        (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
+                spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots",
+                        availableSpots));
+            }
+        }); // reload event aswell as to show proper values
     }
 
     /**
@@ -91,11 +123,6 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                             EntrantListViewWaitlistFragment.this.users.addAll(users);
                             adapter.notifyDataSetChanged();
 
-                            // add listener only if we successfully loaded waitlist
-                            sampleButton.setOnClickListener(l -> {
-                                sampleWaitlist();
-                            });
-
                         }, e -> {
                             Log.w("Firebase", "Error getting users", e);
                             Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show();
@@ -104,9 +131,14 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     }
 
     void sampleWaitlist() {
-        eventsDB.sampleWaitlist(eventId, users.size(), l -> {
-            Log.d("Firebase", "sample success");
-            fetchUsers();
-        });
+        if (availableSpots > 0) {
+            eventsDB.sampleWaitlist(eventId, users.size(), l -> {
+                Log.d("Firebase", "sample success");
+                fetchUsers();
+            });
+        }
+        else {
+            Toast.makeText(requireContext(), "no spots available", Toast.LENGTH_SHORT).show();
+        }
     }
 }

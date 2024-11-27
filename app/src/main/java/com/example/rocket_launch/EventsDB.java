@@ -192,9 +192,15 @@ public class EventsDB {
      * @param onSuccess
      *  listener for what to do on successful load
      */
-    public void loadEvent(String id, OnSuccessListener<DocumentSnapshot> onSuccess) {
+    public void loadEvent(String id, OnSuccessListener<Event> onSuccess) {
         eventsRef.document(id).get()
-                .addOnSuccessListener(onSuccess)
+                .addOnSuccessListener(documentSnapshot -> {
+                    Event event = null;
+                    if (documentSnapshot.exists()) {
+                        event = documentSnapshot.toObject(Event.class);
+                    }
+                    onSuccess.onSuccess(event);
+                })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -426,17 +432,14 @@ public class EventsDB {
 
     public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
         // load event
-        loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
+        loadEvent(eventId, new OnSuccessListener<Event>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Event event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        event.sampleWaitlist(sampleAmount);
-                        eventsRef.document(eventId).set(event)
-                                .addOnSuccessListener(onSuccessListener)
-                                .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
-                    }
+            public void onSuccess(Event event) {
+                if (event != null) {
+                    event.sampleWaitlist(sampleAmount);
+                    eventsRef.document(eventId).set(event)
+                            .addOnSuccessListener(onSuccessListener)
+                            .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
                 }
             }
         });
