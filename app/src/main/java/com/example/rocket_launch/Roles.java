@@ -1,12 +1,16 @@
 package com.example.rocket_launch;
 
-import java.util.HashMap;
-
+/**
+ * class to contain all of a given user's roles
+ */
 public class Roles {
     boolean organizer;
     boolean entrant;
     boolean admin;
 
+    /**
+     * constructor
+     */
     public Roles() {
         this.admin = false;
         this.entrant = false;

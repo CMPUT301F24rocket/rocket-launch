@@ -5,8 +5,16 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+/**
+ * adapter used for displaying the different display tabs for admin
+ */
 public class AdminModePagerAdapter extends FragmentStateAdapter {
 
+    /**
+     * constructor for AdminModePagerAdapter
+     * @param fragmentActivity
+     *  base activity that is displaying the tabs
+     */
     public AdminModePagerAdapter(@NonNull FragmentActivity fragmentActivity) {
         super(fragmentActivity);
     }

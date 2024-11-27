@@ -127,6 +127,24 @@
                     style="@style/UserProfileDisplayStyle" />
             </LinearLayout>
 
+            <!--Display Facility Address-->
+            <LinearLayout
+                android:id="@+id/display_profile_facility_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/UserProfileDisplayStyle"
+                    android:text="Facility Address: " />
+
+                <TextView
+                    android:id="@+id/user_facility_address_textview"
+                    style="@style/UserProfileDisplayStyle" />
+            </LinearLayout>
+
+
 
         </LinearLayout>
 

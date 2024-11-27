@@ -10,6 +10,14 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <!--Location permissions-->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -19,14 +27,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Rocketlaunch"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        tools:replace="android:allowBackup" >
 
         <!-- Specify android:exported attribute for each activity -->
         <activity
             android:name=".admin.AdminModeActivity"
             android:exported="false" />
         <activity
-            android:name=".EventDetailsFragment"
+            android:name=".entrant_events_tab.ScannedEventDetailsFragment"
             android:exported="false" />
         <activity
             android:name=".nav_fragments.UserProfileFragment"
@@ -36,15 +45,17 @@
             android:exported="true" />
         <activity
             android:name=".nav_fragments.CreateEventFragment"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true" />
         <activity
             android:name=".nav_fragments.UserEventsFragment"
             android:exported="true" />
         <activity
-            android:name=".QRCodeScannerActivity"
+            android:name=".entrant_events_tab.QRCodeScannerActivity"
             android:exported="true"/>
         <activity
             android:name=".MainActivity"
+            android:windowSoftInputMode="adjustPan"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
