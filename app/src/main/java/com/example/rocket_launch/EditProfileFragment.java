@@ -20,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
@@ -30,13 +31,19 @@ import com.google.android.material.snackbar.Snackbar;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+import com.squareup.picasso.Picasso;
 
 /**
  * fragment for organizer edit profile
  */
 public class EditProfileFragment extends Fragment {
 
-    private EditText nameEditText, emailEditText, phoneEditText, facilityEditText;
+    private EditText nameEditText, emailEditText, phoneEditText, facilityEditText, facilityAddressEditText;
     private LinearLayout facilityLayout;
     private ImageView profileImageView;
     private Button changeProfilePictureButton, deleteProfilePictureButton;
@@ -68,6 +75,7 @@ public class EditProfileFragment extends Fragment {
         emailEditText = view.findViewById(R.id.edit_user_email);
         phoneEditText = view.findViewById(R.id.edit_user_phone);
         facilityEditText = view.findViewById(R.id.edit_user_facility);
+        facilityAddressEditText = view.findViewById(R.id.edit_user_facility_address);
         profileImageView = view.findViewById(R.id.profile_image_view);
         changeProfilePictureButton = view.findViewById(R.id.change_profile_picture_button);
         deleteProfilePictureButton = view.findViewById(R.id.delete_profile_picture_button);
@@ -77,9 +85,8 @@ public class EditProfileFragment extends Fragment {
         Button cancelButton = view.findViewById(R.id.cancel_profile_edit_button);
         Button editRolesButton = view.findViewById(R.id.edit_user_role_button);
         Button generateProfileButton = view.findViewById(R.id.generate_profile_picture_button);
-        generateProfileButton.setOnClickListener(v ->
-                Toast.makeText(requireContext(), "Implementation in progress...", Toast.LENGTH_SHORT).show()
-        );
+        generateProfileButton.setOnClickListener(v -> loadFixedProfilePicture());
+
 
         // Load and display existing user details
         loadUserDetails();
@@ -93,6 +100,54 @@ public class EditProfileFragment extends Fragment {
 
         return view;
     }
+    private void loadFixedProfilePicture() {
+        // List of fixed URLs
+        String[] fixedImageUrls = {
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage1.png?alt=media&token=ee6fc585-b355-4d48-8b67-154f82565637",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage2.png?alt=media&token=9266bc82-ac24-4edf-96ec-4478bfba1a11",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage3.png?alt=media&token=25d2b9cc-6a8e-4628-aa86-82e8e956d95f",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage4.png?alt=media&token=d1103424-9484-496f-9bb1-f911a7e7d080",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage5.png?alt=media&token=d5f35574-b5df-44e7-b599-8e5fa4c0804c",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage6.png?alt=media&token=776215f7-3c13-4cca-9d77-2661730830ad",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage10.png?alt=media&token=92e10f80-77b8-4e26-8a5f-7e60f008602d",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage7.png?alt=media&token=dee7f8b0-9302-41cc-a401-2d324fb7f19f",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage8.png?alt=media&token=882e7cfe-a523-4a5b-94c5-71228070dcee",
+                "https://firebasestorage.googleapis.com/v0/b/rocket-launch-21699.firebasestorage.app/o/profile_pictures%2Fimage9.png?alt=media&token=8d9e548a-a3df-4c80-ba0c-25615343c04b"
+        };
+
+        // Generate a random index
+        int randomIndex = (int) (Math.random() * fixedImageUrls.length);
+
+        // Get a random URL from the list
+        String randomUrl = fixedImageUrls[randomIndex];
+
+        // Load the image using Picasso
+        Picasso.get()
+                .load(randomUrl)
+                .placeholder(R.drawable.default_image) // Placeholder while loading
+                .error(R.drawable.default_image)       // Error image if loading fails
+                .into(profileImageView);
+        saveProfilePictureUrlToFirestore(randomUrl);
+
+        // Log for debugging purposes
+        Log.d(TAG, "Loaded random image URL: " + randomUrl);
+    }
+
+
+    /**
+     * Save the selected profile picture URL to Firestore
+     * @param imageUrl The URL of the selected image
+     */
+    private void saveProfilePictureUrlToFirestore(String imageUrl) {
+        // Update the user's profile photo path
+        user.setProfilePhotoPath(imageUrl);
+
+        // Save the updated user details in Firestore
+        usersDB.updateUser(androidID, user,
+                success -> Log.d(TAG, "Profile picture URL saved to Firestore."),
+                error -> Log.e(TAG, "Failed to save profile picture URL to Firestore.", error));
+    }
+
 
     /**
      * Open the gallery to select a new profile picture
@@ -242,15 +297,25 @@ public class EditProfileFragment extends Fragment {
         nameEditText.setText(user.getUserName());
         emailEditText.setText(user.getUserEmail());
         phoneEditText.setText(user.getUserPhoneNumber());
+
         if (user.getRoles().isOrganizer()) {
             facilityLayout.setVisibility(View.VISIBLE);
             facilityEditText.setText(user.getUserFacility());
-        }
-        else {
+            facilityAddressEditText.setText(user.getUserFacilityAddress());
+        } else {
             facilityLayout.setVisibility(View.GONE);
         }
-        if (user.getProfilePhotoPath() != null) {
-            loadProfileImage(user.getProfilePhotoPath());
+
+        // Load the profile picture URL from Firestore
+        String profilePhotoPath = user.getProfilePhotoPath();
+        if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
+            Picasso.get()
+                    .load(profilePhotoPath)
+                    .placeholder(R.drawable.default_image)
+                    .error(R.drawable.default_image)
+                    .into(profileImageView);
+        } else {
+            profileImageView.setImageResource(R.drawable.default_image);
         }
     }
 
@@ -262,6 +327,7 @@ public class EditProfileFragment extends Fragment {
         user.setUserEmail(emailEditText.getText().toString());
         user.setUserPhoneNumber(phoneEditText.getText().toString());
         user.setUserFacility(facilityEditText.getText().toString());
+        user.setUserFacilityAddress(facilityAddressEditText.getText().toString());
         usersDB.updateUser(androidID, user,
                 success -> {Log.d(TAG, "user details updated"); closeFragment();},
                 error -> Log.e(TAG, "failed to update user details", error));
