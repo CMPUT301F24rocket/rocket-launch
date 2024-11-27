@@ -1,9 +1,6 @@
 package com.example.rocket_launch;
 
-import android.content.Context;
-import android.provider.Settings;
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -18,10 +15,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import org.checkerframework.checker.units.qual.A;
-
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * class to help with firestore database
@@ -338,5 +334,73 @@ public class EventsDB {
         })
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(events);})
                 .addOnFailureListener(onFailure);
+    }
+
+    public void addToEntrantLocationDataList(String eventID, EntrantLocationData entrantLocation) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Event event = documentSnapshot.toObject(Event.class);
+
+                if (event != null) {
+                    eventsRef.document(eventID).update("entrantLocationDataList", FieldValue.arrayUnion(entrantLocation))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Firebase", "entrant location added to entrant location data list");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Firebase", "Error adding entrant location data", e);
+                                }
+                            });
+                }
+            } else {
+                Log.w("Firebase", "Event document does not exist");
+            }
+        });
+    }
+
+    public void removeFromEntrantLocationDataList(String eventID, String entrantID) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<Map<String, Object>> locationDataList = (List<Map<String, Object>>) documentSnapshot.get("entrantLocationDataList");
+
+                // Filter the list to remove the object with the matching entrantID
+                // since only one instance of entrantID can exist in the list
+                List<Map<String, Object>> updatedLocationDataList = new ArrayList<>();
+                for (Map<String, Object> locationData : locationDataList) {
+                    if (!locationData.get("entrantID").equals(entrantID)) {
+                        updatedLocationDataList.add(locationData);
+                    }
+                }
+
+                eventDocRef.update("entrantLocationDataList", updatedLocationDataList)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Firebase", "Entrant location removed from entrant location data list");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Firebase", "Error removing location data", e);
+                            }
+                        });
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Firebase", "Error fetching event data: ", e);
+            }
+        });
+
     }
 }

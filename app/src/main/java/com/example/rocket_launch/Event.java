@@ -36,6 +36,7 @@ public class Event {
     private List<String> cancelledEntrants;
     private List<String> finalEntrants;
     private int maxWaitlistSize; // Integer
+    private List<EntrantLocationData> entrantLocationDataList;
 
     public Event(){
         // verify lists appear in database -> ensures no access to undefined attribute
@@ -43,6 +44,7 @@ public class Event {
         this.cancelledEntrants = new ArrayList<>();
         this.finalEntrants = new ArrayList<>();
         this.invitedEntrants = new ArrayList<>();
+        this.entrantLocationDataList = new ArrayList<>();
     }
 
     public void setEventID(String eventID){this.eventID = eventID;}
@@ -60,6 +62,11 @@ public class Event {
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
 
+    //For Entrant Location Data List
+    public void setEntrantLocationDataList(){this.entrantLocationDataList = new ArrayList<>();}
+    public void addToEntrantLocationDataList(EntrantLocationData entrantLocationData) {entrantLocationDataList.add(entrantLocationData);}
+    public List<EntrantLocationData> getEntrantLocationDataList(){return entrantLocationDataList;}
+    public void removeFromEntrantLocationDataList(EntrantLocationData entrantLocationData){entrantLocationDataList.remove(entrantLocationData);}
 
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;

@@ -129,6 +129,7 @@ public class CreateNewEventFragment extends Fragment {
         event.setDescription(eventDescription);
         event.setGeolocationRequired(geolocationRequired);
         event.setWaitingList();
+        event.setEntrantLocationDataList();
 
         eventsDB.addCreatedEvent(event, androidId, v -> {
             closeFragment();

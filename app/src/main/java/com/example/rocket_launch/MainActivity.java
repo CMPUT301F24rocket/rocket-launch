@@ -24,9 +24,6 @@ import com.example.rocket_launch.nav_fragments.UserEventsFragment;
 import com.example.rocket_launch.nav_fragments.UserProfileFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.config.Configuration;
 
