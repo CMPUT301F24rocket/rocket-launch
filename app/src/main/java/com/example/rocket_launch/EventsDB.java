@@ -1,7 +1,6 @@
 package com.example.rocket_launch;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -20,8 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import java.util.Random;
 import java.util.UUID;
+
 
 /**
  * class to help with firestore database
@@ -59,6 +60,14 @@ public class EventsDB {
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error adding Event", e))
                 .addOnCompleteListener(onCompleteListener);
+    }
+
+    /**
+     * Get the reference to the events collection.
+     * @return CollectionReference to the events collection
+     */
+    public CollectionReference getEventsRef() {
+        return eventsRef;
     }
 
     /**
@@ -348,6 +357,78 @@ public class EventsDB {
                 .addOnFailureListener(onFailure);
     }
 
+
+    public void addToEntrantLocationDataList(String eventID, EntrantLocationData entrantLocation) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Event event = documentSnapshot.toObject(Event.class);
+
+                if (event != null) {
+                    eventsRef.document(eventID).update("entrantLocationDataList", FieldValue.arrayUnion(entrantLocation))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Firebase", "entrant location added to entrant location data list");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Firebase", "Error adding entrant location data", e);
+                                }
+                            });
+                }
+            } else {
+                Log.w("Firebase", "Event document does not exist");
+            }
+        });
+    }
+
+    //Remove location data from the database
+    public void removeFromEntrantLocationDataList(String eventID, String entrantID) {
+      
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+              
+                List<Map<String, Object>> locationDataList = (List<Map<String, Object>>) documentSnapshot.get("entrantLocationDataList");
+
+                // Filter the list to remove the object with the matching entrantID
+                // since only one instance of entrantID can exist in the list
+                List<Map<String, Object>> updatedLocationDataList = new ArrayList<>();
+                for (Map<String, Object> locationData : locationDataList) {
+                    if (!locationData.get("entrantID").equals(entrantID)) {
+                        updatedLocationDataList.add(locationData);
+                    }
+                }
+
+                eventDocRef.update("entrantLocationDataList", updatedLocationDataList)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Firebase", "Entrant location removed from entrant location data list");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Firebase", "Error removing location data", e);
+                            }
+                        });
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Firebase", "Error fetching event data: ", e);
+            }
+        });
+    }
+
+
     // Add a notification to an event
     // Updated addNotificationToEvent Method
     public void addNotificationToEvent(String eventID, Notification notification) {
@@ -355,7 +436,7 @@ public class EventsDB {
         Map<String, Object> notificationMap = new HashMap<>();
         notificationMap.put("id", notification.getId());
         notificationMap.put("title", notification.getTitle());
-        notificationMap.put("message", notification.getMessage());
+        notificationMap.put("message3", notification.getMessage());
        // notificationMap.put("timestamp", notification.getTimestamp());
 
         // Update Firebase with the notification map
@@ -397,12 +478,8 @@ public class EventsDB {
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
     }
-
+    /*
     public void pickAndNotifyUser(String eventID) {
-        DocumentReference eventDocRef = eventsRef.document(eventID);
-
-        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
                 Event event = documentSnapshot.toObject(Event.class);
 
                 if (event != null && event.getWaitingList() != null && !event.getWaitingList().isEmpty()) {
@@ -431,4 +508,5 @@ public class EventsDB {
             }
         }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
     }
+    */
 }

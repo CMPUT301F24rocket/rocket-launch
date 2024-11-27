@@ -34,6 +34,7 @@ public class WaitlistedEventDetailsFragment extends Fragment {
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
     LinearLayout eventCapacityLayout;
+    boolean locationRequired;
 
     Button cancelWaitlistButton;
 
@@ -90,15 +91,22 @@ public class WaitlistedEventDetailsFragment extends Fragment {
                         eventCapacityLayout.setVisibility(View.VISIBLE);
                         eventWaitlistCapacityView.setText(String.format(
                                 Locale.CANADA, "%d / %d", event.getWaitingList().size(),
-                                event.getMaxWaitlistSize()));
+                                event.getCapacity()));
                     }
                     eventGeolocationRequired.setChecked(event.getGeolocationRequired());
+                    locationRequired = event.getGeolocationRequired();
                     eventDescription.setText(event.getDescription());
                     // in get event so we cant press before we have event
                     cancelWaitlistButton.setOnClickListener(l -> {
                         leaveWaitlist();
                     });
                 }
+                eventGeolocationRequired.setChecked(event.getGeolocationRequired());
+                eventDescription.setText(event.getDescription());
+                // in get event so we cant press before we have event
+                cancelWaitlistButton.setOnClickListener(l -> {
+                    leaveWaitlist();
+                });
             }
         });
     }
@@ -111,11 +119,18 @@ public class WaitlistedEventDetailsFragment extends Fragment {
         String androidId = Settings.Secure
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // add to waitlist of event
-        eventsdb.removeUserFromWaitingList(event.getEventID(), androidId);
+        if (locationRequired == true){ //remove location data from list as well
+            eventsdb.removeFromEntrantLocationDataList(event.getEventID(), androidId);
+            eventsdb.removeUserFromWaitingList(event.getEventID(), androidId);
+            usersDB.removeWaitlistedEvent(androidId, event.getEventID());
 
-        // add to user's joined events
-        usersDB.removeWaitlistedEvent(androidId, event.getEventID());
+        } else{
+            // remove from waitlist of event
+            eventsdb.removeUserFromWaitingList(event.getEventID(), androidId);
+            // remove from user's joined events
+            usersDB.removeWaitlistedEvent(androidId, event.getEventID());
+        }
+
         closeFragment();
     }
 

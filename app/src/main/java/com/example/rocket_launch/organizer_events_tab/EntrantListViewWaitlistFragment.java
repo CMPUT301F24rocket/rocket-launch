@@ -144,9 +144,8 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         super.onResume();
         fetchUsers(); // make sure we reload list in case items updated
         eventsDB.loadEvent(eventId, loadedEvent -> {
-            if (loadedEvent != null) {
-                event = loadedEvent;
-
+            event = loadedEvent;
+            if (event != null) {
                 availableSpots = event.getCapacity() -
                         (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
                 spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots in Event",
