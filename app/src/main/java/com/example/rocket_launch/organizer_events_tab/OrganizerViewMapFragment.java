@@ -77,6 +77,9 @@ public class OrganizerViewMapFragment extends Fragment {
         eventsDB = new EventsDB();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
+        if (getArguments() != null){
+            String eventID = getArguments().getString("eventId");
+        }
     }
 
     @Override
