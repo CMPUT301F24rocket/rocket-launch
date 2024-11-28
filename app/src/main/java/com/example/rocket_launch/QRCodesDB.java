@@ -6,6 +6,7 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
@@ -27,17 +28,32 @@ public class QRCodesDB {
         eventsDB = new EventsDB(); // load eventsDB so we can update event's qr code
     }
 
+    public void loadEventId(String code, OnSuccessListener<String> success, OnFailureListener failure) {
+        qRRef.document(code).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String eventId = (String) documentSnapshot.get("eventId");
+                        success.onSuccess(eventId);
+                    } else {
+                        failure.onFailure(new Exception("Invalid id"));
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
+    }
+
     public void loadCode(String code, OnSuccessListener<Event> success) {
         // try to load from database
         qRRef.document(code).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     // if we successfully find teh code in the database
-                    String eventId = (String) documentSnapshot.get("eventId");
+                    if (documentSnapshot.exists()) {
+                        String eventId = (String) documentSnapshot.get("eventId");
 
-                    // try to load the corresponding event
-                    eventsDB.loadEvent(eventId, success); // pass on success to events db
+                        // try to load the corresponding event
+                        eventsDB.loadEvent(eventId, success); // pass on success to events db
+                    }
                 })
-                .addOnFailureListener(e -> Log.e("error removing from database", "error", e));
+                .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
     }
 
     public void loadAll() {
