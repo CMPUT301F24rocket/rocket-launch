@@ -17,15 +17,16 @@ import android.widget.Toast;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.QRCodesDB;
 import com.example.rocket_launch.R;
 
 /**
  * fragment that displays qr code to organizer
  */
 public class OrganizerViewQrCodeFragment extends Fragment {
-    Event event;
-    EventsDB eventsDB;
+    QRCodesDB qrCodesDB;
     Bitmap qrCodeBitmap;
+    Event event;
 
     // UI
     TextView QRCodeTitle;
@@ -47,6 +48,7 @@ public class OrganizerViewQrCodeFragment extends Fragment {
      *  event of qr code to display
      */
     public OrganizerViewQrCodeFragment(Event event) {
+        this.qrCodesDB = new QRCodesDB();
         this.event = event;
     }
 
@@ -54,7 +56,7 @@ public class OrganizerViewQrCodeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        eventsDB = new EventsDB();
+
     }
 
     @Override
@@ -97,18 +99,13 @@ public class OrganizerViewQrCodeFragment extends Fragment {
      *
      */
     public void generateQRCode() {
-        int hashcode = event.hashCode(); // generate hash of event data
-        while (String.valueOf(hashcode).equals(event.getQRCode())) {
-            hashcode += 1;
-        }
-        event.setQRCode(String.valueOf(hashcode));
-        eventsDB.updateEvent(event.getEventID(), event, s -> {
+        qrCodesDB.addCode(event.getEventID(), s -> {
             Toast.makeText(requireContext(), "Generation Successful!", Toast.LENGTH_LONG).show();
-        }, f -> {
+            Log.d("Generate QR Code", "creating QR code successful");
+        }, l -> {
             Log.d("Generate QR Code", "error creating QR code");
             Toast.makeText(requireContext(), "Generation Failed :(", Toast.LENGTH_LONG).show();
         });
-
     }
 
     /**

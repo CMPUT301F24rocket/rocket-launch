@@ -56,6 +56,8 @@ public class QRCodesDB {
                             onSuccess.onSuccess(null);
                         })
                         .addOnFailureListener(onFailure);
+            } else {
+                Log.w("QRCode", "error adding code: event is is null");
             }
         });
     }
