@@ -80,8 +80,6 @@ public class OrganizerViewQrCodeFragment extends Fragment {
         // QR code
         if (!event.getQRCode().isEmpty()) {
             qrCodeBitmap = event.generateQRCode();
-        }
-        if (qrCodeBitmap != null) {
             qrCodeImage.setImageBitmap(qrCodeBitmap);
             generateButton.setText("Generate new QR code");
             generateButton.setOnClickListener(l -> generateNewQrCode());

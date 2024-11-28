@@ -101,6 +101,7 @@ public class QRCodesDB {
             if (event != null) {
                 DocumentReference newQRRef = qRRef.document();
                 event.setQRCode(newQRRef.getId()); // add code ID to event eventId
+                eventsDB.updateEvent(eventId, event, l -> {}, l -> {});
                 HashMap<String, String> data = new HashMap<>();
                 data.put("eventId", eventId);
                 newQRRef.set(data)
