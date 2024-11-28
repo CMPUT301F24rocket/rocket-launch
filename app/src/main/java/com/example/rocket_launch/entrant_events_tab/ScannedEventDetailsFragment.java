@@ -31,7 +31,6 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.Locale;
 
@@ -139,7 +138,7 @@ public class ScannedEventDetailsFragment extends Fragment {
                         eventCapacityLayout.setVisibility(View.VISIBLE);
                         eventWaitlistCapacityView.setText(String.format(
                                 Locale.CANADA, "%d / %d", event.getWaitingList().size(),
-                                event.getCapacity()));
+                                event.getMaxWaitlistSize()));
                     }
                     eventNameView.setText(event.getName());
                     eventGeolocationRequired.setChecked(event.getGeolocationRequired());
