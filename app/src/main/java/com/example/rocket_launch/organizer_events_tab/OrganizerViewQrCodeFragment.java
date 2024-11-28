@@ -73,7 +73,6 @@ public class OrganizerViewQrCodeFragment extends Fragment {
 
 
         generateButton = view.findViewById(R.id.generateCode);
-        generateButton.setOnClickListener(l -> generateQRCode());
 
         qrCodeImage = view.findViewById(R.id.event_qr_code);
 
@@ -85,11 +84,12 @@ public class OrganizerViewQrCodeFragment extends Fragment {
         if (qrCodeBitmap != null) {
             qrCodeImage.setImageBitmap(qrCodeBitmap);
             generateButton.setText("Generate new QR code");
+            generateButton.setOnClickListener(l -> generateNewQrCode());
         } else {
-        // if no QR code yet, hide the views
-        QRCodeTitle.setText("No QR code yet, Generate one!");
-        qrCodeImage.setVisibility(View.GONE);
-
+            // if no QR code yet, hide the views
+            QRCodeTitle.setText("No QR code yet, Generate one!");
+            qrCodeImage.setVisibility(View.GONE);
+            generateButton.setOnClickListener(l -> generateQRCode());
         }
 
         return view;
@@ -99,12 +99,40 @@ public class OrganizerViewQrCodeFragment extends Fragment {
      *
      */
     public void generateQRCode() {
-        qrCodesDB.addCode(event.getEventID(), s -> {
+        generateButton.setClickable(false); // turn off button while processing
+        qrCodesDB.addCode(event.getEventID(), code -> {
             Toast.makeText(requireContext(), "Generation Successful!", Toast.LENGTH_LONG).show();
             Log.d("Generate QR Code", "creating QR code successful");
+            // update display
+            event.setQRCode(code);
+            qrCodeBitmap = event.generateQRCode();
+            qrCodeImage.setImageBitmap(qrCodeBitmap);
+            generateButton.setText("Generate new QR code");
+            QRCodeTitle.setText("Your Event QR Code:");
+            qrCodeImage.setVisibility(View.VISIBLE);
+            generateButton.setOnClickListener(l -> generateNewQrCode());
+            generateButton.setClickable(true);
+
         }, l -> {
             Log.d("Generate QR Code", "error creating QR code");
             Toast.makeText(requireContext(), "Generation Failed :(", Toast.LENGTH_LONG).show();
+            generateButton.setClickable(true);
+        });
+    }
+
+    public void generateNewQrCode() {
+        generateButton.setClickable(false); // turn off button while processing
+        qrCodesDB.reGenerateCode(event.getQRCode(), event.getEventID(), code -> {
+            Toast.makeText(requireContext(), "Generation Successful!", Toast.LENGTH_LONG).show();
+            Log.d("Generate new QR Code", "creating QR code successful");
+            event.setQRCode(code);
+            qrCodeBitmap = event.generateQRCode();
+            qrCodeImage.setImageBitmap(qrCodeBitmap);
+            generateButton.setClickable(true);
+        }, l -> {
+            Log.d("Generate new QR Code", "error creating QR code");
+            Toast.makeText(requireContext(), "Generation Failed :(", Toast.LENGTH_LONG).show();
+            generateButton.setClickable(true);
         });
     }
 

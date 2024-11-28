@@ -44,16 +44,17 @@ public class QRCodesDB {
         // TODO - implement for admin needs
     }
 
-    public void addCode(String eventId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public void addCode(String eventId, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
         eventsDB.loadEvent(eventId, event -> {
             if (event != null) {
                 DocumentReference newQRRef = qRRef.document();
                 event.setQRCode(newQRRef.getId()); // add code ID to event eventId
+                eventsDB.updateEvent(eventId, event, l -> {}, f -> {});
                 HashMap<String, String> data = new HashMap<>();
                 data.put("eventId", eventId);
                 newQRRef.set(data)
                         .addOnSuccessListener(l -> {
-                            onSuccess.onSuccess(null);
+                            onSuccess.onSuccess(newQRRef.getId());
                         })
                         .addOnFailureListener(onFailure);
             } else {
