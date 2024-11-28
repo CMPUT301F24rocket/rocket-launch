@@ -25,5 +25,4 @@
     <string name="channel_name">Event Notifications</string> <!-- Added -->
     <string name="channel_description">Notifications for actions related to event creation and management.</string> <!-- Added -->
 
-
 </resources>
