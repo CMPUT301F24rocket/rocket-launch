@@ -1,16 +1,16 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+
+import androidx.fragment.app.Fragment;
 
 import com.example.rocket_launch.R;
 
@@ -35,6 +35,12 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         //back button pressed
         ImageButton backButton = view.findViewById(R.id.map_options_back_button);
         backButton.setOnClickListener(v -> closeFragment());
+
+        //edit location button
+        Button editLocationButton = view.findViewById(R.id.map_options_edit_facility_location_button);
+        editLocationButton.setOnClickListener(v -> {
+            //edit location in fragment
+        });
 
         //collapsable options for radius menu
         LinearLayout defineRadiusOptions = view.findViewById(R.id.radius_options_header);

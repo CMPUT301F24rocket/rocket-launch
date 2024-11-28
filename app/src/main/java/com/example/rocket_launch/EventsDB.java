@@ -63,6 +63,14 @@ public class EventsDB {
     }
 
     /**
+     * Get the reference to the events collection.
+     * @return CollectionReference to the events collection
+     */
+    public CollectionReference getEventsRef() {
+        return eventsRef;
+    }
+
+    /**
      * Add user to waiting list and check max waiting list size
      * @param eventID
      *  add user to event wit heventID
@@ -178,13 +186,15 @@ public class EventsDB {
 
     }
 
-    // TODO: update event
     /**
      * update eventDB
      */
-    public void updateEventDB() {
-
+    public void updateEvent(String eventId, Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailureListener) {
+        eventsRef.document(eventId).set(event)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailureListener);
     }
+
 
     /**
      * loads a given event with eventID id
@@ -193,9 +203,16 @@ public class EventsDB {
      * @param onSuccess
      *  listener for what to do on successful load
      */
-    public void loadEvent(String id, OnSuccessListener<DocumentSnapshot> onSuccess) {
+        public void loadEvent(String id, OnSuccessListener<Event> onSuccess) {
         eventsRef.document(id).get()
-                .addOnSuccessListener(onSuccess)
+        .addOnSuccessListener(documentSnapshot -> {
+            Event event = null;
+            if (documentSnapshot.exists()) {
+                event = documentSnapshot.toObject(Event.class);
+            }
+            onSuccess.onSuccess(event);
+        })
+
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
@@ -203,6 +220,7 @@ public class EventsDB {
                     }
                 });
     }
+
 
     /**
      * gets list of user Ids from an event's waitlist
@@ -463,6 +481,7 @@ public class EventsDB {
                 .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
     }
 
+    /*
     public void pickAndNotifyUser(String eventID) {
                 Event event = documentSnapshot.toObject(Event.class);
 
@@ -492,22 +511,5 @@ public class EventsDB {
             }
         }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
     }
-
-    public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
-        // load event
-        loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Event event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        event.sampleWaitlist(sampleAmount);
-                        eventsRef.document(eventId).set(event)
-                                .addOnSuccessListener(onSuccessListener)
-                                .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
-                    }
-                }
-            }
-        });
-    }
+    */
 }

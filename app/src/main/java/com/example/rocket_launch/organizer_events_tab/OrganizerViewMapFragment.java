@@ -1,10 +1,6 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
@@ -12,11 +8,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ZoomButtonsController;
 
+import androidx.fragment.app.Fragment;
+
+import com.example.rocket_launch.EntrantLocationData;
+import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.NominatimGeocode;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
@@ -27,7 +24,6 @@ import org.json.JSONException;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
@@ -48,6 +44,7 @@ public class OrganizerViewMapFragment extends Fragment {
     private MapView mapView = null;
     private ScaleBarOverlay mapScaleBarOverlay;
     private UsersDB userDB;
+    private EventsDB eventsDB;
     private User user;
     private String addressFacility;
     private GeoPoint facilityGeoPoint;
@@ -56,7 +53,7 @@ public class OrganizerViewMapFragment extends Fragment {
     // get facility coordinates from address (entered in userProfile) --> geocoding - DONE
     // make sure the address entered is valid --> Set a default instead: DONE
     // Get Entrant Locations on event sign up
-    //                      --> ask location permission
+    //                      --> ask location permission - DONE
     //                      --> put all entrant coordinates & Names into a list in EventDB
     //                      --> for geoplotting and list views
     // Enable edit facility address in mapView for convenience
@@ -77,6 +74,7 @@ public class OrganizerViewMapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userDB = new UsersDB();
+        eventsDB = new EventsDB();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
     }
@@ -210,6 +208,10 @@ public class OrganizerViewMapFragment extends Fragment {
         void onAddressFetched(String address);
     }
 
+    private interface EntrantLocationDataListCallback{
+        void onEntrantLocationDataListFetched(EntrantLocationData entrantLocationData);
+    }
+
     //get organizer facility address
     private void getFacilityAddress(AddressCallback addressCallback){
         userDB.getUser(androidId, new OnSuccessListener<User>() {
@@ -225,5 +227,10 @@ public class OrganizerViewMapFragment extends Fragment {
         }, e -> {Log.e("getFacilityAddress", "No matching document found or task failed", e);
                 addressCallback.onAddressFetched(null);
         });
+    }
+
+    //get entrant location data from database
+    private void getEntrantLocationDataList(EntrantLocationDataListCallback entrantLocationDataListCallback){
+
     }
 }
