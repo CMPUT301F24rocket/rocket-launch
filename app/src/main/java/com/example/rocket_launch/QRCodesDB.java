@@ -8,8 +8,11 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * handles all database queries related to QR Codes
@@ -56,8 +59,16 @@ public class QRCodesDB {
                 .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
     }
 
-    public void loadAll() {
-        // TODO - implement for admin needs
+    public void loadAll(OnSuccessListener<List<String>> onSuccessListener) {
+        // return a List<String> of all QR codes currently in the system
+        qRRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<String> codes = new ArrayList<>();
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                codes.add(document.getId());
+                Log.d("loaded data", "Document ID: " + document.getId());
+            }
+            onSuccessListener.onSuccess(codes);
+        });
     }
 
     public void addCode(String eventId, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
