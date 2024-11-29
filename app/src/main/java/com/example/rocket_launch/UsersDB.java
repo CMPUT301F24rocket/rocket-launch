@@ -186,19 +186,6 @@ public class UsersDB {
     }
 
 
-    /**
-     * Add an event to the user's cancelled events list
-     * @param androidId ID of the user
-     * @param eventID ID of the event to add to cancelled
-     */
-    public void addCancelledEvent(String androidId, String eventID) {
-        usersRef.document(androidId)
-                .update("eventsCancelled", FieldValue.arrayUnion(eventID))
-                .addOnSuccessListener(unused -> Log.d("Firebase", "Event added to cancelled list"))
-                .addOnFailureListener(e -> Log.w("Firebase", "Failed to add event to cancelled list", e));
-    }
-
-
     // created events
 
     /**

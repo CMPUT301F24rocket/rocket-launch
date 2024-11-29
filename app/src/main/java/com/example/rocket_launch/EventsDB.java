@@ -142,18 +142,18 @@ public class EventsDB {
     public void addUserToRegisteredList(String eventID, String userID) {
         DocumentReference eventDocRef = eventsRef.document(eventID);
 
-        eventDocRef.update("registeredEntrants", FieldValue.arrayUnion(userID))
+        eventDocRef.update("FinalEntrants", FieldValue.arrayUnion(userID))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Firebase", "User removed from registered list");
+                        Log.d("Firebase", "User added to registered list");
                     }
                 })
 
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase", "Error removing user", e);
+                        Log.w("Firebase", "Error adding user", e);
                     }
                 });
 
@@ -169,7 +169,7 @@ public class EventsDB {
     public void removeUserFromRegisteredList(String eventID, String userID) {
         DocumentReference eventDocRef = eventsRef.document(eventID);
 
-        eventDocRef.update("registeredEntrants", FieldValue.arrayRemove(userID))
+        eventDocRef.update("FinalEntrants", FieldValue.arrayRemove(userID))
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
@@ -203,6 +203,19 @@ public class EventsDB {
                     Log.w("Firebase", "Error removing user", e);
                 });
     }
+
+    public void addUserToCancelledList(String eventId, String userId) {
+        DocumentReference eventDocRef = eventsRef.document(eventId);
+
+        eventDocRef.update("cancelledEntrants", FieldValue.arrayUnion(userId))
+                .addOnSuccessListener(l -> {
+                    Log.d("Firebase", "User added to cancelled list");
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("Firebase", "Error adding user", e);
+                });
+    }
+
 
     /**
      * update eventDB
