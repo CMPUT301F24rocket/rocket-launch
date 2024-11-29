@@ -218,6 +218,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     void sampleWaitlist(int spots, OnSuccessListener<List<String>> onSuccess) {
         if (spots > 0) {
             List<String> sampledUsers = event.sampleWaitlist(spots);
+            // update event
             eventsDB.updateEvent(eventId, event, l -> {
                 Toast.makeText(requireContext(), String.format(Locale.CANADA, "invited %d entrant(s)", spots), Toast.LENGTH_SHORT).show();
 
@@ -226,6 +227,10 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 updateUI();
 
             }, l -> Log.d("Firebase", "sample fail :("));
+            // update users
+            for (String androidId : sampledUsers) {
+                usersDB.removeWaitlistedEvent(androidId, eventId);
+            }
             adapter.notifyDataSetChanged();
         }
         else {
