@@ -80,7 +80,8 @@ public class EntrantListViewWaitlistFragment extends Fragment {
             sampleWaitlist(sampleAmount, sampledUsers -> {
                 // send notifications to all sampledUsers saying they were chosen
                 Notification inviteNotification = new Notification();
-                inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), String.format(Locale.CANADA, "You are Invited to Join %s", event.getName()), eventId);
+                String inviteTitle = String.format(Locale.CANADA, "You are Invited to Join %s", event.getName());
+                inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), inviteTitle, eventId);
                 for (String userId : sampledUsers) {
                     usersDB.addNotification(userId, inviteNotification);
                 }
@@ -96,7 +97,10 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         });
         replaceButton.setOnClickListener(l -> {
             sampleWaitlist(replaceAmount, sampledUsers -> {
-                // TODO - send notifications to all sampledUsers saying they were chosen in a redraw
+                // send notifications to all sampledUsers saying they were chosen in a redraw
+                Notification inviteNotification = new Notification();
+                String title = String.format(Locale.CANADA, "You are invited to join %s in a redraw!", event.getName());
+                inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), title, eventId);
             });
         });
 
