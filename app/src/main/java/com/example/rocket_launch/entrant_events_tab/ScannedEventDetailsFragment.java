@@ -130,7 +130,7 @@ public class ScannedEventDetailsFragment extends Fragment {
      * loads an event with eventId
      */
     private void getEvent() {
-        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<Event>() {
+        eventsdb.loadEvent(eventId, new OnSuccessListener<Event>() {
             @Override
             public void onSuccess(Event loadedEvent) {
                 if (loadedEvent != null) {

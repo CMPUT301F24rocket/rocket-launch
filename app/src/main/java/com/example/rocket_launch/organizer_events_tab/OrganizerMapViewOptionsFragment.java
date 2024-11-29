@@ -1,6 +1,7 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,12 +10,22 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProvider;
 
+import com.example.rocket_launch.MapOptionsViewModel;
 import com.example.rocket_launch.R;
 
+/**
+ * Fragment used for setting up additional organizer map options for the map view fragment.
+ * Author: Rachel
+ */
+
 public class OrganizerMapViewOptionsFragment extends Fragment {
+    private MapOptionsViewModel mapOptionsViewModel;
 
     public OrganizerMapViewOptionsFragment() {
         // Required empty public constructor
@@ -23,6 +34,7 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mapOptionsViewModel = new ViewModelProvider(requireActivity()).get(MapOptionsViewModel.class);
 
     }
 
@@ -32,14 +44,47 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.organizer_map_view_options_fragment, container, false);
 
+        //have view model listen for any changes in facility name
+        mapOptionsViewModel.getFacilityName().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+
+                Log.i("Map View Options", "Facility name: " + mapOptionsViewModel.getFacilityName().getValue());
+
+                TextView facilityNameTextView = view.findViewById(R.id.map_options_facility_name);
+                facilityNameTextView.setText(mapOptionsViewModel.getFacilityName().getValue());
+            }
+        });
+
+        //have view model listen for any changes in the facility address
+        mapOptionsViewModel.getFacilityAddress().observe(getViewLifecycleOwner(), new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+
+                Log.i("Map View Options", "Facility Address: " + mapOptionsViewModel.getFacilityAddress().getValue());
+
+                TextView facilityAddressTextView = view.findViewById(R.id.map_options_facility_address);
+                facilityAddressTextView.setText(mapOptionsViewModel.getFacilityAddress().getValue());
+            }
+        });
+
+
         //back button pressed
         ImageButton backButton = view.findViewById(R.id.map_options_back_button);
         backButton.setOnClickListener(v -> closeFragment());
 
         //edit location button
         Button editLocationButton = view.findViewById(R.id.map_options_edit_facility_location_button);
-        editLocationButton.setOnClickListener(v -> {
-            //edit location in fragment
+        editLocationButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MapOptionEditFacilityAddress mapOptions = new MapOptionEditFacilityAddress();
+                getChildFragmentManager()
+                        .beginTransaction()
+                        .replace(R.id.map_options_edit_address_container, mapOptions)
+                        .addToBackStack(null)
+                        .commit();
+            }
         });
 
         //collapsable options for radius menu

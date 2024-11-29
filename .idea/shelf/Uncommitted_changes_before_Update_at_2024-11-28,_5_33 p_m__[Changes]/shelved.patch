@@ -1,0 +1,99 @@
+Index: app/src/main/res/layout/activity_main.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/main_activity\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    android:fitsSystemWindows=\"true\"\n    tools:context=\".MainActivity\">\n\n    <FrameLayout\n        android:id=\"@+id/fragment_frame\"\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"0dp\"\n        app:layout_constraintBottom_toTopOf=\"@+id/bottom_nav_view\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintTop_toTopOf=\"parent\" />\n\n    <!--Bottom Navigation Bar-->\n    <com.google.android.material.bottomnavigation.BottomNavigationView\n        android:id=\"@+id/bottom_nav_view\"\n        app:menu=\"@menu/bottom_nav_menu\"\n        style=\"@style/BottomNavBarStyle\"\n\n        app:layout_constraintBottom_toBottomOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\" />\n\n<!--    <TextView-->\n<!--        android:id=\"@+id/textView\"-->\n<!--        android:layout_width=\"wrap_content\"-->\n<!--        android:layout_height=\"wrap_content\"-->\n<!--        android:layout_marginBottom=\"16dp\"-->\n<!--        android:text=\"@string/cmput301_event_lottery_system_application\"-->\n<!--        android:textAlignment=\"center\"-->\n<!--        android:textSize=\"30sp\"-->\n<!--        app:layout_constraintBottom_toTopOf=\"@+id/get_started\"-->\n<!--        app:layout_constraintEnd_toEndOf=\"parent\"-->\n<!--        app:layout_constraintHorizontal_bias=\"0.0\"-->\n<!--        app:layout_constraintStart_toStartOf=\"parent\"-->\n<!--        app:layout_constraintTop_toBottomOf=\"@+id/main_activity_header\" />-->\n\n<!--    <TextView-->\n<!--        android:id=\"@+id/textView2\"-->\n<!--        android:layout_width=\"wrap_content\"-->\n<!--        android:layout_height=\"wrap_content\"-->\n<!--        android:layout_marginTop=\"16dp\"-->\n<!--        android:text=\"@string/by_team_rocket\"-->\n<!--        android:textSize=\"25sp\"-->\n<!--        app:layout_constraintEnd_toEndOf=\"parent\"-->\n<!--        app:layout_constraintStart_toStartOf=\"parent\"-->\n<!--        app:layout_constraintTop_toBottomOf=\"@+id/textView\"-->\n<!--        tools:ignore=\"MissingConstraints\" />-->\n\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/activity_main.xml b/app/src/main/res/layout/activity_main.xml
+--- a/app/src/main/res/layout/activity_main.xml	(revision 58d926776f1a33a7a69a748b9c170f9172178ac1)
++++ b/app/src/main/res/layout/activity_main.xml	(date 1732755679448)
+@@ -8,6 +8,7 @@
+     android:fitsSystemWindows="true"
+     tools:context=".MainActivity">
+ 
++
+     <FrameLayout
+         android:id="@+id/fragment_frame"
+         android:layout_width="match_parent"
+@@ -15,31 +16,38 @@
+         app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
+         app:layout_constraintEnd_toEndOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintTop_toTopOf="parent" />
++        app:layout_constraintTop_toTopOf="parent">
+ 
+-    <!--Bottom Navigation Bar-->
+-    <com.google.android.material.bottomnavigation.BottomNavigationView
+-        android:id="@+id/bottom_nav_view"
+-        app:menu="@menu/bottom_nav_menu"
+-        style="@style/BottomNavBarStyle"
+-
+-        app:layout_constraintBottom_toBottomOf="parent"
+-        app:layout_constraintStart_toStartOf="parent"
+-        app:layout_constraintEnd_toEndOf="parent" />
+ 
+-<!--    <TextView-->
+-<!--        android:id="@+id/textView"-->
+-<!--        android:layout_width="wrap_content"-->
+-<!--        android:layout_height="wrap_content"-->
+-<!--        android:layout_marginBottom="16dp"-->
+-<!--        android:text="@string/cmput301_event_lottery_system_application"-->
+-<!--        android:textAlignment="center"-->
+-<!--        android:textSize="30sp"-->
+-<!--        app:layout_constraintBottom_toTopOf="@+id/get_started"-->
+-<!--        app:layout_constraintEnd_toEndOf="parent"-->
+-<!--        app:layout_constraintHorizontal_bias="0.0"-->
+-<!--        app:layout_constraintStart_toStartOf="parent"-->
+-<!--        app:layout_constraintTop_toBottomOf="@+id/main_activity_header" />-->
++<!--        <TextView-->
++<!--            android:id="@+id/application"-->
++<!--            android:layout_width="wrap_content"-->
++<!--            android:layout_height="wrap_content"-->
++<!--            android:layout_marginBottom="16dp"-->
++<!--            android:text="@string/cmput301_event_lottery_system_application"-->
++<!--            android:textAlignment="center"-->
++<!--            android:textSize="30sp"-->
++<!--            app:layout_constraintEnd_toEndOf="parent"-->
++<!--            app:layout_constraintHorizontal_bias="0.0"-->
++<!--            app:layout_constraintStart_toStartOf="parent"/>-->
++
++    </FrameLayout>
++
++
++
++
++
++    <!--Bottom Navigation Bar-->
++    <com.google.android.material.bottomnavigation.BottomNavigationView
++        android:id="@+id/bottom_nav_view"
++        app:menu="@menu/bottom_nav_menu"
++        style="@style/BottomNavBarStyle"
++
++        app:layout_constraintBottom_toBottomOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintEnd_toEndOf="parent" />
++
++
+ 
+ <!--    <TextView-->
+ <!--        android:id="@+id/textView2"-->
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\n    <string name=\"app_name\">rocket-launch</string>\n\n    <!--Bottom Navigation Titles-->\n    <string name=\"title_home\">Home</string>\n    <string name=\"title_user_profile\">User Profile</string>\n    <string name=\"title_notifications\">Notifications</string>\n    <string name=\"title_create_events\">Create Event</string>\n    <string name=\"title_user_events\">User Events</string>\n\n    <!--Activity Header Titles-->\n    <string name=\"user_profile_header\">User Profile</string>\n    <string name=\"user_events_header\">My Events</string>\n    <string name=\"notifications_header\">Notifications</string>\n    <string name=\"main_header\">MainActivity</string>\n    <string name=\"create_event_header\">Created Events</string>\n    <!-- TODO: Remove or change this placeholder text -->\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\n    <string name=\"by_team_rocket\">By Team Rocket</string>\n    <string name=\"get_started\">Create User</string>\n    <string name=\"cmput301_event_lottery_system_application\">CMPUT301 Event Lottery System Application\\n</string>\n\n\n    <!-- Notification Channel Strings -->\n    <string name=\"channel_name\">Event Notifications</string> <!-- Added -->\n    <string name=\"channel_description\">Notifications for actions related to event creation and management.</string> <!-- Added -->\n\n\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision 58d926776f1a33a7a69a748b9c170f9172178ac1)
++++ b/app/src/main/res/values/strings.xml	(date 1732755506459)
+@@ -18,7 +18,7 @@
+     <string name="hello_blank_fragment">Hello blank fragment</string>
+     <string name="by_team_rocket">By Team Rocket</string>
+     <string name="get_started">Create User</string>
+-    <string name="cmput301_event_lottery_system_application">CMPUT301 Event Lottery System Application\n</string>
++    <string name="cmput301_event_lottery_system_application">Event Lottery System\n\n</string>
+ 
+ 
+     <!-- Notification Channel Strings -->

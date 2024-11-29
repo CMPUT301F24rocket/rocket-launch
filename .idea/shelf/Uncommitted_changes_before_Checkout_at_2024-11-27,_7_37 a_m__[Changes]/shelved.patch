@@ -1,0 +1,92 @@
+Index: app/src/main/res/layout/fragment_created_event_details.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    tools:context=\".organizer_events_tab.CreatedEventDetailsFragment\">\n\n    <TextView \n        android:id=\"@+id/organizer_event_details_header\"\n        style=\"@style/SubHeaderStyle\"\n        android:text=\"Organizer Event Details\" \n        app:layout_constraintTop_toTopOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\"/>\n\n    <LinearLayout\n        android:layout_width=\"match_parent\"\n        android:layout_height=\"0dp\"\n        app:layout_constraintTop_toBottomOf=\"@id/organizer_event_details_header\"\n        app:layout_constraintBottom_toBottomOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n\n        android:orientation=\"vertical\"\n        android:padding=\"20dp\">\n        \n        <ImageButton\n            android:id=\"@+id/organizer_event_details_back_button\"\n            style=\"@style/ArrowLeftButtonStyle\" />\n\n        <TextView\n            android:id=\"@+id/organizer_event_details_name\"\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:text=\"Event Name\"\n            android:textSize=\"25sp\"\n            android:padding=\"15sp\"\n            android:gravity=\"center\"/>\n\n        <Button\n            android:id=\"@+id/edit_event_page_button\"\n            style=\"@style/OrganizerEventDetailsButtons\"\n            android:text=\"Edit Event page\"/>\n\n        <Button\n            android:id=\"@+id/view_entrant_lists_button\"\n            style=\"@style/OrganizerEventDetailsButtons\"\n            android:text=\"View Entrant Lists\"/>\n\n        <Button\n            android:id=\"@+id/view_entrant_map_button\"\n            style=\"@style/OrganizerEventDetailsButtons\"\n            android:text=\"View Entrant Map\"/>\n\n        <Button\n            android:id=\"@+id/view_event_qr_code_button\"\n            style=\"@style/OrganizerEventDetailsButtons\"\n            android:text=\"View Event QR Code\"/>\n\n        <Button\n            android:id=\"@+id/view_event_notification_button\"\n            style=\"@style/OrganizerEventDetailsButtons\"\n            android:text=\"Notify Waitlist\"/>\n\n    </LinearLayout>\n\n\n</androidx.constraintlayout.widget.ConstraintLayout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_created_event_details.xml b/app/src/main/res/layout/fragment_created_event_details.xml
+--- a/app/src/main/res/layout/fragment_created_event_details.xml	(revision 24f1093a6789f5534bda3aa66077c509ac8548fd)
++++ b/app/src/main/res/layout/fragment_created_event_details.xml	(date 1732718242773)
+@@ -6,10 +6,10 @@
+     xmlns:app="http://schemas.android.com/apk/res-auto"
+     tools:context=".organizer_events_tab.CreatedEventDetailsFragment">
+ 
+-    <TextView 
++    <TextView
+         android:id="@+id/organizer_event_details_header"
+         style="@style/SubHeaderStyle"
+-        android:text="Organizer Event Details" 
++        android:text="Organizer Event Details"
+         app:layout_constraintTop_toTopOf="parent"
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"/>
+@@ -24,7 +24,7 @@
+ 
+         android:orientation="vertical"
+         android:padding="20dp">
+-        
++
+         <ImageButton
+             android:id="@+id/organizer_event_details_back_button"
+             style="@style/ArrowLeftButtonStyle" />
+@@ -58,10 +58,6 @@
+             style="@style/OrganizerEventDetailsButtons"
+             android:text="View Event QR Code"/>
+ 
+-        <Button
+-            android:id="@+id/view_event_notification_button"
+-            style="@style/OrganizerEventDetailsButtons"
+-            android:text="Notify Waitlist"/>
+ 
+     </LinearLayout>
+ 
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"deploymentTargetSelector\">\n    <selectionStates>\n      <SelectionState runConfigName=\"app\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n        <DropdownSelection timestamp=\"2024-11-24T18:48:52.975230800Z\">\n          <Target type=\"DEFAULT_BOOT\">\n            <handle>\n              <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=RFCX508G5BA\" />\n            </handle>\n          </Target>\n        </DropdownSelection>\n        <DialogSelection />\n      </SelectionState>\n      <SelectionState runConfigName=\"MainActivity\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n      </SelectionState>\n    </selectionStates>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+--- a/.idea/deploymentTargetSelector.xml	(revision 24f1093a6789f5534bda3aa66077c509ac8548fd)
++++ b/.idea/deploymentTargetSelector.xml	(date 1732672344787)
+@@ -4,17 +4,14 @@
+     <selectionStates>
+       <SelectionState runConfigName="app">
+         <option name="selectionMode" value="DROPDOWN" />
+-        <DropdownSelection timestamp="2024-11-24T18:48:52.975230800Z">
++        <DropdownSelection timestamp="2024-11-27T01:51:19.642427Z">
+           <Target type="DEFAULT_BOOT">
+             <handle>
+-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RFCX508G5BA" />
++              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/nathan/.android/avd/Pixel_8_API_33.avd" />
+             </handle>
+           </Target>
+         </DropdownSelection>
+         <DialogSelection />
+-      </SelectionState>
+-      <SelectionState runConfigName="MainActivity">
+-        <option name="selectionMode" value="DROPDOWN" />
+       </SelectionState>
+     </selectionStates>
+   </component>
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\n    <string name=\"app_name\">rocket-launch</string>\n\n    <!--Bottom Navigation Titles-->\n    <string name=\"title_home\">Home</string>\n    <string name=\"title_user_profile\">User Profile</string>\n    <string name=\"title_notifications\">Notifications</string>\n    <string name=\"title_create_events\">Create Event</string>\n    <string name=\"title_user_events\">User Events</string>\n\n    <!--Activity Header Titles-->\n    <string name=\"user_profile_header\">User Profile</string>\n    <string name=\"user_events_header\">My Events</string>\n    <string name=\"notifications_header\">Notifications</string>\n    <string name=\"main_header\">MainActivity</string>\n    <string name=\"create_event_header\">Created Events</string>\n    <!-- TODO: Remove or change this placeholder text -->\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\n    <string name=\"by_team_rocket\">By Team Rocket</string>\n    <string name=\"get_started\">Create User</string>\n    <string name=\"cmput301_event_lottery_system_application\">CMPUT301 Event Lottery System Application\\n</string>\n\n\n</resources>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/values/strings.xml b/app/src/main/res/values/strings.xml
+--- a/app/src/main/res/values/strings.xml	(revision 24f1093a6789f5534bda3aa66077c509ac8548fd)
++++ b/app/src/main/res/values/strings.xml	(date 1732670809206)
+@@ -18,7 +18,6 @@
+     <string name="hello_blank_fragment">Hello blank fragment</string>
+     <string name="by_team_rocket">By Team Rocket</string>
+     <string name="get_started">Create User</string>
+-    <string name="cmput301_event_lottery_system_application">CMPUT301 Event Lottery System Application\n</string>
+ 
+ 
+ </resources>
+\ No newline at end of file

@@ -6,9 +6,13 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * handles all database queries related to QR Codes
@@ -27,35 +31,61 @@ public class QRCodesDB {
         eventsDB = new EventsDB(); // load eventsDB so we can update event's qr code
     }
 
+    public void loadEventId(String code, OnSuccessListener<String> success, OnFailureListener failure) {
+        qRRef.document(code).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String eventId = (String) documentSnapshot.get("eventId");
+                        success.onSuccess(eventId);
+                    } else {
+                        failure.onFailure(new Exception("Invalid id"));
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
+    }
+
     public void loadCode(String code, OnSuccessListener<Event> success) {
         // try to load from database
         qRRef.document(code).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     // if we successfully find teh code in the database
-                    String eventId = (String) documentSnapshot.get("eventId");
+                    if (documentSnapshot.exists()) {
+                        String eventId = (String) documentSnapshot.get("eventId");
 
-                    // try to load the corresponding event
-                    eventsDB.loadEvent(eventId, success); // pass on success to events db
+                        // try to load the corresponding event
+                        eventsDB.loadEvent(eventId, success); // pass on success to events db
+                    }
                 })
-                .addOnFailureListener(e -> Log.e("error removing from database", "error", e));
+                .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
     }
 
-    public void loadAll() {
-        // TODO - implement for admin needs
+    public void loadAll(OnSuccessListener<List<String>> onSuccessListener) {
+        // return a List<String> of all QR codes currently in the system
+        qRRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
+            List<String> codes = new ArrayList<>();
+            for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                codes.add(document.getId());
+                Log.d("loaded data", "Document ID: " + document.getId());
+            }
+            onSuccessListener.onSuccess(codes);
+        });
     }
 
-    public void addCode(String eventId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+    public void addCode(String eventId, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
         eventsDB.loadEvent(eventId, event -> {
             if (event != null) {
                 DocumentReference newQRRef = qRRef.document();
                 event.setQRCode(newQRRef.getId()); // add code ID to event eventId
+                eventsDB.updateEvent(eventId, event, l -> {}, f -> {});
                 HashMap<String, String> data = new HashMap<>();
                 data.put("eventId", eventId);
                 newQRRef.set(data)
                         .addOnSuccessListener(l -> {
-                            onSuccess.onSuccess(null);
+                            onSuccess.onSuccess(newQRRef.getId());
                         })
                         .addOnFailureListener(onFailure);
+            } else {
+                Log.w("QRCode", "error adding code: event is is null");
             }
         });
     }
@@ -98,6 +128,7 @@ public class QRCodesDB {
             if (event != null) {
                 DocumentReference newQRRef = qRRef.document();
                 event.setQRCode(newQRRef.getId()); // add code ID to event eventId
+                eventsDB.updateEvent(eventId, event, l -> {}, l -> {});
                 HashMap<String, String> data = new HashMap<>();
                 data.put("eventId", eventId);
                 newQRRef.set(data)

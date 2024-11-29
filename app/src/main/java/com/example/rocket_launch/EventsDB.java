@@ -211,14 +211,12 @@ public class EventsDB {
                 event = documentSnapshot.toObject(Event.class);
             }
             onSuccess.onSuccess(event);
-        })
-
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase", "Error loading Event", e);
-                    }
-                });
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Firebase", "Error loading Event", e);
+            }
+        });
     }
 
 
