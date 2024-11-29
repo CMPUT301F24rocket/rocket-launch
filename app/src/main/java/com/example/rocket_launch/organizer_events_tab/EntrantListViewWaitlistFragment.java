@@ -1,6 +1,7 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.InviteNotification;
+import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UserDetailsFragment;
@@ -79,8 +82,20 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         });
         sampleButton.setOnClickListener(l -> {
             sampleWaitlist(sampleAmount, sampledUsers -> {
-                // TODO - send notifications to all sampledUsers saying they were chosen
-                // TODO - send notifications to all in waitlist saying they were not chosen
+                // send notifications to all sampledUsers saying they were chosen
+                InviteNotification inviteNotification = new InviteNotification(java.util.UUID.randomUUID().toString(), eventId);
+                inviteNotification.setTitle(String.format(Locale.CANADA, "You are Invited to Join %s", event.getName()));
+                for (String userId : sampledUsers) {
+                    usersDB.addNotification(userId, inviteNotification);
+                }
+
+                // send notifications to all in waitlist saying they were not chosen
+                String title = String.format(Locale.CANADA, "You were not chosen for %s", event.getName());
+                String message = "Keep an eye out for any redraws";
+                Notification declineNotification = new Notification(java.util.UUID.randomUUID().toString(), title, message);
+                for (String userId : event.getWaitingList()) {
+                    usersDB.addNotification(userId, declineNotification);
+                }
             });
         });
         replaceButton.setOnClickListener(l -> {

@@ -9,10 +9,10 @@ public class InviteNotification extends Notification {
 
     public InviteNotification() {}
 
-    public InviteNotification(String id, String eventName) {
+    public InviteNotification(String id, String eventId) {
         setId(id);
-        setTitle(String.format(Locale.CANADA, "Invited to join %s", eventName));
         setInvitation(true);
+        this.eventId = eventId;
     }
 
     public String getEventId() {
