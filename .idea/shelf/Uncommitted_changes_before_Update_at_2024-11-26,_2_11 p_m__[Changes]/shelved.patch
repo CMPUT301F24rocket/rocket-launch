@@ -1,0 +1,70 @@
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"deploymentTargetSelector\">\n    <selectionStates>\n      <SelectionState runConfigName=\"app\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n      </SelectionState>\n    </selectionStates>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+--- a/.idea/deploymentTargetSelector.xml	(revision fcd9699d16fccaa92bdea03bc98b6226627ebe23)
++++ b/.idea/deploymentTargetSelector.xml	(date 1732655034946)
+@@ -4,6 +4,14 @@
+     <selectionStates>
+       <SelectionState runConfigName="app">
+         <option name="selectionMode" value="DROPDOWN" />
++        <DropdownSelection timestamp="2024-11-26T20:58:51.483611Z">
++          <Target type="DEFAULT_BOOT">
++            <handle>
++              <DeviceId pluginId="LocalEmulator" identifier="path=/Users/nathan/.android/avd/Pixel_7_API_34.avd" />
++            </handle>
++          </Target>
++        </DropdownSelection>
++        <DialogSelection />
+       </SelectionState>
+     </selectionStates>
+   </component>
+Index: app/src/main/java/com/example/rocket_launch/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocket_launch;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.provider.Settings;\nimport android.util.Log;\nimport android.view.Menu;\nimport android.view.MenuItem;\n\nimport androidx.activity.EdgeToEdge;\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.graphics.Insets;\nimport androidx.core.view.ViewCompat;\nimport androidx.core.view.WindowInsetsCompat;\n\nimport com.example.rocket_launch.admin.AdminModeActivity;\nimport com.example.rocket_launch.nav_fragments.CreateEventFragment;\nimport com.example.rocket_launch.nav_fragments.NotificationsFragment;\nimport com.example.rocket_launch.nav_fragments.UserEventsFragment;\nimport com.example.rocket_launch.nav_fragments.UserProfileFragment;\nimport com.google.android.gms.tasks.OnSuccessListener;\nimport com.google.android.material.bottomnavigation.BottomNavigationView;\nimport com.google.firebase.firestore.DocumentReference;\nimport com.google.firebase.firestore.DocumentSnapshot;\nimport com.google.firebase.firestore.FirebaseFirestore;\n\n/**\n * main activity that gets loaded on startup\n */\npublic class MainActivity extends AppCompatActivity {\n    UsersDB usersDB;\n    BottomNavigationView bottomNav;\n\n    CreateEventFragment createEvent;\n    UserEventsFragment userEvents;\n    UserProfileFragment userProfile;\n    NotificationsFragment notifications;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        EdgeToEdge.enable(this);\n        setContentView(R.layout.activity_main);\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_activity), (v, insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\n            return insets;\n        });\n\n        // load fragments for navigation\n        createEvent = new CreateEventFragment();\n        userEvents = new UserEventsFragment();\n        userProfile = new UserProfileFragment();\n        notifications = new NotificationsFragment();\n\n        // set up nav-bar\n        bottomNav = findViewById(R.id.bottom_nav_view);\n\n        usersDB = new UsersDB();\n\n        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);\n\n        usersDB.getUser(androidID, new OnSuccessListener<User>() {\n            @Override\n            public void onSuccess(User user) {\n                if (user != null) {\n                    checkUserRole(user);\n                    setupNavBar(user.getRoles());\n                } else {\n                    user = new User();\n                    user.setAndroidId(androidID);\n                    usersDB.addUser(androidID, user);\n                    SelectRolesFragment frag = new SelectRolesFragment(user.getRoles());\n                    frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {\n                        @Override\n                        public void onSuccess(Roles roles) {\n                            usersDB.setRoles(androidID, roles);\n                            setupNavBar(roles);\n                        }\n                    });\n                    frag.show(getSupportFragmentManager(), \"Create New User\");\n                }\n            }\n        }, e -> Log.w(\"Firebase\", \"Error getting user\", e));\n    }\n\n    /**\n     * check if the user has the admin role and navigate to AdminModeActivity if true\n     * @param user\n     *  user to check for admin role\n     */\n    private void checkUserRole(User user) {\n        if (user.getRoles().isAdmin()) {\n            Intent intent = new Intent(this, AdminModeActivity.class);\n            startActivity(intent);\n            finish();\n        }\n    }\n\n    /**\n     * function to properly set up navbar on load\n     * @param roles\n     *  a given user's roles\n     */\n    private void setupNavBar(Roles roles) {\n        bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {\n            @Override\n            public boolean onNavigationItemSelected(@NonNull MenuItem item) {\n                if (item.getItemId() == R.id.navigation_user_profile) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, userProfile)\n                            .commit();\n                    return true;\n                } else if (item.getItemId() == R.id.navigation_create_events) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, createEvent)\n                            .commit();\n                    return true;\n                } else if (item.getItemId() == R.id.navigation_notifications) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, notifications)\n                            .commit();\n                    return true;\n                } else if (item.getItemId() == R.id.navigation_user_events) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, userEvents)\n                            .commit();\n                    return true;\n                }\n                return false;\n            }\n        });\n\n        Menu menu = bottomNav.getMenu();\n        if (!roles.isEntrant()) {\n            // if not entrant, don't show user events\n            menu.findItem(R.id.navigation_user_events).setVisible(false);\n        }\n        if (!roles.isOrganizer()) {\n            // if not organizer, don't show create events\n            menu.findItem(R.id.navigation_create_events).setVisible(false);\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/rocket_launch/MainActivity.java b/app/src/main/java/com/example/rocket_launch/MainActivity.java
+--- a/app/src/main/java/com/example/rocket_launch/MainActivity.java	(revision 6f3a5fc9af64865cf28182c08dcf9bfe27f0aa47)
++++ b/app/src/main/java/com/example/rocket_launch/MainActivity.java	(date 1732655509650)
+@@ -6,10 +6,16 @@
+ import android.util.Log;
+ import android.view.Menu;
+ import android.view.MenuItem;
++import android.widget.Button;
++import android.widget.Toast;
+ 
+ import androidx.activity.EdgeToEdge;
++import androidx.activity.result.ActivityResultCallback;
++import androidx.activity.result.ActivityResultLauncher;
++import androidx.activity.result.contract.ActivityResultContracts;
+ import androidx.annotation.NonNull;
+ import androidx.appcompat.app.AppCompatActivity;
++import androidx.core.app.NotificationCompat;
+ import androidx.core.graphics.Insets;
+ import androidx.core.view.ViewCompat;
+ import androidx.core.view.WindowInsetsCompat;
+@@ -37,6 +43,17 @@
+     UserProfileFragment userProfile;
+     NotificationsFragment notifications;
+ 
++    private final ActivityResultLauncher<String> activityResultLauncher = registerForActivityResult(new ActivityResultContracts.RequestPermission(), new ActivityResultCallback<Boolean>() {
++        public void onActivityResult(Boolean o) {
++            if (o) {
++                Toast.makeText(MainActivity.this, "Post Notifications Granted", Toast.LENGTH_SHORT).show();
++            } else {
++                Toast.makeText(MainActivity.this, "Post", Toast.LENGTH_SHORT).show();
++            }
++        }
++    });
++
++
+     @Override
+     protected void onCreate(Bundle savedInstanceState) {
+         super.onCreate(savedInstanceState);

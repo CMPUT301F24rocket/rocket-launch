@@ -1,0 +1,86 @@
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import com.android.build.gradle.internal.getSdkDir\n\nplugins {\n    alias(libs.plugins.android.application)\n    //firebase\n    id(\"com.google.gms.google-services\")\n}\n\nandroid {\n    namespace = \"com.example.rocket_launch\"\n    compileSdk = 34\n\n    defaultConfig {\n        applicationId = \"com.example.rocket_launch\"\n        minSdk = 24\n        targetSdk = 34\n        versionCode = 1\n        versionName = \"1.0\"\n\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    buildTypes {\n        release {\n            isMinifyEnabled = false\n            proguardFiles(\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\n                \"proguard-rules.pro\"\n            )\n        }\n    }\n    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_1_8\n        targetCompatibility = JavaVersion.VERSION_1_8\n    }\n}\n\ndependencies {\n\n    implementation(libs.appcompat)\n    implementation(libs.material)\n    implementation(libs.activity)\n    implementation(libs.constraintlayout)\n    implementation(libs.firebase.firestore)\n    implementation(libs.navigation.fragment)\n    implementation(libs.navigation.ui)\n\n    // QR code scanner\n    implementation(\"com.journeyapps:zxing-android-embedded:4.3.0\")\n    implementation(\"com.google.zxing:core:3.3.3\")\n\n    // Glide\n    implementation(\"com.github.bumptech.glide:glide:4.16.0\")\n\n    //firebase\n    implementation(platform(\"com.google.firebase:firebase-bom:33.5.1\"))\n    implementation(\"com.google.firebase:firebase-analytics\")\n    implementation(\"com.google.firebase:firebase-firestore\")\n\n    //OSM\n    implementation(\"org.osmdroid:osmdroid-android:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-wms:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-mapsforge:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-geopackage:6.1.11\")\n\n    //Nominatim (For Geocoding)\n    implementation(\"com.squareup.okhttp3:okhttp:4.9.1\")\n\n    //Google Location Services\n    implementation (\"com.google.android.gms:play-services-location:21.0.1\")\n\n    // Espresso and JUnit for UI Testing\n    implementation (\"androidx.appcompat:appcompat:1.6.1\")\n    implementation (\"com.google.android.material:material:1.6.1\")\n    implementation (\"androidx.constraintlayout:constraintlayout:2.1.4\")\n\n    implementation (\"com.google.firebase:firebase-storage:20.2.0\")\n    implementation (\"com.github.bumptech.glide:glide:4.12.0\")\n    implementation(libs.firebase.database)\n    implementation(libs.ui.graphics.android)\n    annotationProcessor (\"com.github.bumptech.glide:compiler:4.12.0\")\n    implementation (\"com.squareup.picasso:picasso:2.71828\")\n\n    testImplementation (\"org.junit.jupiter:junit-jupiter-api:5.0.1\")\n    testRuntimeOnly (\"org.junit.jupiter:junit-jupiter-engine:5.0.1\")\n\n    androidTestImplementation (\"androidx.test.ext:junit:1.1.5\")\n    androidTestImplementation (\"androidx.test.espresso:espresso-core:3.5.1\")\n\n\n\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 08f8fc051218ea7f1519af579db921a69864db4c)
++++ b/app/build.gradle.kts	(date 1732718437622)
+@@ -77,7 +77,6 @@
+     implementation ("com.google.firebase:firebase-storage:20.2.0")
+     implementation ("com.github.bumptech.glide:glide:4.12.0")
+     implementation(libs.firebase.database)
+-    implementation(libs.ui.graphics.android)
+     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+     implementation ("com.squareup.picasso:picasso:2.71828")
+ 
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"deploymentTargetSelector\">\n    <selectionStates>\n      <SelectionState runConfigName=\"app\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n        <DropdownSelection timestamp=\"2024-11-24T18:48:52.975230800Z\">\n          <Target type=\"DEFAULT_BOOT\">\n            <handle>\n              <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=RFCX508G5BA\" />\n            </handle>\n          </Target>\n        </DropdownSelection>\n        <DialogSelection />\n      </SelectionState>\n      <SelectionState runConfigName=\"MainActivity\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n      </SelectionState>\n      <SelectionState runConfigName=\"CreateEventTest\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n      </SelectionState>\n      <SelectionState runConfigName=\"NotificationTest\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n      </SelectionState>\n    </selectionStates>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+--- a/.idea/deploymentTargetSelector.xml	(revision 08f8fc051218ea7f1519af579db921a69864db4c)
++++ b/.idea/deploymentTargetSelector.xml	(date 1732718437696)
+@@ -13,15 +13,6 @@
+         </DropdownSelection>
+         <DialogSelection />
+       </SelectionState>
+-      <SelectionState runConfigName="MainActivity">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+-      <SelectionState runConfigName="CreateEventTest">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+-      <SelectionState runConfigName="NotificationTest">
+-        <option name="selectionMode" value="DROPDOWN" />
+-      </SelectionState>
+     </selectionStates>
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"CompilerConfiguration\">\n    <bytecodeTargetLevel target=\"17\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+--- a/.idea/compiler.xml	(revision 08f8fc051218ea7f1519af579db921a69864db4c)
++++ b/.idea/compiler.xml	(date 1732718454991)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="17" />
++    <bytecodeTargetLevel target="21" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"JavadocGenerationManager\">\n    <option name=\"OUTPUT_DIRECTORY\" value=\"$PROJECT_DIR$/docs\" />\n  </component>\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_17\" default=\"true\" project-jdk-name=\"jbr-17\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 08f8fc051218ea7f1519af579db921a69864db4c)
++++ b/.idea/misc.xml	(date 1732718468679)
+@@ -1,9 +1,10 @@
++<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="JavadocGenerationManager">
+     <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/docs" />
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">

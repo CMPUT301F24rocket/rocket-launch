@@ -1,0 +1,60 @@
+Index: app/src/main/res/layout/activity_notifications.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:id=\"@+id/notifications_activity\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\"\n    tools:context=\".NotificationsActivity\">\n\n    <!--User Profile Header-->\n    <TextView\n        android:id=\"@+id/notifications_header\"\n        style=\"@style/ActivityHeaderStyle\"\n        android:text=\"@string/notifications_header\"\n\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintTop_toTopOf=\"parent\"/>\n\n    <!--Bottom Navigation Bar-->\n    <com.google.android.material.bottomnavigation.BottomNavigationView\n        android:id=\"@+id/bottom_nav_view\"\n        app:menu=\"@menu/bottom_nav_menu\"\n        style=\"@style/BottomNavBarStyle\"\n\n        app:layout_constraintBottom_toBottomOf=\"parent\"\n        app:layout_constraintLeft_toLeftOf=\"parent\"\n        app:layout_constraintRight_toRightOf=\"parent\" />\n\n</androidx.constraintlayout.widget.ConstraintLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/activity_notifications.xml b/app/src/main/res/layout/activity_notifications.xml
+--- a/app/src/main/res/layout/activity_notifications.xml	
++++ b/app/src/main/res/layout/activity_notifications.xml	
+@@ -7,7 +7,7 @@
+     android:layout_height="match_parent"
+     tools:context=".NotificationsActivity">
+ 
+-    <!--User Profile Header-->
++    <!--Notifications Header-->
+     <TextView
+         android:id="@+id/notifications_header"
+         style="@style/ActivityHeaderStyle"
+@@ -17,6 +17,25 @@
+         app:layout_constraintStart_toStartOf="parent"
+         app:layout_constraintTop_toTopOf="parent"/>
+ 
++    <LinearLayout
++        android:id="@+id/notifications_layout"
++        android:layout_width="329dp"
++        android:layout_height="448dp"
++
++        android:orientation="vertical"
++        app:layout_constraintBottom_toTopOf="@+id/bottom_nav_view"
++        app:layout_constraintEnd_toEndOf="parent"
++        app:layout_constraintStart_toStartOf="parent"
++        app:layout_constraintTop_toBottomOf="@+id/notifications_header">
++
++        <ListView
++            android:id="@+id/notifications_list"
++            android:layout_width="match_parent"
++            android:layout_height="match_parent"
++            />
++    </LinearLayout>
++
++
+     <!--Bottom Navigation Bar-->
+     <com.google.android.material.bottomnavigation.BottomNavigationView
+         android:id="@+id/bottom_nav_view"
+Index: app/src/main/java/com/example/rocket_launch/CreateEventActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocket_launch;\n\nimport android.content.Intent;\nimport android.os.Bundle;\n\nimport androidx.activity.EdgeToEdge;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.graphics.Insets;\nimport androidx.core.view.ViewCompat;\nimport androidx.core.view.WindowInsetsCompat;\n\nimport com.google.android.material.bottomnavigation.BottomNavigationView;\n\npublic class CreateEventActivity extends AppCompatActivity {\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        EdgeToEdge.enable(this);\n        setContentView(R.layout.activity_create_event);\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.create_event_activity), (v, insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\n            return insets;\n        });\n\n        //for navigation bar\n        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);\n        bottomNav.setSelectedItemId(R.id.navigation_create_events);\n        bottomBarNavigation(bottomNav);\n\n    }\n\n    private void bottomBarNavigation(BottomNavigationView bottomNav){\n        bottomNav.setOnItemSelectedListener(item -> {\n            if (item.getItemId() == R.id.navigation_home) {\n                startActivity(new Intent(getApplicationContext(),MainActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                return true;\n            } else if (item.getItemId() == R.id.navigation_user_events) {\n                startActivity(new Intent(getApplicationContext(),UserEventsActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                finish();\n                return true;\n            } else if (item.getItemId() ==R.id.navigation_create_events) {\n                //current activity, do nothing\n                return true;\n            } else if (item.getItemId() ==R.id.navigation_notifications) {\n                startActivity(new Intent(getApplicationContext(), NotificationsActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                finish();\n                return true;\n            } else if (item.getItemId() ==R.id.navigation_user_profile) {\n                startActivity(new Intent(getApplicationContext(), UserProfileActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                finish();\n                return true;\n            }\n            return false;\n        });\n    }\n}
+===================================================================
+diff --git a/app/src/main/java/com/example/rocket_launch/CreateEventActivity.java b/app/src/main/java/com/example/rocket_launch/CreateEventActivity.java
+--- a/app/src/main/java/com/example/rocket_launch/CreateEventActivity.java	
++++ b/app/src/main/java/com/example/rocket_launch/CreateEventActivity.java	
+@@ -24,6 +24,8 @@
+             return insets;
+         });
+ 
++
++
+         //for navigation bar
+         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
+         bottomNav.setSelectedItemId(R.id.navigation_create_events);
