@@ -112,6 +112,16 @@
         <item name="android:padding">10dp</item>
         <item name="android:textColor">@color/gunmetal</item> </style>
 
+    <!--Button F Style-->
+    <style name="ButtonStyleF">
+        <item name="android:backgroundTint">@color/uranian_blue</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:padding">10sp</item>
+        <item name="android:textColor">@color/marian_blue</item> </style>
+
+
     <!--X button Style-->
     <style name="XButtonStyle">
         <item name="android:src">@drawable/close_thick</item>
@@ -142,8 +152,8 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">20sp</item>
         <item name="android:textSize">25sp</item>
-        <item name="android:textColor">@color/fern_green</item>
-        <item name="android:backgroundTint">@color/tea_green</item>
+        <item name="android:textColor">@color/marian_blue</item>
+        <item name="android:backgroundTint">@color/uranian_blue</item>
         <item name="cornerRadius">10sp</item>
     </style>
 
