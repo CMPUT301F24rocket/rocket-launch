@@ -83,7 +83,8 @@ public class NotificationsFragment extends Fragment {
         notificationsListView.setAdapter(notificationsAdapter);
 
         notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
-            Notification selectedNotification = user.getNotifications().get(position);
+            // get position from the back because of reversed list
+            Notification selectedNotification = user.getNotifications().get(user.getNotifications().size() - 1 - position);
             NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment();
 
             Bundle args = new Bundle();
