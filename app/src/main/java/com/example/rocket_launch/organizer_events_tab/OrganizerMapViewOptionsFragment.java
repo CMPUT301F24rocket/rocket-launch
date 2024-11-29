@@ -44,6 +44,7 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.organizer_map_view_options_fragment, container, false);
 
+        //have view model listen for any changes in facility name
         mapOptionsViewModel.getFacilityName().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -55,7 +56,7 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
             }
         });
 
-
+        //have view model listen for any changes in the facility address
         mapOptionsViewModel.getFacilityAddress().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
