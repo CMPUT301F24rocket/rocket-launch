@@ -13,9 +13,11 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.rocket_launch.EditProfileFragment;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.Notification;
+import com.example.rocket_launch.NotificationCreator;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UserDetailsFragment;
@@ -74,7 +76,15 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         notifyButton = view.findViewById(R.id.sendNotification);
 
         notifyButton.setOnClickListener(l -> {
-            // TODO - send notification to all
+            // open NotificationCreator
+            NotificationCreator notificationCreator = new NotificationCreator(users);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_frame, notificationCreator)
+                    .addToBackStack(null)
+                    .commit();
         });
         sampleButton.setOnClickListener(l -> {
             sampleWaitlist(sampleAmount, sampledUsers -> {
@@ -127,8 +137,8 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     }
 
     void updateUI() {
-        if (event.getWaitingList().isEmpty()) {
-            notifyButton.setVisibility(View.GONE);
+        if (!event.getWaitingList().isEmpty()) {
+            notifyButton.setVisibility(View.VISIBLE);
         }
         // amount of space available total
         availableSpots = event.getCapacity() -
