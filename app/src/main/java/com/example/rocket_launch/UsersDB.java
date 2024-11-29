@@ -106,12 +106,8 @@ public class UsersDB {
      *  notification data to add
      */
     public void addNotification(String androidID, Notification notification){
-        Map<String, Object> notificationMap = new HashMap<>();
-        notificationMap.put("id", notification.getId());
-        notificationMap.put("title", notification.getTitle());
-        notificationMap.put("message", notification.getMessage());
         usersRef.document(androidID)
-                .update("notifications", FieldValue.arrayUnion(notificationMap))
+                .update("notifications", FieldValue.arrayUnion(notification))
                 .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added successfully"))
                 .addOnFailureListener(e -> Log.w("Firebase", "Error adding notification", e));
     }
