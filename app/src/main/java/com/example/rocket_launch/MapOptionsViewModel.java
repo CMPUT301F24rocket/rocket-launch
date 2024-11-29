@@ -15,6 +15,7 @@ public class MapOptionsViewModel extends ViewModel {
     MutableLiveData<String> facilityAddress =  new MutableLiveData<>();
     MutableLiveData<String> facilityName = new MutableLiveData<>();
     MutableLiveData<List<EntrantLocationData>> entrantLocationDataList = new MutableLiveData<>();
+    MutableLiveData<Integer> radius = new MutableLiveData<>();
 
     public void setFacilityAddress(String address){facilityAddress.setValue(address);}
     public LiveData<String> getFacilityAddress(){return facilityAddress;}
@@ -24,4 +25,7 @@ public class MapOptionsViewModel extends ViewModel {
 
     public void setEntrantLocationDataList(List<EntrantLocationData> locationDataList){entrantLocationDataList.setValue(locationDataList);}
     public LiveData<List<EntrantLocationData>> getEntrantLocationDataList(){return entrantLocationDataList;}
+
+    public void setRadius(Integer r) {radius.setValue(r);}
+    public LiveData<Integer> getRadius(){return radius;}
 }
