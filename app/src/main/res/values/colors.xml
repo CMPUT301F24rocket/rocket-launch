@@ -16,5 +16,10 @@
     <color name="tea_green">#C6D8AF</color>
     <color name="fern_green">#568259</color>
     <color name="thistle">#E4CCE7</color>
+    <color name="thistle_dark">#D3B8D7</color>
+
+    <!--For Map Markers-->
+    <color name="entrant_marker">#007842</color>
+    <color name="facility_marker">#C4110E</color>
 
 </resources>

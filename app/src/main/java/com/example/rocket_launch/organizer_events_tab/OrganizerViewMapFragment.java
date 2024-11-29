@@ -1,5 +1,6 @@
 package com.example.rocket_launch.organizer_events_tab;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -10,7 +11,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 
+import androidx.core.content.ContextCompat;
+import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
@@ -27,6 +31,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import org.json.JSONException;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
+import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -65,9 +70,9 @@ public class OrganizerViewMapFragment extends Fragment {
     // Get Entrant Locations on event sign up
     //                      --> ask location permission - DONE
     //                      --> put all entrant coordinates & Names into a list in EventDB - DONE
-    //                      --> for geoplotting and list views - IN PROGRESS
+    //                      --> for geoplot markers - DONE
     // Enable edit facility address in mapView for convenience
-    //                      --> and update facility address in DB - IN PROGRESS
+    //                      --> and update facility address in DB - DONE
     //                      --> Create fragment for editing address - DONE
     // Add range functionality:
     //                      --> entrants within a specified range of facility & those outside
@@ -101,6 +106,10 @@ public class OrganizerViewMapFragment extends Fragment {
         //Setting up mapView
         mapView = view.findViewById(R.id.organizer_map_view);
         mapView.setTileSource(TileSourceFactory.MAPNIK);
+       // mapView.setScrollableAreaLimitDouble(new BoundingBox(85, 180, -85, -180));
+        mapView.setScrollableAreaLimitLatitude(85, -85, 0);
+        mapView.setMaxZoomLevel(20.0);
+        mapView.setMinZoomLevel(4.0);
 
         IMapController mapController = mapView.getController();
         mapController.setZoom(15.0); //setting zoom on launch
@@ -160,6 +169,9 @@ public class OrganizerViewMapFragment extends Fragment {
             }
         });
 
+        ImageButton mapRefreshButton = view.findViewById(R.id.map_refresh_button);
+        mapRefreshButton.setOnClickListener(v -> refreshFragment());
+
         return view;
     }
 
@@ -189,13 +201,13 @@ public class OrganizerViewMapFragment extends Fragment {
                     handler.post(() -> {
                         if (startPoint != null) {
                             mapController.setCenter(startPoint);
-                            facilityMarker = createMapMarker("Your Facility", startPoint);
+                            facilityMarker = createFacilityMarker("Your Facility", startPoint);
                         }
                     });
                 } else {
                     handler.post(() -> {
                         mapController.setCenter(facilityGeoPoint);
-                        facilityMarker = createMapMarker("Default Location", facilityGeoPoint);
+                        facilityMarker = createFacilityMarker("Default Location", facilityGeoPoint);
                     });
                 }
 
@@ -214,15 +226,45 @@ public class OrganizerViewMapFragment extends Fragment {
         mapView.getOverlays().add(mapScaleBarOverlay);
     }
 
-    private Marker createMapMarker(String name, GeoPoint geoPoint){
+    private Marker createFacilityMarker(String name, GeoPoint geoPoint){
         org.osmdroid.views.overlay.Marker marker = new Marker(mapView);
+
+        //styles for facility location marker
+        Drawable markerIcon = ContextCompat.getDrawable(requireContext(), R.drawable.map_marker_star_outline);
+        assert markerIcon != null;
+
+        Drawable facilityMarker = DrawableCompat.wrap(markerIcon);
+        DrawableCompat.setTint(facilityMarker, ContextCompat.getColor(requireContext(), R.color.facility_marker));
+
         marker.setPosition(geoPoint);
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         marker.setTitle(name);
+        marker.setIcon(facilityMarker);
+
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
         mapView.getOverlays().add(marker);
         mapView.invalidate();
         return marker;
     }
+
+    private Marker createEntrantMarker(String name, GeoPoint geoPoint){
+        org.osmdroid.views.overlay.Marker marker = new Marker(mapView);
+
+        //styles for entrant location marker
+        Drawable markerIcon = ContextCompat.getDrawable(requireContext(), R.drawable.map_marker);
+        Drawable entrantMarker = DrawableCompat.wrap(markerIcon);
+        DrawableCompat.setTint(entrantMarker, ContextCompat.getColor(requireContext(), R.color.entrant_marker));
+
+        marker.setPosition(geoPoint);
+        marker.setTitle(name);
+        marker.setIcon(entrantMarker);
+
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+
+        mapView.getOverlays().add(marker);
+        mapView.invalidate();
+        return marker;
+    }
+
 
     private void createEntrantLocationMarkers(){
         List<EntrantLocationData> entrantLocationDataList = mapOptionsViewModel.getEntrantLocationDataList().getValue();
@@ -239,7 +281,7 @@ public class OrganizerViewMapFragment extends Fragment {
             //for every name, create a marker
             getEntrantUserName(entrantID, entrantNameFetched -> {
                 if (entrantNameFetched != null){
-                    createMapMarker(entrantNameFetched, entrantGeoPoint);
+                    createEntrantMarker(entrantNameFetched, entrantGeoPoint);
                 } else {
                     Log.i("Create Entrant GeoMarkers", "createEntrantLocationMarkers: no entrant marker created");
                 }
@@ -279,6 +321,17 @@ public class OrganizerViewMapFragment extends Fragment {
     public void onPause(){
         super.onPause();
         mapView.onPause();
+    }
+
+    private void refreshFragment(){
+        Bundle bundle = new Bundle();
+        bundle.putString("eventId", eventID);
+        OrganizerViewMapFragment refreshOrganizerViewMapFragment = new OrganizerViewMapFragment();
+        refreshOrganizerViewMapFragment.setArguments(bundle);
+
+        FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_frame, refreshOrganizerViewMapFragment);
+        fragmentTransaction.commit();
     }
 
     //Callback for Address fetched from the Database --> since fetching from the DB is asynchronoua
