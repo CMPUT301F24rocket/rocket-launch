@@ -1,7 +1,6 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
-import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,14 +15,11 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
-import com.example.rocket_launch.InviteNotification;
 import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.entrant_events_tab.EntrantViewWaitingListFragment;
-import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragment;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 import java.util.ArrayList;
@@ -83,8 +79,8 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         sampleButton.setOnClickListener(l -> {
             sampleWaitlist(sampleAmount, sampledUsers -> {
                 // send notifications to all sampledUsers saying they were chosen
-                InviteNotification inviteNotification = new InviteNotification(java.util.UUID.randomUUID().toString(), eventId);
-                inviteNotification.setTitle(String.format(Locale.CANADA, "You are Invited to Join %s", event.getName()));
+                Notification inviteNotification = new Notification();
+                inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), String.format(Locale.CANADA, "You are Invited to Join %s", event.getName()), eventId);
                 for (String userId : sampledUsers) {
                     usersDB.addNotification(userId, inviteNotification);
                 }
