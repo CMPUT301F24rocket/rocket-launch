@@ -70,9 +70,9 @@ dependencies {
     implementation ("com.google.android.gms:play-services-location:21.0.1")
 
     // Espresso and JUnit for UI Testing
-    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("androidx.appcompat:appcompat:1.7.0")
     implementation ("com.google.android.material:material:1.6.1")
-    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
+    implementation ("androidx.constraintlayout:constraintlayout:2.2.0")
 
     implementation ("com.google.firebase:firebase-storage:20.2.0")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
