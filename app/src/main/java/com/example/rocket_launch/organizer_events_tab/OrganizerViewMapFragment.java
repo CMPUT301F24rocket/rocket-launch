@@ -1,10 +1,6 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
-
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.os.Handler;
 import android.os.Looper;
 import android.provider.Settings;
@@ -12,11 +8,14 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
-import android.widget.ZoomButtonsController;
 
+import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
+
+import com.example.rocket_launch.EntrantLocationData;
+import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.MapOptionsViewModel;
 import com.example.rocket_launch.NominatimGeocode;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
@@ -27,7 +26,6 @@ import org.json.JSONException;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
 import org.osmdroid.util.GeoPoint;
-import org.osmdroid.views.CustomZoomButtonsController;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
@@ -38,6 +36,7 @@ import java.util.concurrent.Executors;
 
 /**
  * Fragment used for displaying a map to an organizer
+ * Author: Rachel
  */
 //References used for map views & processing
 // https://github.com/osmdroid/osmdroid/wiki/How-to-use-the-osmdroid-library-(Java), Accessed 2024-11-24
@@ -48,22 +47,22 @@ public class OrganizerViewMapFragment extends Fragment {
     private MapView mapView = null;
     private ScaleBarOverlay mapScaleBarOverlay;
     private UsersDB userDB;
+    private EventsDB eventsDB;
     private User user;
     private String addressFacility;
     private GeoPoint facilityGeoPoint;
+    private MapOptionsViewModel mapOptionsViewModel;
 
     //TODO: display coordinates of entrants
     // get facility coordinates from address (entered in userProfile) --> geocoding - DONE
     // make sure the address entered is valid --> Set a default instead: DONE
     // Get Entrant Locations on event sign up
-    //                      --> ask location permission
-    //                      --> put all entrant coordinates & Names into a list in EventDB
-    //                      --> for geoplotting and list views
+    //                      --> ask location permission - DONE
+    //                      --> put all entrant coordinates & Names into a list in EventDB - DONE
+    //                      --> for geoplotting and list views - IN PROGRESS
     // Enable edit facility address in mapView for convenience
-    //                      --> and update facility address in DB
-    //                      --> Create fragment for editing address
-    //                      --> put hint: "address not showing up? try simplifying it
-    //                      --> eg. ETLC University of Alberta Edmonton (no commas, special characters, or postal codes)
+    //                      --> and update facility address in DB - IN PROGRESS
+    //                      --> Create fragment for editing address - DONE
     // Add range functionality:
     //                      --> entrants within a specified range of facility & those outside
     //                      --> display it in a list so its easier to read
@@ -77,8 +76,13 @@ public class OrganizerViewMapFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         userDB = new UsersDB();
+        eventsDB = new EventsDB();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
+        mapOptionsViewModel = new ViewModelProvider(requireActivity()).get(MapOptionsViewModel.class);
 
+        if (getArguments() != null){
+            String eventID = getArguments().getString("eventId");
+        }
     }
 
     @Override
@@ -86,6 +90,8 @@ public class OrganizerViewMapFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.organizer_view_map_fragment, container, false);
+        getFacilityName();
+        Log.i("View Map Fragment Facility Name", "onCreateView: facility name: " + mapOptionsViewModel.getFacilityName().getValue());
 
         //Setting up mapView
         mapView = view.findViewById(R.id.organizer_map_view);
@@ -105,14 +111,16 @@ public class OrganizerViewMapFragment extends Fragment {
         getFacilityAddress(addressFetched -> {
             if (addressFetched != null){
                 addressFacility = addressFetched;
+
             } else {
                 addressFacility = defaultAddress;
                 facilityGeoPoint = defaultStartPoint;
             }
-            Log.i("getAddressFacilityTest", "address Facility: " + addressFacility); //log facility address
+            mapOptionsViewModel.setFacilityAddress(addressFacility);
+            Log.i("getAddressFacilityTest", "address Facility: " + mapOptionsViewModel.getFacilityAddress().getValue()); //log facility address
 
             //create the starting point and set mapView to that location
-            createStartGeoPosition(mapController, addressFacility, facilityGeoPoint);
+            createStartGeoPosition(mapController, mapOptionsViewModel.getFacilityAddress().getValue(), facilityGeoPoint);
         });
 
         //back button
@@ -210,6 +218,10 @@ public class OrganizerViewMapFragment extends Fragment {
         void onAddressFetched(String address);
     }
 
+    private interface EntrantLocationDataListCallback{
+        void onEntrantLocationDataListFetched(EntrantLocationData entrantLocationData);
+    }
+
     //get organizer facility address
     private void getFacilityAddress(AddressCallback addressCallback){
         userDB.getUser(androidId, new OnSuccessListener<User>() {
@@ -225,5 +237,26 @@ public class OrganizerViewMapFragment extends Fragment {
         }, e -> {Log.e("getFacilityAddress", "No matching document found or task failed", e);
                 addressCallback.onAddressFetched(null);
         });
+    }
+
+    //get organizer facility address
+    private void getFacilityName(){
+        userDB.getUser(androidId, new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User newUser) {
+                user = newUser;
+                String facilityName = newUser.getUserFacility();
+                Log.i("FETCH FACILITY NAME", "facility name: " + facilityName);
+
+                mapOptionsViewModel.setFacilityName(facilityName);
+
+            }
+        }, e -> {Log.e("getFacilityAddress", "No matching document found or task failed", e);
+        });
+    }
+
+    //get entrant location data from database
+    private void getEntrantLocationDataList(EntrantLocationDataListCallback entrantLocationDataListCallback){
+
     }
 }

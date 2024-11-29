@@ -34,6 +34,7 @@ public class WaitlistedEventDetailsFragment extends Fragment {
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
     LinearLayout eventCapacityLayout;
+    boolean locationRequired;
 
     Button cancelWaitlistButton;
 
@@ -80,26 +81,25 @@ public class WaitlistedEventDetailsFragment extends Fragment {
      * loads an event with eventId
      */
     private void getEvent() {
-        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<DocumentSnapshot>() {
+        eventsdb.loadEvent(event.getEventID(), new OnSuccessListener<Event>() {
             @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        eventNameView.setText(event.getName());
-                        if (event.getMaxWaitlistSize() != -1) {
-                            eventCapacityLayout.setVisibility(View.VISIBLE);
-                            eventWaitlistCapacityView.setText(String.format(
-                                    Locale.CANADA, "%d / %d", event.getWaitingList().size(),
-                                    event.getCapacity()));
-                        }
-                        eventGeolocationRequired.setChecked(event.getGeolocationRequired());
-                        eventDescription.setText(event.getDescription());
-                        // in get event so we cant press before we have event
-                        cancelWaitlistButton.setOnClickListener(l -> {
-                            leaveWaitlist();
-                        });
+            public void onSuccess(Event loadedEvent) {
+                event = loadedEvent;
+                if (event != null) {
+                    eventNameView.setText(event.getName());
+                    if (event.getMaxWaitlistSize() != -1) {
+                        eventCapacityLayout.setVisibility(View.VISIBLE);
+                        eventWaitlistCapacityView.setText(String.format(
+                                Locale.CANADA, "%d / %d", event.getWaitingList().size(),
+                                event.getCapacity()));
                     }
+                    eventGeolocationRequired.setChecked(event.getGeolocationRequired());
+                    locationRequired = event.getGeolocationRequired();
+                    eventDescription.setText(event.getDescription());
+                    // in get event so we cant press before we have event
+                    cancelWaitlistButton.setOnClickListener(l -> {
+                        leaveWaitlist();
+                    });
                 }
             }
         });
@@ -113,11 +113,18 @@ public class WaitlistedEventDetailsFragment extends Fragment {
         String androidId = Settings.Secure
                 .getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
-        // add to waitlist of event
-        eventsdb.removeUserFromWaitingList(event.getEventID(), androidId);
+        if (locationRequired == true){ //remove location data from list as well
+            eventsdb.removeFromEntrantLocationDataList(event.getEventID(), androidId);
+            eventsdb.removeUserFromWaitingList(event.getEventID(), androidId);
+            usersDB.removeWaitlistedEvent(androidId, event.getEventID());
 
-        // add to user's joined events
-        usersDB.removeWaitlistedEvent(androidId, event.getEventID());
+        } else{
+            // remove from waitlist of event
+            eventsdb.removeUserFromWaitingList(event.getEventID(), androidId);
+            // remove from user's joined events
+            usersDB.removeWaitlistedEvent(androidId, event.getEventID());
+        }
+
         closeFragment();
     }
 

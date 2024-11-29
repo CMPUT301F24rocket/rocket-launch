@@ -213,4 +213,12 @@
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
 
+    <FrameLayout
+        android:id="@+id/map_options_edit_address_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/map_options_header"/>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

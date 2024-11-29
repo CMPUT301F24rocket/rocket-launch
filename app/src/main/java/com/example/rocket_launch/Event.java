@@ -24,6 +24,7 @@ import java.util.Random;
 
 public class Event {
     private String eventID;
+    private String QRCode;
     private String name;
     private String description;
     private int capacity;
@@ -36,7 +37,12 @@ public class Event {
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
     private List<String> finalEntrants;
-    private int maxWaitlistSize; // Integer
+  
+    private List<EntrantLocationData> entrantLocationDataList;
+
+    private int maxWaitlistSize;// Integer
+    private List<Notification> notifications; // new notification list
+
 
     public Event(){
         // verify lists appear in database -> ensures no access to undefined attribute
@@ -44,7 +50,30 @@ public class Event {
         this.cancelledEntrants = new ArrayList<>();
         this.finalEntrants = new ArrayList<>();
         this.invitedEntrants = new ArrayList<>();
+
+        this.entrantLocationDataList = new ArrayList<>();
+
+        this.notifications = new ArrayList<>(); // initialize notification list
+
+        this.QRCode = "";
     }
+
+    // ############################ //
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public void addNotifications(List<Notification> notifications){
+        this.notifications = notifications;
+
+    }
+
+    // ############################ //
+
 
     public void setEventID(String eventID){this.eventID = eventID;}
     public void setName(String name){this.name = name;}
@@ -61,6 +90,11 @@ public class Event {
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
 
+    //For Entrant Location Data List
+    public void setEntrantLocationDataList(){this.entrantLocationDataList = new ArrayList<>();}
+    public void addToEntrantLocationDataList(EntrantLocationData entrantLocationData) {entrantLocationDataList.add(entrantLocationData);}
+    public List<EntrantLocationData> getEntrantLocationDataList(){return entrantLocationDataList;}
+    public void removeFromEntrantLocationDataList(EntrantLocationData entrantLocationData){entrantLocationDataList.remove(entrantLocationData);}
 
     public int getMaxWaitlistSize() {
         return maxWaitlistSize;
@@ -126,11 +160,10 @@ public class Event {
     public Bitmap generateQRCode() {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
-            // Adjust the width and height of the QR code as needed
             int width = 500, height = 500;
             Bitmap bitmap = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
 
-            com.google.zxing.common.BitMatrix bitMatrix = qrCodeWriter.encode(getEventID(), BarcodeFormat.QR_CODE, width, height);
+            com.google.zxing.common.BitMatrix bitMatrix = qrCodeWriter.encode(getQRCode(), BarcodeFormat.QR_CODE, width, height);
 
             // Convert the BitMatrix into a bitmap
             for (int x = 0; x < width; x++) {
@@ -151,17 +184,32 @@ public class Event {
      * @param sampleAmount
      *  (int) amount of entrants to remove and return
      */
-    public void sampleWaitlist(int sampleAmount) {
+    public List<String> sampleWaitlist(int sampleAmount) {
+        List<String> sampledUsers = new ArrayList<>();
+
         if (sampleAmount <= capacity) {
             Random rand = new Random();
             // sample sampleAmount from waitlist
             for (int i = 0; i < sampleAmount; i++) {
                 int index = rand.nextInt(waitingList.size());
-                invitedEntrants.add(waitingList.get(index));
-                waitingList.remove(index);
+                
+                sampledUsers.add(waitingList.get(index)); // add to list to return
+                invitedEntrants.add(waitingList.get(index)); // add to invited entrants list
+                waitingList.remove(index); // remove from waiting list
+
             }
         }
+        return sampledUsers;
     }
+
+    public String getQRCode() {
+        return QRCode;
+    }
+
+    public void setQRCode(String QRCode) {
+        this.QRCode = QRCode;
+    }
+
 
     public List<String> getCancelledEntrants() {
         return cancelledEntrants;

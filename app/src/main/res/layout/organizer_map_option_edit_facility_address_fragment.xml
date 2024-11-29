@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    tools:context=".organizer_events_tab.MapOptionEditFacilityAddress"
+    android:layout_margin="20dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:background="@color/periwinkle">
+
+            <ImageButton
+                android:id="@+id/edit_facility_location_back_button"
+                style="@style/ArrowLeftButtonStyle"
+                android:backgroundTint="@color/periwinkle"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textStyle="bold"
+                android:layout_marginTop="20dp"
+                android:layout_marginRight="30dp"
+                android:gravity="center"
+                android:text="Edit Facility Location"/>
+
+        </LinearLayout>
+
+
+        <EditText
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:padding="10dp"
+            android:hint="Enter Facility Address"/>
+
+        <Button
+            android:id="@+id/change_facility_location_button"
+            style="@style/ButtonStyleE"
+            android:backgroundTint="@color/periwinkle"
+            android:text="Change Location"
+            android:layout_gravity="center" />
+
+        <View
+            style="@style/DividerLineStyle" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:text="Facility not showing up on the map? Try simplifying it!" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:text="Make sure building name is correct." />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:text="Leave out postal code and comma separators." />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="5dp"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:text="eg. ETLC University of Alberta Edmonton" />
+
+    </LinearLayout>
+
+
+
+</FrameLayout>

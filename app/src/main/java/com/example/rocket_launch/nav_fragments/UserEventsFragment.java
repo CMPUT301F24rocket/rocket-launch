@@ -1,15 +1,19 @@
 package com.example.rocket_launch.nav_fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.rocket_launch.QRCodesDB;
+import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.entrant_events_tab.ScannedEventDetailsFragment;
 import com.example.rocket_launch.entrant_events_tab.QRCodeScannerActivity;
 import com.example.rocket_launch.R;
@@ -27,6 +31,7 @@ public class UserEventsFragment extends Fragment {
 
     FloatingActionButton addEvent;
     ActivityResultLauncher<ScanOptions> QRLauncher;
+    QRCodesDB qrCodesDB;
 
     /**
      * default constructor
@@ -62,16 +67,24 @@ public class UserEventsFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        qrCodesDB = new QRCodesDB(); // initialize qrCodesDB
         QRLauncher = registerForActivityResult(new ScanContract(), result -> {
             if (result.getContents() != null) {
-                String eventId = result.getContents();
-                ScannedEventDetailsFragment showDetails = new ScannedEventDetailsFragment(eventId);
-                requireActivity().getSupportFragmentManager()
-                        .beginTransaction()
-                        .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                        .replace(R.id.fragment_frame, showDetails)
-                .addToBackStack(null)  // Add to back stack so we can come back to this activity
-                        .commit();
+                String code = result.getContents();
+                qrCodesDB.loadEventId(code, eventId -> {
+
+                    ScannedEventDetailsFragment showDetails = new ScannedEventDetailsFragment(eventId);
+                    requireActivity().getSupportFragmentManager()
+                            .beginTransaction()
+                            .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                            .replace(R.id.fragment_frame, showDetails)
+                            .addToBackStack(null)  // Add to back stack so we can come back to this activity
+                            .commit();
+                }, e -> {
+                    Log.e("Firebase", "unknown Event");
+                    Toast.makeText(requireContext(), "Unknown Event", Toast.LENGTH_SHORT).show();
+
+                });
             }
         });
     }
