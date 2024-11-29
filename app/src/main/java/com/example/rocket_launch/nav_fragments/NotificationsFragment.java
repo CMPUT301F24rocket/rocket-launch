@@ -22,6 +22,7 @@ import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.j256.ormlite.stmt.query.Not;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -95,7 +96,12 @@ public class NotificationsFragment extends Fragment {
         notificationsListView.setAdapter(notificationsAdapter);
 
         notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
-            notificationList.get(position);
+            Notification selectedNotification = user.getNotifications().get(position);
+            if (selectedNotification.getInvitation()) {
+                // load as regular notification
+            } else {
+                // load as invite
+            }
         });
 
         loadNotifications();
