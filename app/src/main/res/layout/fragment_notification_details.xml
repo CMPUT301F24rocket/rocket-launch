@@ -17,7 +17,21 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <!-- From: Event Name -->
+
+    <!-- Back Button -->
+    <ImageView
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/arrow_left"
+
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        app:layout_constraintTop_toBottomOf="@id/view_message_header"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <!--event name -->
     <TextView
         android:id="@+id/from_event_name"
         android:layout_width="0dp"
@@ -25,12 +39,13 @@
         android:text="From: "
         android:textSize="16sp"
         android:layout_marginTop="16dp"
-        app:layout_constraintTop_toBottomOf="@id/view_message_header"
+        android:layout_marginStart="32dp"
+        app:layout_constraintTop_toBottomOf="@id/back_button"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontalBias="0.0" />
 
-    <!-- Message Content -->
+    <!-- message -->
     <TextView
         android:id="@+id/message_content"
         android:layout_width="0dp"
@@ -38,12 +53,13 @@
         android:text="Mesage:"
         android:textSize="16sp"
         android:layout_marginTop="16dp"
+        android:layout_marginStart="32dp"
         app:layout_constraintTop_toBottomOf="@id/from_event_name"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5" />
 
-    <!-- Yes/No Buttons -->
+    <!-- accept/decline buttons -->
     <LinearLayout
         android:id="@+id/confirmation_buttons"
         style="@style/ButtonStyleC"
