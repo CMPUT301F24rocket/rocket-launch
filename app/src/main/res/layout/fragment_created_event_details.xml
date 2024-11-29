@@ -58,7 +58,6 @@
             style="@style/OrganizerEventDetailsButtons"
             android:text="View Event QR Code"/>
 
-
     </LinearLayout>
 
 
