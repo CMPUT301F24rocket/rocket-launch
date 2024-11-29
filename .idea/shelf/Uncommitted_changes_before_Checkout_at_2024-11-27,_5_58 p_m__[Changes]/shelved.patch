@@ -1,0 +1,39 @@
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import com.android.build.gradle.internal.getSdkDir\n\nplugins {\n    alias(libs.plugins.android.application)\n    //firebase\n    id(\"com.google.gms.google-services\")\n}\n\nandroid {\n    namespace = \"com.example.rocket_launch\"\n    compileSdk = 34\n\n    defaultConfig {\n        applicationId = \"com.example.rocket_launch\"\n        minSdk = 24\n        targetSdk = 34\n        versionCode = 1\n        versionName = \"1.0\"\n\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    buildTypes {\n        release {\n            isMinifyEnabled = false\n            proguardFiles(\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\n                \"proguard-rules.pro\"\n            )\n        }\n    }\n    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_1_8\n        targetCompatibility = JavaVersion.VERSION_1_8\n    }\n}\n\ndependencies {\n\n    implementation(libs.appcompat)\n    implementation(libs.material)\n    implementation(libs.activity)\n    implementation(libs.constraintlayout)\n    implementation(libs.firebase.firestore)\n    implementation(libs.navigation.fragment)\n    implementation(libs.navigation.ui)\n\n    // QR code scanner\n    implementation(\"com.journeyapps:zxing-android-embedded:4.3.0\")\n    implementation(\"com.google.zxing:core:3.3.3\")\n\n    // Glide\n    implementation(\"com.github.bumptech.glide:glide:4.16.0\")\n\n    //firebase\n    implementation(platform(\"com.google.firebase:firebase-bom:33.5.1\"))\n    implementation(\"com.google.firebase:firebase-analytics\")\n    implementation(\"com.google.firebase:firebase-firestore\")\n\n    //OSM\n    implementation(\"org.osmdroid:osmdroid-android:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-wms:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-mapsforge:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-geopackage:6.1.11\")\n\n    //Nominatim (For Geocoding)\n    implementation(\"com.squareup.okhttp3:okhttp:4.9.1\")\n\n    // Espresso and JUnit for UI Testing\n    implementation (\"androidx.appcompat:appcompat:1.6.1\")\n    implementation (\"com.google.android.material:material:1.6.1\")\n    implementation (\"androidx.constraintlayout:constraintlayout:2.1.4\")\n    implementation(libs.firebase.database)\n    implementation(\"com.squareup.picasso:picasso:2.8\")\n\n    testImplementation (\"org.junit.jupiter:junit-jupiter-api:5.0.1\")\n    testRuntimeOnly (\"org.junit.jupiter:junit-jupiter-engine:5.0.1\")\n\n    androidTestImplementation (\"androidx.test.ext:junit:1.1.5\")\n    androidTestImplementation (\"androidx.test.espresso:espresso-core:3.5.1\")\n\n\n\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 24f1093a6789f5534bda3aa66077c509ac8548fd)
++++ b/app/build.gradle.kts	(date 1732718589629)
+@@ -66,12 +66,20 @@
+     //Nominatim (For Geocoding)
+     implementation("com.squareup.okhttp3:okhttp:4.9.1")
+ 
++    //Google Location Services
++    implementation ("com.google.android.gms:play-services-location:21.0.1")
++
+     // Espresso and JUnit for UI Testing
+     implementation ("androidx.appcompat:appcompat:1.6.1")
+     implementation ("com.google.android.material:material:1.6.1")
+     implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
++
++    implementation ("com.google.firebase:firebase-storage:20.2.0")
++    implementation ("com.github.bumptech.glide:glide:4.12.0")
+     implementation(libs.firebase.database)
+-    implementation("com.squareup.picasso:picasso:2.8")
++    //implementation(libs.ui.graphics.android)
++    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
++    implementation ("com.squareup.picasso:picasso:2.71828")
+ 
+     testImplementation ("org.junit.jupiter:junit-jupiter-api:5.0.1")
+     testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine:5.0.1")
+@@ -81,4 +89,4 @@
+ 
+ 
+ 
+-}
+\ No newline at end of file
++}

@@ -22,6 +22,8 @@ public class Notification {
     private String title;
     private String message;
 
+    private Boolean invitation;
+
     // No-argument constructor (required for Firestore)
     public Notification() {}
 
@@ -30,6 +32,7 @@ public class Notification {
         this.id = id;
         this.title = title;
         this.message = message;
+        this.invitation = false;
     }
 
     // Getters and Setters
@@ -55,5 +58,13 @@ public class Notification {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Boolean getInvitation() {
+        return invitation;
+    }
+
+    public void setInvitation(Boolean invitation) {
+        this.invitation = invitation;
     }
 }
