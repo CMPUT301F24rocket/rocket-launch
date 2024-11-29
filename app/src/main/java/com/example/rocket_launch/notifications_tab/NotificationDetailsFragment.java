@@ -24,11 +24,7 @@ public class NotificationDetailsFragment extends Fragment {
         String from = args != null ? args.getString("from") : "Unknown Sender";
         String message = args!= null ? args.getString("message") : "No Message";
         boolean isInvitation = args!= null && args.getBoolean("isInvitation", false);
-
-
-
-
-
+        
         // get UI elements
         TextView fromTextView = view.findViewById(R.id.from_event_name);
         TextView messageTextView = view.findViewById(R.id.message_content);
