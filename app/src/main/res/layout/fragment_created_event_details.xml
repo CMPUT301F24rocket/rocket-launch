@@ -8,7 +8,7 @@
 
     <TextView 
         android:id="@+id/organizer_event_details_header"
-        style="@style/SubHeaderStyle"
+        style="@style/ActivityHeaderStyle"
         android:text="Organizer Event Details" 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
