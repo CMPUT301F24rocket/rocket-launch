@@ -15,14 +15,15 @@ import android.widget.ListView;
 
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.notifications_tab.NotificationDetailsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.j256.ormlite.stmt.query.Not;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -78,17 +79,6 @@ public class NotificationsFragment extends Fragment {
 
         });
 
-//            NotificationPreferencesFragment notifPreferences = new NotificationPreferencesFragment(user.getNotificationPreferences(), usersDB.getUsersRef().document(androidId));
-//            notifPreferences.setOnSuccessListener(new NotificationPreferencesFragment.OnSuccessListener() {
-//                @Override
-//                public void onSuccess() {
-//                    // this is def inefficient but it works
-//                    loadNotifications();
-//                }
-//            });
-//            notifPreferences.show(getParentFragmentManager(), "edit notifs");
-//        });
-
         notificationsListView = view.findViewById(R.id.notifications_list_view);
         notificationList = new ArrayList<>();
 
@@ -97,11 +87,22 @@ public class NotificationsFragment extends Fragment {
 
         notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
             Notification selectedNotification = user.getNotifications().get(position);
-            if (selectedNotification.getInvitation()) {
-                // load as regular notification
-            } else {
-                // load as invite
-            }
+
+            NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment();
+
+            Bundle args = new Bundle();
+            args.putString("from", selectedNotification.getTitle());
+            args.putString("message", selectedNotification.getMessage());
+            args.putBoolean("isInvitation", selectedNotification.getInvitation());
+            detailsFragment.setArguments(args);
+
+            // go to NotificationDetailsFragment
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_frame, detailsFragment)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         loadNotifications();
@@ -123,8 +124,6 @@ public class NotificationsFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> Log.d("NotificationPreferences", "Updated successfully in Firestore."))
                 .addOnFailureListener(e -> Log.e("NotificationPreferences", "Failed to update preferences in Firestore.", e));
     }
-
-
 
     /**
      * function used to load and display all notifications
