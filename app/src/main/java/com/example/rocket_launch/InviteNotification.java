@@ -1,16 +1,18 @@
 package com.example.rocket_launch;
 
-import static androidx.core.content.ContentProviderCompat.requireContext;
-
-import android.provider.Settings;
+import java.util.Locale;
 
 public class InviteNotification extends Notification {
 
     public String eventId;
     private EventsDB eventsDB;
 
-    InviteNotification() {
-        eventsDB = new EventsDB();
+    public InviteNotification() {}
+
+    public InviteNotification(String id, String eventName) {
+        setId(id);
+        setTitle(String.format(Locale.CANADA, "Invited to join %s", eventName));
+        setInvitation(true);
     }
 
     public String getEventId() {
