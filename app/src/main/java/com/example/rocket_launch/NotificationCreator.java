@@ -7,6 +7,10 @@ import android.view.ViewGroup;
 
 import androidx.fragment.app.Fragment;
 
+/**
+ * fragment to allow an organizer to create and edit contents of notification
+ * Author: kaiden
+ */
 public class NotificationCreator extends Fragment {
 
     @Override
