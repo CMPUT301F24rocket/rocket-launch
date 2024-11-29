@@ -495,5 +495,5 @@ public class EventsDB {
                     }
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
-    }hgyh
+    }
 }
