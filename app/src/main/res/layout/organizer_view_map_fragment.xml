@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/map_view_header"
-        style="@style/SubHeaderStyleB"
+        style="@style/ActivityHeaderStyle"
         android:text="Entrant Geolocations"
 
         app:layout_constraintTop_toTopOf="parent"
@@ -16,7 +16,7 @@
     <ImageButton
         android:id="@+id/map_refresh_button"
         style="@style/RefreshButtonStyle"
-        android:backgroundTint="@color/desert_sand"
+        android:backgroundTint="@color/periwinkle"
         app:layout_constraintTop_toTopOf="@id/map_view_header"
         app:layout_constraintBottom_toBottomOf="@id/map_view_header"
         app:layout_constraintStart_toStartOf="@id/map_view_header"
