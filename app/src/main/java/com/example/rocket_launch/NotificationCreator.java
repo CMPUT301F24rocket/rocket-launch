@@ -66,10 +66,16 @@ public class NotificationCreator extends Fragment {
         String titleText = title.getText().toString();
         String messageText = message.getText().toString();
 
+        boolean validEntry = true;
+
         // make sure title is not empty
-        boolean validEntry = !titleText.isEmpty();
+        if (titleText.isEmpty()) {
+            title.setError("title cannot be empty");
+            validEntry = false;
+        }
         // make sure message is not empty
-        if (!messageText.isEmpty()) {
+        if (messageText.isEmpty()) {
+            message.setError("message cannot be empty");
             validEntry = false;
         }
         if (validEntry) {
@@ -84,8 +90,8 @@ public class NotificationCreator extends Fragment {
                 usersDB.addNotification(user.getAndroidId(), notification);
             }
             Toast.makeText(requireContext(), String.format(Locale.CANADA, "Sent notification to %d users", users.size()), Toast.LENGTH_SHORT).show();
+            closeFragment();
         }
-        closeFragment();
     }
 
     /**

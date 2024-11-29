@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.NotificationCreator;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UserDetailsFragment;
@@ -50,7 +51,15 @@ public class EntrantListViewFinalFragment  extends Fragment {
 
         notifyButton = view.findViewById(R.id.sendNotification);
         notifyButton.setOnClickListener(l -> {
-            // send notification
+            // open NotificationCreator
+            NotificationCreator notificationCreator = new NotificationCreator(users);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_frame, notificationCreator)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
@@ -78,6 +87,10 @@ public class EntrantListViewFinalFragment  extends Fragment {
                             EntrantListViewFinalFragment.this.users.clear();
                             EntrantListViewFinalFragment.this.users.addAll(users);
                             adapter.notifyDataSetChanged();
+
+                            if (!users.isEmpty()) {
+                                notifyButton.setVisibility(View.VISIBLE);
+                            }
                         }, e -> {
                             Log.w("Firebase", "Error getting users", e);
                             Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show();
