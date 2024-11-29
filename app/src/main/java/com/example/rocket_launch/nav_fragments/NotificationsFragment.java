@@ -94,6 +94,10 @@ public class NotificationsFragment extends Fragment {
         notificationsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, notificationList);
         notificationsListView.setAdapter(notificationsAdapter);
 
+        notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
+            notificationList.get(position);
+        });
+
         loadNotifications();
         updateNotificationPreferences();
 
@@ -129,11 +133,11 @@ public class NotificationsFragment extends Fragment {
             // Clear current list and load new notifications
             notificationList.clear();
 
-            // Check and iterate over user notifications
+            // Check and iterate over user notifications (neweset first)
             if (user.getNotifications() != null) {
-                for (Notification notification : user.getNotifications()) {
+                for (int i = user.getNotifications().size() - 1; i >= 0; i--) {
                     // Concatenate title and message for display
-                    notificationList.add(notification.getTitle() + ": " + notification.getMessage());
+                    notificationList.add(user.getNotifications().get(i).getTitle() + ": " + user.getNotifications().get(i).getMessage());
                 }
             }
 
