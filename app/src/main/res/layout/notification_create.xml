@@ -63,6 +63,7 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <Button
+            android:id="@+id/cancelButton"
             style="@style/ButtonStyleC"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
@@ -72,6 +73,7 @@
             android:text="cancel" />
 
         <Button
+            android:id="@+id/sendButton"
             style="@style/ButtonStyleB"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
