@@ -183,7 +183,25 @@ public class EventsDB {
                         Log.w("Firebase", "Error removing user", e);
                     }
                 });
+    }
 
+    /**
+     * remove a user from an events invited list
+     * @param eventId
+     *  id of event
+     * @param userId
+     *  id of user
+     */
+    public void removeUserFromInvitedList(String eventId, String userId) {
+        DocumentReference eventDocRef = eventsRef.document(eventId);
+
+        eventDocRef.update("invitedEntrants", FieldValue.arrayRemove(userId))
+                .addOnSuccessListener(l -> {
+                    Log.d("Firebase", "User removed from registered list");
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("Firebase", "Error removing user", e);
+                });
     }
 
     /**
@@ -477,37 +495,5 @@ public class EventsDB {
                     }
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
-    }
-
-    /*
-    public void pickAndNotifyUser(String eventID) {
-                Event event = documentSnapshot.toObject(Event.class);
-
-                if (event != null && event.getWaitingList() != null && !event.getWaitingList().isEmpty()) {
-                    List<String> waitingList = event.getWaitingList();
-                    Random random = new Random();
-                    String selectedUserID = waitingList.get(random.nextInt(waitingList.size()));
-
-                    eventDocRef.update("waitingList", FieldValue.arrayRemove(selectedUserID));
-                    eventDocRef.update("registeredEntrants", FieldValue.arrayUnion(selectedUserID));
-
-                    Notification notification = new Notification(
-                            UUID.randomUUID().toString(),
-                            "Lottery Winner",
-                            "Congratulations! You've been selected for event: " + event.getName()
-                    );
-
-                    UsersDB usersDB = new UsersDB();
-                    usersDB.addNotification(selectedUserID, notification);
-
-                    Log.d("Lottery", "User " + selectedUserID + " selected and notified.");
-                } else {
-                    Log.d("Lottery", "Waiting list is empty or event not found.");
-                }
-            } else {
-                Log.w("Lottery", "Event document does not exist.");
-            }
-        }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
-    }
-    */
+    }hgyh
 }
