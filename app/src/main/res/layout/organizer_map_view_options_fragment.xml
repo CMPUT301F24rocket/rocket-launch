@@ -153,7 +153,7 @@
                     style="@style/ButtonStyleE"
                     android:layout_gravity="center"
                     android:textStyle="italic"
-                    android:text="Enter"/>
+                    android:text="Enter Radius"/>
 
                 <!--For Entrants in Range-->
                 <LinearLayout
