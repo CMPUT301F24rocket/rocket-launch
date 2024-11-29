@@ -43,7 +43,7 @@ public class NotificationHelper {
     @SuppressLint("MissingPermission")
     public static void showNotification(Context context, String title, String message, int notificationID) {
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.drawable.baseline_notifications_24) // Replace with your app's icon
+                .setSmallIcon(R.drawable.baseline_notifications_24)
                 .setContentTitle(title)
                 .setContentText(message)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);

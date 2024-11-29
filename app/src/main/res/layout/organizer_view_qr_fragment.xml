@@ -6,7 +6,7 @@
 
     <TextView
         android:id="@+id/waitlist_view_header"
-        style="@style/SubHeaderStyleB"
+        style="@style/ActivityHeaderStyle"
         android:text="Event QR Code"
 
         app:layout_constraintTop_toTopOf="parent"
@@ -53,7 +53,7 @@
         android:id="@+id/generateCode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/ButtonStyleB"
+        style="@style/ButtonStyleA"
         android:layout_margin="10dp"
         android:text="Generate QR Code"
         android:gravity="center"

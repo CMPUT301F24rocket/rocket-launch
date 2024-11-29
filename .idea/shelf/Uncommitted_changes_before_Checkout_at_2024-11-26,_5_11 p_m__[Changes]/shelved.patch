@@ -1,0 +1,134 @@
+Index: app/src/main/java/com/example/rocket_launch/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocket_launch;\n\nimport android.content.Context;\nimport android.content.Intent;\nimport android.content.SharedPreferences;\nimport android.os.Bundle;\nimport android.provider.Settings;\nimport android.util.Log;\nimport android.view.Menu;\nimport android.view.MenuItem;\nimport android.view.View;\n\nimport androidx.activity.EdgeToEdge;\nimport androidx.annotation.NonNull;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.graphics.Insets;\nimport androidx.core.view.ViewCompat;\nimport androidx.core.view.WindowInsetsCompat;\n\nimport com.example.rocket_launch.admin.AdminModeActivity;\nimport com.example.rocket_launch.nav_fragments.CreateEventFragment;\nimport com.example.rocket_launch.nav_fragments.NotificationsFragment;\nimport com.example.rocket_launch.nav_fragments.UserEventsFragment;\nimport com.example.rocket_launch.nav_fragments.UserProfileFragment;\nimport com.google.android.gms.tasks.OnSuccessListener;\nimport com.google.android.material.bottomnavigation.BottomNavigationView;\nimport com.google.firebase.firestore.DocumentReference;\nimport com.google.firebase.firestore.DocumentSnapshot;\nimport com.google.firebase.firestore.FirebaseFirestore;\n\nimport org.osmdroid.config.Configuration;\n\n/**\n * main activity that gets loaded on startup\n */\npublic class MainActivity extends AppCompatActivity {\n    UsersDB usersDB;\n    BottomNavigationView bottomNav;\n\n    CreateEventFragment createEvent;\n    UserEventsFragment userEvents;\n    UserProfileFragment userProfile;\n    NotificationsFragment notifications;\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        EdgeToEdge.enable(this);\n        setContentView(R.layout.activity_main);\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_activity), (v, insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\n            return insets;\n        });\n\n        View fragmentView = findViewById(R.id.fragment_frame);\n        ViewCompat.setOnApplyWindowInsetsListener(fragmentView, (v, insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(0,0,0, 0);\n            return insets;\n        });\n\n        View navBarView = findViewById((R.id.bottom_nav_view));\n        ViewCompat.setOnApplyWindowInsetsListener(navBarView, (v,insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(systemBars.left, 0, systemBars.right, 0);\n            return insets;\n        });\n\n        //Referenced: https://github.com/osmdroid/osmdroid/wiki/How-to-use-the-osmdroid-library-(Java), accessed 2024-11-24\n        //Initializing osmdroid configuration\n        Context context = getApplicationContext();\n        SharedPreferences sharedPreferences = context.getSharedPreferences(\n                \"osmdroid_preferences\",\n                Context.MODE_PRIVATE\n        );\n        Configuration.getInstance().load(context, sharedPreferences);\n        Configuration.getInstance().setUserAgentValue(context.getPackageName());\n\n        // load fragments for navigation\n        createEvent = new CreateEventFragment();\n        userEvents = new UserEventsFragment();\n        userProfile = new UserProfileFragment();\n        notifications = new NotificationsFragment();\n\n        // set up nav-bar\n        bottomNav = findViewById(R.id.bottom_nav_view);\n\n        usersDB = new UsersDB();\n\n        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);\n\n        usersDB.getUser(androidID, new OnSuccessListener<User>() {\n            @Override\n            public void onSuccess(User user) {\n                if (user != null) {\n                    checkUserRole(user);\n                    setupNavBar(user.getRoles());\n                } else {\n                    user = new User();\n                    user.setAndroidId(androidID);\n                    usersDB.addUser(androidID, user);\n                    SelectRolesFragment frag = new SelectRolesFragment(user.getRoles());\n                    frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {\n                        @Override\n                        public void onSuccess(Roles roles) {\n                            usersDB.setRoles(androidID, roles);\n                            setupNavBar(roles);\n                        }\n                    });\n                    frag.show(getSupportFragmentManager(), \"Create New User\");\n                }\n            }\n        }, e -> Log.w(\"Firebase\", \"Error getting user\", e));\n    }\n\n    /**\n     * check if the user has the admin role and navigate to AdminModeActivity if true\n     * @param user\n     *  user to check for admin role\n     */\n    private void checkUserRole(User user) {\n        if (user.getRoles().isAdmin()) {\n            Intent intent = new Intent(this, AdminModeActivity.class);\n            startActivity(intent);\n            finish();\n        }\n    }\n\n    /**\n     * function to properly set up navbar on load\n     * @param roles\n     *  a given user's roles\n     */\n    private void setupNavBar(Roles roles) {\n        bottomNav.setOnItemSelectedListener(new BottomNavigationView.OnItemSelectedListener() {\n            @Override\n            public boolean onNavigationItemSelected(@NonNull MenuItem item) {\n                if (item.getItemId() == R.id.navigation_user_profile) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, userProfile)\n                            .commit();\n                    return true;\n                } else if (item.getItemId() == R.id.navigation_create_events) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, createEvent)\n                            .commit();\n                    return true;\n                } else if (item.getItemId() == R.id.navigation_notifications) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, notifications)\n                            .commit();\n                    return true;\n                } else if (item.getItemId() == R.id.navigation_user_events) {\n                    getSupportFragmentManager()\n                            .beginTransaction()\n                            .replace(R.id.fragment_frame, userEvents)\n                            .commit();\n                    return true;\n                }\n                return false;\n            }\n        });\n\n        Menu menu = bottomNav.getMenu();\n        if (!roles.isEntrant()) {\n            // if not entrant, don't show user events\n            menu.findItem(R.id.navigation_user_events).setVisible(false);\n        }\n        if (!roles.isOrganizer()) {\n            // if not organizer, don't show create events\n            menu.findItem(R.id.navigation_create_events).setVisible(false);\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/rocket_launch/MainActivity.java b/app/src/main/java/com/example/rocket_launch/MainActivity.java
+--- a/app/src/main/java/com/example/rocket_launch/MainActivity.java	(revision 9d6cf2e7a48dbfe5a6d99e793a2ae2b671004d84)
++++ b/app/src/main/java/com/example/rocket_launch/MainActivity.java	(date 1732665507115)
+@@ -1,14 +1,11 @@
+ package com.example.rocket_launch;
+ 
+-import android.content.Context;
+ import android.content.Intent;
+-import android.content.SharedPreferences;
+ import android.os.Bundle;
+ import android.provider.Settings;
+ import android.util.Log;
+ import android.view.Menu;
+ import android.view.MenuItem;
+-import android.view.View;
+ 
+ import androidx.activity.EdgeToEdge;
+ import androidx.annotation.NonNull;
+@@ -28,8 +25,6 @@
+ import com.google.firebase.firestore.DocumentSnapshot;
+ import com.google.firebase.firestore.FirebaseFirestore;
+ 
+-import org.osmdroid.config.Configuration;
+-
+ /**
+  * main activity that gets loaded on startup
+  */
+@@ -53,30 +48,6 @@
+             return insets;
+         });
+ 
+-        View fragmentView = findViewById(R.id.fragment_frame);
+-        ViewCompat.setOnApplyWindowInsetsListener(fragmentView, (v, insets) -> {
+-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+-            v.setPadding(0,0,0, 0);
+-            return insets;
+-        });
+-
+-        View navBarView = findViewById((R.id.bottom_nav_view));
+-        ViewCompat.setOnApplyWindowInsetsListener(navBarView, (v,insets) -> {
+-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+-            v.setPadding(systemBars.left, 0, systemBars.right, 0);
+-            return insets;
+-        });
+-
+-        //Referenced: https://github.com/osmdroid/osmdroid/wiki/How-to-use-the-osmdroid-library-(Java), accessed 2024-11-24
+-        //Initializing osmdroid configuration
+-        Context context = getApplicationContext();
+-        SharedPreferences sharedPreferences = context.getSharedPreferences(
+-                "osmdroid_preferences",
+-                Context.MODE_PRIVATE
+-        );
+-        Configuration.getInstance().load(context, sharedPreferences);
+-        Configuration.getInstance().setUserAgentValue(context.getPackageName());
+-
+         // load fragments for navigation
+         createEvent = new CreateEventFragment();
+         userEvents = new UserEventsFragment();
+Index: .idea/deploymentTargetSelector.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"deploymentTargetSelector\">\n    <selectionStates>\n      <SelectionState runConfigName=\"app\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n        <DropdownSelection timestamp=\"2024-11-24T18:48:52.975230800Z\">\n          <Target type=\"DEFAULT_BOOT\">\n            <handle>\n              <DeviceId pluginId=\"PhysicalDevice\" identifier=\"serial=RFCX508G5BA\" />\n            </handle>\n          </Target>\n        </DropdownSelection>\n        <DialogSelection />\n      </SelectionState>\n      <SelectionState runConfigName=\"MainActivity\">\n        <option name=\"selectionMode\" value=\"DROPDOWN\" />\n      </SelectionState>\n    </selectionStates>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/deploymentTargetSelector.xml b/.idea/deploymentTargetSelector.xml
+--- a/.idea/deploymentTargetSelector.xml	(revision 9d6cf2e7a48dbfe5a6d99e793a2ae2b671004d84)
++++ b/.idea/deploymentTargetSelector.xml	(date 1732665546894)
+@@ -4,17 +4,6 @@
+     <selectionStates>
+       <SelectionState runConfigName="app">
+         <option name="selectionMode" value="DROPDOWN" />
+-        <DropdownSelection timestamp="2024-11-24T18:48:52.975230800Z">
+-          <Target type="DEFAULT_BOOT">
+-            <handle>
+-              <DeviceId pluginId="PhysicalDevice" identifier="serial=RFCX508G5BA" />
+-            </handle>
+-          </Target>
+-        </DropdownSelection>
+-        <DialogSelection />
+-      </SelectionState>
+-      <SelectionState runConfigName="MainActivity">
+-        <option name="selectionMode" value="DROPDOWN" />
+       </SelectionState>
+     </selectionStates>
+   </component>
+Index: .idea/compiler.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"CompilerConfiguration\">\n    <bytecodeTargetLevel target=\"17\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/compiler.xml b/.idea/compiler.xml
+--- a/.idea/compiler.xml	(revision 9d6cf2e7a48dbfe5a6d99e793a2ae2b671004d84)
++++ b/.idea/compiler.xml	(date 1732665527091)
+@@ -1,6 +1,6 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="CompilerConfiguration">
+-    <bytecodeTargetLevel target="17" />
++    <bytecodeTargetLevel target="21" />
+   </component>
+ </project>
+\ No newline at end of file
+Index: .idea/misc.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><project version=\"4\">\n  <component name=\"ExternalStorageConfigurationManager\" enabled=\"true\" />\n  <component name=\"JavadocGenerationManager\">\n    <option name=\"OUTPUT_DIRECTORY\" value=\"$PROJECT_DIR$/docs\" />\n  </component>\n  <component name=\"ProjectRootManager\" version=\"2\" languageLevel=\"JDK_17\" default=\"true\" project-jdk-name=\"jbr-17\" project-jdk-type=\"JavaSDK\">\n    <output url=\"file://$PROJECT_DIR$/build/classes\" />\n  </component>\n  <component name=\"ProjectType\">\n    <option name=\"id\" value=\"Android\" />\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/misc.xml b/.idea/misc.xml
+--- a/.idea/misc.xml	(revision 9d6cf2e7a48dbfe5a6d99e793a2ae2b671004d84)
++++ b/.idea/misc.xml	(date 1732665527095)
+@@ -1,9 +1,10 @@
++<?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+   <component name="ExternalStorageConfigurationManager" enabled="true" />
+   <component name="JavadocGenerationManager">
+     <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/docs" />
+   </component>
+-  <component name="ProjectRootManager" version="2" languageLevel="JDK_17" default="true" project-jdk-name="jbr-17" project-jdk-type="JavaSDK">
++  <component name="ProjectRootManager" version="2" languageLevel="JDK_21" default="true" project-jdk-name="jbr-21" project-jdk-type="JavaSDK">
+     <output url="file://$PROJECT_DIR$/build/classes" />
+   </component>
+   <component name="ProjectType">
