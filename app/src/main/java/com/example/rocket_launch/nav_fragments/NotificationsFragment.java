@@ -53,12 +53,10 @@ public class NotificationsFragment extends Fragment {
         // we are required to have (an) empty constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
-
         db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -76,7 +74,6 @@ public class NotificationsFragment extends Fragment {
                 intent.setData(uri);
             }
             startActivity(intent);
-
         });
 
         notificationsListView = view.findViewById(R.id.notifications_list_view);
@@ -87,18 +84,20 @@ public class NotificationsFragment extends Fragment {
 
         notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
             Notification selectedNotification = user.getNotifications().get(position);
-
             NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment();
 
             Bundle args = new Bundle();
+
+            args.putString("androidID", user.getAndroidId());
             args.putString("from", selectedNotification.getTitle());
             args.putString("message", selectedNotification.getMessage());
 
-            //true
-            args.putBoolean("isInvitation", selectedNotification.getInvitation() == null || selectedNotification.getInvitation());
-
-            // false
-            args.putBoolean("isInvitation", selectedNotification.getInvitation() != null && selectedNotification.getInvitation());
+            if (selectedNotification.getInvitation() != null && selectedNotification.getInvitation()) {
+                args.putBoolean("isInvitation", true);
+                args.putString("eventID", selectedNotification.getEventId());
+            } else {
+                args.putBoolean("isInvitation", false);
+            }
             detailsFragment.setArguments(args);
 
             // go to NotificationDetailsFragment
@@ -109,13 +108,9 @@ public class NotificationsFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-
         loadNotifications();
         updateNotificationPreferences();
-
-
         return view;
-
     }
 
     private void updateNotificationPreferences() {
