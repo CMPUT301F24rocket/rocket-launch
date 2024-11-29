@@ -39,6 +39,10 @@ public class MainActivity extends AppCompatActivity {
     UserProfileFragment userProfile;
     NotificationsFragment notifications;
 
+    UserHomepageFragment homepage;
+    StartUpFragment startpage;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,7 +97,22 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     checkUserRole(user);
                     setupNavBar(user.getRoles());
-                    } else {
+
+                    // Display the UserHomepageFragment
+                    UserHomepageFragment frag = new UserHomepageFragment(user.getUserName());
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
+                            .commit();
+                } else {
+
+                    // Display the StartUpFragment
+                    StartUpFragment startfrag = new StartUpFragment();
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_frame, startfrag) // Ensure R.id.fragment_frame is the container
+                            .commit();
+
                     user = new User();
                     user.setAndroidId(androidID);
                     usersDB.addUser(androidID, user);

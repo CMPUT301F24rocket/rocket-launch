@@ -1,0 +1,395 @@
+Index: app/src/main/java/com/example/rocket_launch/MainActivity.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocket_launch;\n\nimport android.content.Intent;\nimport android.os.Bundle;\nimport android.view.Menu;\nimport android.widget.Button;\n\nimport androidx.activity.EdgeToEdge;\nimport androidx.appcompat.app.AppCompatActivity;\nimport androidx.core.graphics.Insets;\nimport androidx.core.view.ViewCompat;\nimport androidx.core.view.WindowInsetsCompat;\n\nimport com.google.android.material.bottomnavigation.BottomNavigationView;\n\n\npublic class MainActivity extends AppCompatActivity {\n    //initialize user\n    User user;\n\n    //Initialize firestore\n\n    @Override\n    protected void onCreate(Bundle savedInstanceState) {\n        super.onCreate(savedInstanceState);\n        EdgeToEdge.enable(this);\n        setContentView(R.layout.activity_main);\n        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_activity), (v, insets) -> {\n            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());\n            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);\n            return insets;\n        });\n\n        //for navigation bar\n        BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);\n\n        //setBarNavigationDisplay(bottomNav, user);\n\n        bottomNav.setSelectedItemId(R.id.navigation_home);\n\n        //navigating to different activities using the bottom nav bar\n        bottomBarNavigation(bottomNav);\n\n        UsersDB usersDB = new UsersDB(); // load user database\n        final User[] user = {usersDB.getUser()}; // try to get firebase user (returns null for now)\n\n        // if user is null, make a new one and prompt for user information\n\n        Button get_started_button = findViewById(R.id.get_started);\n        get_started_button.setOnClickListener(v -> {\n            if (user[0] == null) {\n                user[0] = new User();\n                new NewUserFragment(user[0]).show(getSupportFragmentManager(), \"Create New User\");\n            }\n\n            // User is an entrant (the user joins or signs up for events)\n            if (user[0].isEntrant()) {\n\n\n            } else if (user[0].isOrganizer()) {\n\n\n            } else if (user[0].isAdmin()) {\n\n\n            } else {\n                System.out.print(\"Error\");\n            }\n        });\n    };\n\n    private void bottomBarNavigation(BottomNavigationView bottomNav){\n        bottomNav.setOnItemSelectedListener(item -> {\n            if (item.getItemId() == R.id.navigation_home) {\n                //current activity, no nothing\n                return true;\n            } else if (item.getItemId() == R.id.navigation_user_events) {\n                startActivity(new Intent(getApplicationContext(),UserEventsActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                finish();\n                return true;\n            } else if (item.getItemId() ==R.id.navigation_create_events) {\n                startActivity(new Intent(getApplicationContext(),CreateEventActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                finish();\n                return true;\n            } else if (item.getItemId() ==R.id.navigation_notifications) {\n                startActivity(new Intent(getApplicationContext(), NotificationsActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                finish();\n                return true;\n            } else if (item.getItemId() ==R.id.navigation_user_profile) {\n                startActivity(new Intent(getApplicationContext(), UserProfileActivity.class)\n                        .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));\n                finish();\n                return true;\n            }\n            return false;\n        });\n    }\n\n    //Implement this in other activities when we get roles working\n    //Setting up nav bar visibility based on roles\n    private void setBarNavigationDisplay(BottomNavigationView bottomNav, User user){\n        Menu menu = bottomNav.getMenu();\n\n        //if the role is not true, hide the menu item\n        if (!user.getRoles().isEntrant()){\n            menu.findItem(R.id.navigation_user_events).setVisible(false);\n            menu.findItem(R.id.navigation_notifications).setVisible(false);\n            menu.findItem(R.id.navigation_user_profile).setVisible(false);\n        }\n\n        if (!user.getRoles().isOrganizer()){\n            menu.findItem(R.id.navigation_create_events).setVisible(false);\n        }\n    }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/rocket_launch/MainActivity.java b/app/src/main/java/com/example/rocket_launch/MainActivity.java
+--- a/app/src/main/java/com/example/rocket_launch/MainActivity.java	
++++ b/app/src/main/java/com/example/rocket_launch/MainActivity.java	
+@@ -2,6 +2,7 @@
+ 
+ import android.content.Intent;
+ import android.os.Bundle;
++import android.util.Log;
+ import android.view.Menu;
+ import android.widget.Button;
+ 
+@@ -11,7 +12,9 @@
+ import androidx.core.view.ViewCompat;
+ import androidx.core.view.WindowInsetsCompat;
+ 
++import com.google.android.gms.tasks.OnSuccessListener;
+ import com.google.android.material.bottomnavigation.BottomNavigationView;
++import com.google.firebase.firestore.DocumentSnapshot;
+ 
+ 
+ public class MainActivity extends AppCompatActivity {
+@@ -28,68 +31,66 @@
+         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main_activity), (v, insets) -> {
+             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+-            return insets;
++            return insets;});
++
++        usersDB = new UsersDB(); // Load user database
++        String androidId = "your_device_id"; // Replace with actual device ID
++
++        Button get_started_button = findViewById(R.id.get_started);
++        get_started_button.setOnClickListener(v -> {
++
++            // Get Firebase user
++            usersDB.getUser(androidId, new OnSuccessListener<DocumentSnapshot>() {
++                @Override
++                public void onSuccess(DocumentSnapshot documentSnapshot) {
++                    if (documentSnapshot.exists()) {
++                        user = documentSnapshot.toObject(User.class);
++                        checkUserRole(user);
++                    } else {
++                        user = new User();
++                        new NewUserFragment(user).show(getSupportFragmentManager(), "Create New User");
++                    }
++                }
++            }, e -> {
++                Log.w("Firebase", "Error getting user", e);
++            });
+         });
+ 
+-        //for navigation bar
+         BottomNavigationView bottomNav = findViewById(R.id.bottom_nav_view);
+-
+-        //setBarNavigationDisplay(bottomNav, user);
+-
+         bottomNav.setSelectedItemId(R.id.navigation_home);
+-
+-        //navigating to different activities using the bottom nav bar
+         bottomBarNavigation(bottomNav);
+-
+-        UsersDB usersDB = new UsersDB(); // load user database
+-        final User[] user = {usersDB.getUser()}; // try to get firebase user (returns null for now)
+-
+-        // if user is null, make a new one and prompt for user information
+-
+-        Button get_started_button = findViewById(R.id.get_started);
+-        get_started_button.setOnClickListener(v -> {
+-            if (user[0] == null) {
+-                user[0] = new User();
+-                new NewUserFragment(user[0]).show(getSupportFragmentManager(), "Create New User");
+-            }
++    }
+ 
+-            // User is an entrant (the user joins or signs up for events)
+-            if (user[0].isEntrant()) {
+-
+-
+-            } else if (user[0].isOrganizer()) {
+-
+-
+-            } else if (user[0].isAdmin()) {
+-
+-
+-            } else {
+-                System.out.print("Error");
+-            }
+-        });
+-    };
++    private void checkUserRole(User user) {
++        if (user.isEntrant()) {
++            // Go to entrant activity
++        } else if (user.isOrganizer()) {
++            // Go to organizer activity
++        } else if (user.isAdmin()) {
++            // Go to admin activity
++        }
++    }
+ 
+-    private void bottomBarNavigation(BottomNavigationView bottomNav){
++    private void bottomBarNavigation(BottomNavigationView bottomNav) {
+         bottomNav.setOnItemSelectedListener(item -> {
+             if (item.getItemId() == R.id.navigation_home) {
+-                //current activity, no nothing
+                 return true;
+             } else if (item.getItemId() == R.id.navigation_user_events) {
+-                startActivity(new Intent(getApplicationContext(),UserEventsActivity.class)
++                startActivity(new Intent(getApplicationContext(), UserEventsActivity.class)
+                         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                 finish();
+                 return true;
+-            } else if (item.getItemId() ==R.id.navigation_create_events) {
+-                startActivity(new Intent(getApplicationContext(),CreateEventActivity.class)
++            } else if (item.getItemId() == R.id.navigation_create_events) {
++                startActivity(new Intent(getApplicationContext(), CreateEventActivity.class)
+                         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                 finish();
+                 return true;
+-            } else if (item.getItemId() ==R.id.navigation_notifications) {
++            } else if (item.getItemId() == R.id.navigation_notifications) {
+                 startActivity(new Intent(getApplicationContext(), NotificationsActivity.class)
+                         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                 finish();
+                 return true;
+-            } else if (item.getItemId() ==R.id.navigation_user_profile) {
++            } else if (item.getItemId() == R.id.navigation_user_profile) {
+                 startActivity(new Intent(getApplicationContext(), UserProfileActivity.class)
+                         .addFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION));
+                 finish();
+@@ -99,20 +100,19 @@
+         });
+     }
+ 
+-    //Implement this in other activities when we get roles working
+-    //Setting up nav bar visibility based on roles
+-    private void setBarNavigationDisplay(BottomNavigationView bottomNav, User user){
++    private void setBarNavigationDisplay(BottomNavigationView bottomNav, User user) {
+         Menu menu = bottomNav.getMenu();
+ 
+-        //if the role is not true, hide the menu item
+-        if (!user.getRoles().isEntrant()){
++        // Hide menu items based on user roles
++        if (!user.getRoles().isEntrant()) {
+             menu.findItem(R.id.navigation_user_events).setVisible(false);
+             menu.findItem(R.id.navigation_notifications).setVisible(false);
+             menu.findItem(R.id.navigation_user_profile).setVisible(false);
+         }
+ 
+-        if (!user.getRoles().isOrganizer()){
++        if (!user.getRoles().isOrganizer()) {
+             menu.findItem(R.id.navigation_create_events).setVisible(false);
+         }
+     }
+-}
+\ No newline at end of file
++}
++
+Index: app/src/main/java/com/example/rocket_launch/UsersDB.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocket_launch;\n\nimport com.google.firebase.firestore.CollectionReference;\nimport com.google.firebase.firestore.FirebaseFirestore;\n\n\n/*\nusers stored in users collection\neach user will be obtained through device id (the document id)\nwe keep it in a class so we can reference the database and change values whenever\n*/\npublic class UsersDB {\n     private FirebaseFirestore db;\n     private CollectionReference user_ref;\n\n    UsersDB() {\n        // uncomment when we actually have a database\n        // db = FirebaseFirestore.getInstance(); // load database on initialization\n        // user_ref = db.collection(\"users\"); // from collection of users load user\n\n    }\n\n    public User getUser() {\n        // return user when implemented\n        // null for testing\n        return null;\n    }\n\n    public void addUser(User user) {\n\n    }\n\n    public void deleteUser() {\n\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/rocket_launch/UsersDB.java b/app/src/main/java/com/example/rocket_launch/UsersDB.java
+--- a/app/src/main/java/com/example/rocket_launch/UsersDB.java	
++++ b/app/src/main/java/com/example/rocket_launch/UsersDB.java	
+@@ -1,36 +1,48 @@
+-package com.example.rocket_launch;
++import android.util.Log;
+ 
++import com.google.android.gms.tasks.OnFailureListener;
++import com.google.android.gms.tasks.OnSuccessListener;
+ import com.google.firebase.firestore.CollectionReference;
++import com.google.firebase.firestore.DocumentSnapshot;
+ import com.google.firebase.firestore.FirebaseFirestore;
+ 
++import java.util.HashMap;
++import java.util.Map;
+ 
+-/*
+-users stored in users collection
+-each user will be obtained through device id (the document id)
+-we keep it in a class so we can reference the database and change values whenever
+-*/
+ public class UsersDB {
+-     private FirebaseFirestore db;
+-     private CollectionReference user_ref;
++    private FirebaseFirestore db;
++    private CollectionReference userRef;
+ 
+     UsersDB() {
+-        // uncomment when we actually have a database
+-        // db = FirebaseFirestore.getInstance(); // load database on initialization
+-        // user_ref = db.collection("users"); // from collection of users load user
+-
++        db = FirebaseFirestore.getInstance();
++        userRef = db.collection("user_info");  // Reference the collection
+     }
+ 
+-    public User getUser() {
+-        // return user when implemented
+-        // null for testing
+-        return null;
+-    }
++    public void addUser(String androidId, User user) {
++        Map<String, Object> userMap = new HashMap<>();
++        userMap.put("android_id", androidId);
++        userMap.put("name", user.getUserName());
++        userMap.put("email", user.getUserEmail());
++        userMap.put("phone", user.getUserPhoneNumber());
+ 
+-    public void addUser(User user) {
+-
++        userRef.document(androidId).set(userMap)
++                .addOnSuccessListener(new OnSuccessListener<Void>() {
++                    @Override
++                    public void onSuccess(Void unused) {
++                        Log.d("Firebase", "User added successfully");
++                    }
++                })
++                .addOnFailureListener(new OnFailureListener() {
++                    @Override
++                    public void onFailure(Exception e) {
++                        Log.w("Firebase", "Error adding user", e);
++                    }
++                });
+     }
+ 
+-    public void deleteUser() {
+-
++    public void getUser(String androidId, OnSuccessListener<DocumentSnapshot> onSuccess, OnFailureListener onFailure) {
++        userRef.document(androidId).get()
++                .addOnSuccessListener(onSuccess)
++                .addOnFailureListener(onFailure);
+     }
+-}
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/rocket_launch/Event.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocket_launch;\n\nimport android.media.Image;\n\nimport java.util.Calendar;\n\npublic class Event {\n    String name;\n    String description;\n    Calendar startTime;\n    Calendar endTime;\n    int participants;\n    Image photo;\n\n    Event(String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo) {\n        this.name = name;\n        this.description = description;\n        this.startTime = startTime;\n        this.endTime = endTime;\n        this.participants = participants;\n        this.photo = photo;\n    }\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/rocket_launch/Event.java b/app/src/main/java/com/example/rocket_launch/Event.java
+--- a/app/src/main/java/com/example/rocket_launch/Event.java	
++++ b/app/src/main/java/com/example/rocket_launch/Event.java	
+@@ -2,22 +2,65 @@
+ 
+ import android.media.Image;
+ 
++import java.util.ArrayList;
+ import java.util.Calendar;
++import java.util.List;
+ 
+ public class Event {
+-    String name;
+-    String description;
+-    Calendar startTime;
+-    Calendar endTime;
+-    int participants;
+-    Image photo;
++    private String eventID;
++    private String name;
++    private String description;
++    private Calendar startTime;
++    private Calendar endTime;
++    private int participants;
++    private Image photo;
++    private List<String> waitingList;
+ 
+-    Event(String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo) {
++    public Event(String eventID, String name, String description, Calendar startTime, Calendar endTime, int participants, Image photo) {
++        this.eventID = eventID;
+         this.name = name;
+         this.description = description;
+         this.startTime = startTime;
+         this.endTime = endTime;
+         this.participants = participants;
+         this.photo = photo;
++        this.waitingList = new ArrayList<>();
++    }
++
++
++    public void addToWaitingList(String userID){
++        waitingList.add(userID);
++    }
++
++    public List<String> getWaitingList() {
++        return waitingList;
++    }
++
++    public Image getPhoto() {
++        return photo;
++    }
++
++    public String getEventID() {
++        return eventID;
++    }
++
++    public String getName() {
++        return name;
++    }
++
++    public String getDescription() {
++        return description;
++    }
++
++    public Calendar getStartTime() {
++        return startTime;
+     }
+-}
++
++    public Calendar getEndTime() {
++        return endTime;
++    }
++
++    public int getParticipants() {
++        return participants;
++    }
++}
+\ No newline at end of file
+Index: app/src/main/java/com/example/rocket_launch/EventDB.java
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.rocket_launch;\n\npublic class EventDB {\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/rocket_launch/EventDB.java b/app/src/main/java/com/example/rocket_launch/EventDB.java
+--- a/app/src/main/java/com/example/rocket_launch/EventDB.java	
++++ b/app/src/main/java/com/example/rocket_launch/EventDB.java	
+@@ -1,4 +1,51 @@
+ package com.example.rocket_launch;
+ 
++import android.util.Log;
++import com.google.android.gms.tasks.OnFailureListener;
++import com.google.android.gms.tasks.OnSuccessListener;
++import com.google.firebase.firestore.CollectionReference;
++import com.google.firebase.firestore.DocumentSnapshot;
++import com.google.firebase.firestore.FieldValue;
++import com.google.firebase.firestore.FirebaseFirestore;
++
++import java.util.ArrayList;
++import java.util.HashMap;
++import java.util.Map;
++
+ public class EventDB {
+-}
++
++    private FirebaseFirestore db;
++    private CollectionReference eventRef;
++
++    public EventDB(){
++        db = FirebaseFirestore.getInstance();
++        eventRef = db.collection("events");
++    }
++
++
++    public void addEvent(String eventID, Event event){
++        Map<String, Object> eventMap = new HashMap<>();
++        eventMap.put("name", event.getName());
++        eventMap.put("description", event.getDescription());
++        eventMap.put("startTime", event.getStartTime());
++        eventMap.put("endTime", event.getEndTime());
++        eventMap.put("participants", event.getParticipants());
++        eventMap.put("waitingList", new ArrayList<>());
++
++        eventRef.document(eventID).set(eventMap)
++                .addOnSuccessListener(new OnSuccessListener<Void>() {
++                    @Override
++                    public void onSuccess(Void unused) {
++                        Log.d("Firebase", "Event added successfully");
++                    }
++                })
++                .addOnFailureListener(new OnFailureListener() {
++                    @Override
++                    public void onFailure(Exception e) {
++                        Log.w("Firebase", "Error adding event", e);
++                    }
++                });
++    }
++
++
++}
+\ No newline at end of file
