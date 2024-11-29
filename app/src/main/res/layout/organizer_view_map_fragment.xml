@@ -13,6 +13,16 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
 
+    <ImageButton
+        android:id="@+id/map_refresh_button"
+        style="@style/RefreshButtonStyle"
+        android:backgroundTint="@color/desert_sand"
+        app:layout_constraintTop_toTopOf="@id/map_view_header"
+        app:layout_constraintBottom_toBottomOf="@id/map_view_header"
+        app:layout_constraintStart_toStartOf="@id/map_view_header"
+        app:layout_constraintEnd_toEndOf="@id/map_view_header"
+        app:layout_constraintHorizontal_bias="0.97"/>
+
     <org.osmdroid.views.MapView
         android:id="@+id/organizer_map_view"
         android:layout_width="match_parent"

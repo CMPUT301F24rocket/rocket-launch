@@ -25,12 +25,13 @@
     <ImageButton
         android:id="@+id/map_options_back_button"
         style="@style/ArrowLeftButtonStyle"
-        app:layout_constraintTop_toBottomOf="@+id/map_options_header"
-        app:layout_constraintBottom_toTopOf="@id/map_options_scroll_view"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/map_options_header"
+        app:layout_constraintBottom_toBottomOf="@id/map_options_header"
+        app:layout_constraintStart_toStartOf="@id/map_options_header"
+        app:layout_constraintEnd_toEndOf="@id/map_options_header"
         app:layout_constraintHorizontal_bias="0"
-        android:backgroundTint="@color/thistle"/>
+        android:backgroundTint="@color/thistle_dark"
+        android:padding="15dp"/>
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/map_options_scroll_view"

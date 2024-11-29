@@ -128,6 +128,14 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item> </style>
 
+    <!--Refresh button Style-->
+    <style name="RefreshButtonStyle">
+        <item name="android:src">@drawable/refresh</item>
+        <item name="android:gravity">center</item>
+        <item name="android:padding">15sp</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item> </style>
+
     <!-- Organizer event detail options button Style-->
     <style name="OrganizerEventDetailsButtons">
         <item name="android:layout_width">match_parent</item>
