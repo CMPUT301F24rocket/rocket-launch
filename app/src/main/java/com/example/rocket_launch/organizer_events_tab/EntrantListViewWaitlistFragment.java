@@ -53,7 +53,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.organizer_view_waitlist_layout, container, false);
+        View view = inflater.inflate(R.layout.organizer_view_list_waitlist, container, false);
 
         assert getArguments() != null;
         eventId = getArguments().getString("eventId");
@@ -80,7 +80,8 @@ public class EntrantListViewWaitlistFragment extends Fragment {
             sampleWaitlist(sampleAmount, sampledUsers -> {
                 // send notifications to all sampledUsers saying they were chosen
                 Notification inviteNotification = new Notification();
-                inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), String.format(Locale.CANADA, "You are Invited to Join %s", event.getName()), eventId);
+                String inviteTitle = String.format(Locale.CANADA, "You are Invited to Join %s", event.getName());
+                inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), inviteTitle, eventId);
                 for (String userId : sampledUsers) {
                     usersDB.addNotification(userId, inviteNotification);
                 }
@@ -96,7 +97,10 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         });
         replaceButton.setOnClickListener(l -> {
             sampleWaitlist(replaceAmount, sampledUsers -> {
-                // TODO - send notifications to all sampledUsers saying they were chosen in a redraw
+                // send notifications to all sampledUsers saying they were chosen in a redraw
+                Notification inviteNotification = new Notification();
+                String title = String.format(Locale.CANADA, "You are invited to join %s in a redraw!", event.getName());
+                inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), title, eventId);
             });
         });
 
@@ -174,20 +178,6 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                         availableSpots));
             }
         }); // reload event as well as to show proper values
-    }
-
-    /**
-     * displays event details fragment. For use when event is clicked
-     * @param userDetailsFragment
-     *  fragment to go display
-     */
-    private void openClickedEvent(UserDetailsFragment userDetailsFragment){
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_frame, userDetailsFragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     /**
