@@ -21,18 +21,26 @@ public class Notification {
     private String id;
     private String title;
     private String message;
+    private String eventId;
 
     private Boolean invitation;
 
     // No-argument constructor (required for Firestore)
     public Notification() {}
 
-    // Full constructor
+    // Full constructor (non-invite)
     public Notification(String id, String title, String message) {
         this.id = id;
         this.title = title;
         this.message = message;
         this.invitation = false;
+    }
+
+    public void createInvite(String id, String title, String eventId) {
+        this.id = id;
+        this.title = title;
+        this.eventId = eventId;
+        this.invitation = true;
     }
 
     // Getters and Setters
@@ -66,5 +74,13 @@ public class Notification {
 
     public void setInvitation(Boolean invitation) {
         this.invitation = invitation;
+    }
+
+    public String getEventId() {
+        return eventId;
+    }
+
+    public void setEventId(String eventId) {
+        this.eventId = eventId;
     }
 }
