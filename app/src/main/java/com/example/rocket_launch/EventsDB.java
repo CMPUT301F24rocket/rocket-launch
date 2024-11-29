@@ -1,7 +1,6 @@
 package com.example.rocket_launch;
 
 import android.util.Log;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -20,8 +19,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import java.util.Random;
 import java.util.UUID;
+
 
 /**
  * class to help with firestore database
@@ -59,6 +60,14 @@ public class EventsDB {
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error adding Event", e))
                 .addOnCompleteListener(onCompleteListener);
+    }
+
+    /**
+     * Get the reference to the events collection.
+     * @return CollectionReference to the events collection
+     */
+    public CollectionReference getEventsRef() {
+        return eventsRef;
     }
 
     /**
@@ -174,16 +183,36 @@ public class EventsDB {
                         Log.w("Firebase", "Error removing user", e);
                     }
                 });
-
     }
 
-    // TODO: update event
+    /**
+     * remove a user from an events invited list
+     * @param eventId
+     *  id of event
+     * @param userId
+     *  id of user
+     */
+    public void removeUserFromInvitedList(String eventId, String userId) {
+        DocumentReference eventDocRef = eventsRef.document(eventId);
+
+        eventDocRef.update("invitedEntrants", FieldValue.arrayRemove(userId))
+                .addOnSuccessListener(l -> {
+                    Log.d("Firebase", "User removed from registered list");
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("Firebase", "Error removing user", e);
+                });
+    }
+
     /**
      * update eventDB
      */
-    public void updateEventDB() {
-
+    public void updateEvent(String eventId, Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailureListener) {
+        eventsRef.document(eventId).set(event)
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailureListener);
     }
+
 
     /**
      * loads a given event with eventID id
@@ -192,16 +221,22 @@ public class EventsDB {
      * @param onSuccess
      *  listener for what to do on successful load
      */
-    public void loadEvent(String id, OnSuccessListener<DocumentSnapshot> onSuccess) {
+        public void loadEvent(String id, OnSuccessListener<Event> onSuccess) {
         eventsRef.document(id).get()
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase", "Error loading Event", e);
-                    }
-                });
+        .addOnSuccessListener(documentSnapshot -> {
+            Event event = null;
+            if (documentSnapshot.exists()) {
+                event = documentSnapshot.toObject(Event.class);
+            }
+            onSuccess.onSuccess(event);
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Firebase", "Error loading Event", e);
+            }
+        });
     }
+
 
     /**
      * gets list of user Ids from an event's waitlist
@@ -340,6 +375,78 @@ public class EventsDB {
                 .addOnFailureListener(onFailure);
     }
 
+
+    public void addToEntrantLocationDataList(String eventID, EntrantLocationData entrantLocation) {
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Event event = documentSnapshot.toObject(Event.class);
+
+                if (event != null) {
+                    eventsRef.document(eventID).update("entrantLocationDataList", FieldValue.arrayUnion(entrantLocation))
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d("Firebase", "entrant location added to entrant location data list");
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.w("Firebase", "Error adding entrant location data", e);
+                                }
+                            });
+                }
+            } else {
+                Log.w("Firebase", "Event document does not exist");
+            }
+        });
+    }
+
+    //Remove location data from the database
+    public void removeFromEntrantLocationDataList(String eventID, String entrantID) {
+      
+        DocumentReference eventDocRef = eventsRef.document(eventID);
+
+        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+              
+                List<Map<String, Object>> locationDataList = (List<Map<String, Object>>) documentSnapshot.get("entrantLocationDataList");
+
+                // Filter the list to remove the object with the matching entrantID
+                // since only one instance of entrantID can exist in the list
+                List<Map<String, Object>> updatedLocationDataList = new ArrayList<>();
+                for (Map<String, Object> locationData : locationDataList) {
+                    if (!locationData.get("entrantID").equals(entrantID)) {
+                        updatedLocationDataList.add(locationData);
+                    }
+                }
+
+                eventDocRef.update("entrantLocationDataList", updatedLocationDataList)
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d("Firebase", "Entrant location removed from entrant location data list");
+                            }
+                        })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w("Firebase", "Error removing location data", e);
+                            }
+                        });
+            }
+
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception e) {
+                Log.w("Firebase", "Error fetching event data: ", e);
+            }
+        });
+    }
+
+
     // Add a notification to an event
     // Updated addNotificationToEvent Method
     public void addNotificationToEvent(String eventID, Notification notification) {
@@ -347,7 +454,7 @@ public class EventsDB {
         Map<String, Object> notificationMap = new HashMap<>();
         notificationMap.put("id", notification.getId());
         notificationMap.put("title", notification.getTitle());
-        notificationMap.put("message", notification.getMessage());
+        notificationMap.put("message3", notification.getMessage());
        // notificationMap.put("timestamp", notification.getTimestamp());
 
         // Update Firebase with the notification map
@@ -388,57 +495,5 @@ public class EventsDB {
                     }
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
-    }
-
-    public void pickAndNotifyUser(String eventID) {
-        DocumentReference eventDocRef = eventsRef.document(eventID);
-
-        eventDocRef.get().addOnSuccessListener(documentSnapshot -> {
-            if (documentSnapshot.exists()) {
-                Event event = documentSnapshot.toObject(Event.class);
-
-                if (event != null && event.getWaitingList() != null && !event.getWaitingList().isEmpty()) {
-                    List<String> waitingList = event.getWaitingList();
-                    Random random = new Random();
-                    String selectedUserID = waitingList.get(random.nextInt(waitingList.size()));
-
-                    eventDocRef.update("waitingList", FieldValue.arrayRemove(selectedUserID));
-                    eventDocRef.update("registeredEntrants", FieldValue.arrayUnion(selectedUserID));
-
-                    Notification notification = new Notification(
-                            UUID.randomUUID().toString(),
-                            "Lottery Winner",
-                            "Congratulations! You've been selected for event: " + event.getName()
-                    );
-
-                    UsersDB usersDB = new UsersDB();
-                    usersDB.addNotification(selectedUserID, notification);
-
-                    Log.d("Lottery", "User " + selectedUserID + " selected and notified.");
-                } else {
-                    Log.d("Lottery", "Waiting list is empty or event not found.");
-                }
-            } else {
-                Log.w("Lottery", "Event document does not exist.");
-            }
-        }).addOnFailureListener(e -> Log.w("Lottery", "Error fetching event document", e));
-    }
-
-    public void sampleWaitlist(String eventId, int sampleAmount, OnSuccessListener<Void> onSuccessListener) {
-        // load event
-        loadEvent(eventId, new OnSuccessListener<DocumentSnapshot>() {
-            @Override
-            public void onSuccess(DocumentSnapshot documentSnapshot) {
-                if (documentSnapshot.exists()) {
-                    Event event = documentSnapshot.toObject(Event.class);
-                    if (event != null) {
-                        event.sampleWaitlist(sampleAmount);
-                        eventsRef.document(eventId).set(event)
-                                .addOnSuccessListener(onSuccessListener)
-                                .addOnFailureListener(e -> Log.w("Firebase", "Error saving Event", e));
-                    }
-                }
-            }
-        });
     }
 }

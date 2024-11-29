@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -31,10 +32,11 @@ public class EntrantListViewInvitedFragment extends Fragment {
     private Event.UserArrayAdapter adapter;
     private ArrayList<User> users;
     private String eventId;
+    private Button notifyButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.view_list, container, false);
+        View view = inflater.inflate(R.layout.organizer_view_list_invited, container, false);
 
         assert getArguments() != null;
         eventId = getArguments().getString("eventId");
@@ -45,6 +47,11 @@ public class EntrantListViewInvitedFragment extends Fragment {
         users = new ArrayList<>();
         adapter = new Event.UserArrayAdapter(requireContext(), users);
         listView.setAdapter(adapter);
+
+        notifyButton = view.findViewById(R.id.sendNotification);
+        notifyButton.setOnClickListener(l -> {
+            // send notification
+        });
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             // TODO - maybe?
@@ -58,20 +65,6 @@ public class EntrantListViewInvitedFragment extends Fragment {
     public void onResume() {
         super.onResume();
         fetchUsers();
-    }
-
-    /**
-     * displays event details fragment. For use when event is clicked
-     * @param userDetailsFragment
-     *  fragment to go display
-     */
-    private void openClickedEvent(UserDetailsFragment userDetailsFragment){
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_frame, userDetailsFragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     /**

@@ -1,5 +1,8 @@
 package com.example.rocket_launch.nav_fragments;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.provider.Settings.Secure;
@@ -10,13 +13,15 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.notifications_tab.NotificationPreferencesFragment;
+import com.example.rocket_launch.notifications_tab.NotificationDetailsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -38,7 +43,6 @@ public class NotificationsFragment extends Fragment {
     private FirebaseFirestore db;
     private UsersDB usersDB;
     private String androidId;
-    private List notifications;
 
     private FloatingActionButton notificationSettingsButton;
 
@@ -60,15 +64,19 @@ public class NotificationsFragment extends Fragment {
 
         notificationSettingsButton = view.findViewById(R.id.notification_settings_button);
         notificationSettingsButton.setOnClickListener(v -> {
-            NotificationPreferencesFragment notifPreferences = new NotificationPreferencesFragment(user.getNotificationPreferences(), usersDB.getUsersRef().document(androidId));
-            notifPreferences.setOnSuccessListener(new NotificationPreferencesFragment.OnSuccessListener() {
-                @Override
-                public void onSuccess() {
-                    // this is def inefficient but it works
-                    loadNotifications();
-                }
-            });
-            notifPreferences.show(getParentFragmentManager(), "edit notifs");
+
+            // open app notification settings
+            Intent intent = new Intent();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // For Android 8.0 (Oreo) and above
+                intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
+            } else {
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
+                intent.setData(uri);
+            }
+            startActivity(intent);
+
         });
 
         notificationsListView = view.findViewById(R.id.notifications_list_view);
@@ -77,10 +85,46 @@ public class NotificationsFragment extends Fragment {
         notificationsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, notificationList);
         notificationsListView.setAdapter(notificationsAdapter);
 
+        notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
+            Notification selectedNotification = user.getNotifications().get(position);
+
+            NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment();
+
+            Bundle args = new Bundle();
+            args.putString("from", selectedNotification.getTitle());
+            args.putString("message", selectedNotification.getMessage());
+
+            args.putBoolean("isInvitation", selectedNotification.getInvitation() != null && selectedNotification.getInvitation());
+
+            detailsFragment.setArguments(args);
+
+            // go to NotificationDetailsFragment
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_frame, detailsFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
+
         loadNotifications();
+        updateNotificationPreferences();
+
 
         return view;
 
+    }
+
+    private void updateNotificationPreferences() {
+        boolean notificationPreferences = NotificationManagerCompat.from(requireContext()).areNotificationsEnabled();
+        Log.d("NotificationPreferences", "Notifications enabled: " + notificationPreferences);
+        String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
+
+        // Update Firestore directly
+        new UsersDB().getUsersRef().document(androidID)
+                .update("notificationPreferences", notificationPreferences)
+                .addOnSuccessListener(aVoid -> Log.d("NotificationPreferences", "Updated successfully in Firestore."))
+                .addOnFailureListener(e -> Log.e("NotificationPreferences", "Failed to update preferences in Firestore.", e));
     }
 
     /**
@@ -96,11 +140,11 @@ public class NotificationsFragment extends Fragment {
             // Clear current list and load new notifications
             notificationList.clear();
 
-            // Check and iterate over user notifications
+            // Check and iterate over user notifications (neweset first)
             if (user.getNotifications() != null) {
-                for (Notification notification : user.getNotifications()) {
+                for (int i = user.getNotifications().size() - 1; i >= 0; i--) {
                     // Concatenate title and message for display
-                    notificationList.add(notification.getTitle() + ": " + notification.getMessage());
+                    notificationList.add(user.getNotifications().get(i).getTitle() + ": " + user.getNotifications().get(i).getMessage());
                 }
             }
 
@@ -110,21 +154,3 @@ public class NotificationsFragment extends Fragment {
     }
 }
 
-//    private void loadNotifications() {
-//
-//        usersDB = new UsersDB();
-//        // reference https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
-//        String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
-//
-//        usersDB.getUser(androidID, new OnSuccessListener<User>() {
-//            @Override
-//            public void onSuccess(User newUser) {
-//                user = newUser;
-//                List<String> notifications = user.getNotifications();
-//                notificationList.clear();
-//                notificationList.addAll(notifications);
-//                notificationsAdapter.notifyDataSetChanged();
-//
-//            }
-//        }, e -> Log.e("NotificationFragment", "Error fetching user", e));
-//    }
