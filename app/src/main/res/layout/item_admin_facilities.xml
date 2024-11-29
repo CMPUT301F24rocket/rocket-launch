@@ -3,21 +3,26 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:padding="16dp"
+    android:gravity="start|center_vertical"
     android:background="@android:color/white"
-    android:padding="16dp">
+    android:minHeight="64dp">
 
     <TextView
-        android:id="@+id/user_name"
+        android:id="@+id/facility_name"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name"
+        android:minHeight="20dp"
+        android:text="Facility_Name"
         android:textSize="16sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
 
     <TextView
-        android:id="@+id/user_email"
+        android:id="@+id/facility_address"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Email"
-        android:textSize="14sp" />
+        android:minHeight="20dp"
+        android:text="Facility_Address"
+        android:textSize="14sp"/>
 </LinearLayout>
