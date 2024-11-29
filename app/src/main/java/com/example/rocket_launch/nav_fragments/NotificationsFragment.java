@@ -94,8 +94,11 @@ public class NotificationsFragment extends Fragment {
             args.putString("from", selectedNotification.getTitle());
             args.putString("message", selectedNotification.getMessage());
 
-            args.putBoolean("isInvitation", selectedNotification.getInvitation() != null && selectedNotification.getInvitation());
+            //true
+            args.putBoolean("isInvitation", selectedNotification.getInvitation() == null || selectedNotification.getInvitation());
 
+            // false
+            args.putBoolean("isInvitation", selectedNotification.getInvitation() != null && selectedNotification.getInvitation());
             detailsFragment.setArguments(args);
 
             // go to NotificationDetailsFragment
