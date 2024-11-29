@@ -1,6 +1,7 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +16,8 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.InviteNotification;
+import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UserDetailsFragment;
@@ -74,6 +77,33 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         replaceButton = view.findViewById(R.id.replaceButton);
         notifyButton = view.findViewById(R.id.sendNotification);
 
+        notifyButton.setOnClickListener(l -> {
+            // TODO - send notification to all
+        });
+        sampleButton.setOnClickListener(l -> {
+            sampleWaitlist(sampleAmount, sampledUsers -> {
+                // send notifications to all sampledUsers saying they were chosen
+                InviteNotification inviteNotification = new InviteNotification(java.util.UUID.randomUUID().toString(), eventId);
+                inviteNotification.setTitle(String.format(Locale.CANADA, "You are Invited to Join %s", event.getName()));
+                for (String userId : sampledUsers) {
+                    usersDB.addNotification(userId, inviteNotification);
+                }
+
+                // send notifications to all in waitlist saying they were not chosen
+                String title = String.format(Locale.CANADA, "You were not chosen for %s", event.getName());
+                String message = "Keep an eye out for any redraws";
+                Notification declineNotification = new Notification(java.util.UUID.randomUUID().toString(), title, message);
+                for (String userId : event.getWaitingList()) {
+                    usersDB.addNotification(userId, declineNotification);
+                }
+            });
+        });
+        replaceButton.setOnClickListener(l -> {
+            sampleWaitlist(replaceAmount, sampledUsers -> {
+                // TODO - send notifications to all sampledUsers saying they were chosen in a redraw
+            });
+        });
+
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
             // TODO - do something on clicking a user
@@ -85,56 +115,8 @@ public class EntrantListViewWaitlistFragment extends Fragment {
             if (loadedEvent!= null) {
                 event = loadedEvent;
 
-                if (event.getWaitingList().isEmpty()) {
-                    notifyButton.setVisibility(View.GONE);
-                } else {
-                    notifyButton.setOnClickListener(l -> {
-                        // TODO - send notification to all
-                    });
-                }
+                updateUI();
 
-                // amount of space available total
-                availableSpots = event.getCapacity() -
-                        (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
-                // set text for amount of spots available in total
-                spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots", availableSpots));
-
-                // takes into account if waitlist does not have that many
-                int realAvailableSpots = Math.min(event.getWaitingList().size(), availableSpots);
-
-                if (realAvailableSpots < event.getCancelledEntrants().size()) {
-                    replaceAmount = realAvailableSpots; // replacement amount is all the spots
-                    sampleAmount = 0; // implies sampleAmount = 0
-                }
-                else {
-                    replaceAmount = event.getCancelledEntrants().size(); //
-                    sampleAmount = realAvailableSpots - replaceAmount;
-                }
-
-                if (sampleAmount > 0) {
-                    // set text on button
-                    sampleButton.setText(String.format(Locale.CANADA, "Sample %d Users", sampleAmount));
-                    sampleButton.setOnClickListener(l -> {
-                        sampleWaitlist(sampleAmount, sampledUsers -> {
-                            // TODO - send notifications to all sampledUsers saying they were chosen
-                            // TODO - send notifications to all in waitlist saying they were not chosen
-                        });
-                    });
-                } else {
-                    sampleButton.setVisibility(View.GONE);
-                }
-
-                if (replaceAmount > 0) {
-                    // set text on button
-                    replaceButton.setText(String.format(Locale.CANADA, "Replace %d Users", replaceAmount));
-                    replaceButton.setOnClickListener(l -> {
-                        sampleWaitlist(replaceAmount, sampledUsers -> {
-                            // TODO - send notifications to all sampledUsers saying they were chosen in a redraw
-                        });
-                    });
-                } else {
-                    replaceButton.setVisibility(View.GONE);
-                }
             } else {
                 Log.e("WaitingList fragment", "invalid event");
             }
@@ -144,6 +126,41 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         return view;
     }
 
+    void updateUI() {
+        if (event.getWaitingList().isEmpty()) {
+            notifyButton.setVisibility(View.GONE);
+        }
+        // amount of space available total
+        availableSpots = event.getCapacity() -
+                (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
+        // set text for amount of spots available in total
+        spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots", availableSpots));
+
+        // takes into account if waitlist does not have that many
+        int realAvailableSpots = Math.min(event.getWaitingList().size(), availableSpots);
+
+        if (realAvailableSpots < event.getCancelledEntrants().size()) {
+            replaceAmount = realAvailableSpots; // replacement amount is all the spots
+            sampleAmount = 0; // implies sampleAmount = 0
+        }
+        else {
+            replaceAmount = event.getCancelledEntrants().size(); //
+            sampleAmount = realAvailableSpots - replaceAmount;
+        }
+        if (sampleAmount > 0) {
+            // set text on button
+            sampleButton.setText(String.format(Locale.CANADA, "Sample %d Users", sampleAmount));
+        } else {
+            sampleButton.setVisibility(View.GONE);
+        }
+
+        if (replaceAmount > 0) {
+            // set text on button
+            replaceButton.setText(String.format(Locale.CANADA, "Replace %d Users", replaceAmount));
+        } else {
+            replaceButton.setVisibility(View.GONE);
+        }
+    }
 
     /**
      * each time we resume or load this fragment we want to use fresh data
@@ -210,6 +227,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
 
                 onSuccess.onSuccess(sampledUsers);
                 fetchUsers();
+                updateUI();
 
             }, l -> Log.d("Firebase", "sample fail :("));
             adapter.notifyDataSetChanged();
