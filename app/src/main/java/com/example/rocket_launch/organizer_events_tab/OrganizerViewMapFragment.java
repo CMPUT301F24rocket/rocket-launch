@@ -11,9 +11,11 @@ import android.view.ViewGroup;
 import android.widget.ImageButton;
 
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 
 import com.example.rocket_launch.EntrantLocationData;
+import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.MapOptionsViewModel;
 import com.example.rocket_launch.NominatimGeocode;
@@ -31,6 +33,7 @@ import org.osmdroid.views.overlay.Marker;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -49,9 +52,12 @@ public class OrganizerViewMapFragment extends Fragment {
     private UsersDB userDB;
     private EventsDB eventsDB;
     private User user;
+    private Event event;
+    private String eventID;
     private String addressFacility;
-    private GeoPoint facilityGeoPoint;
+    private GeoPoint defaultGeoPoint;
     private MapOptionsViewModel mapOptionsViewModel;
+    private Marker facilityMarker;
 
     //TODO: display coordinates of entrants
     // get facility coordinates from address (entered in userProfile) --> geocoding - DONE
@@ -80,9 +86,8 @@ public class OrganizerViewMapFragment extends Fragment {
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         mapOptionsViewModel = new ViewModelProvider(requireActivity()).get(MapOptionsViewModel.class);
 
-        if (getArguments() != null){
-            String eventID = getArguments().getString("eventId");
-        }
+        assert getArguments() != null;
+        eventID = getArguments().getString("eventId");
     }
 
     @Override
@@ -114,13 +119,27 @@ public class OrganizerViewMapFragment extends Fragment {
 
             } else {
                 addressFacility = defaultAddress;
-                facilityGeoPoint = defaultStartPoint;
+                defaultGeoPoint = defaultStartPoint;
             }
             mapOptionsViewModel.setFacilityAddress(addressFacility);
             Log.i("getAddressFacilityTest", "address Facility: " + mapOptionsViewModel.getFacilityAddress().getValue()); //log facility address
 
             //create the starting point and set mapView to that location
-            createStartGeoPosition(mapController, mapOptionsViewModel.getFacilityAddress().getValue(), facilityGeoPoint);
+            createStartGeoPosition(mapController, mapOptionsViewModel.getFacilityAddress().getValue(), defaultGeoPoint);
+        });
+
+        checkAddressFacilityChangedViewModel(mapController, defaultGeoPoint); //create new facility location if the address changes
+
+        //Get the list of entrant locations
+        getEntrantLocationDataList(locationListFetched -> {
+            if (locationListFetched != null) {
+                mapOptionsViewModel.setEntrantLocationDataList(locationListFetched);
+                Log.i("GetLocationDataListTest", "onCreateView: Entrants location data in list");
+                createEntrantLocationMarkers();
+
+            } else {
+                Log.i("GetLocationDataListTest", "onCreateView: No entrants location data in list");
+            }
         });
 
         //back button
@@ -170,13 +189,13 @@ public class OrganizerViewMapFragment extends Fragment {
                     handler.post(() -> {
                         if (startPoint != null) {
                             mapController.setCenter(startPoint);
-                            createMapMarker("Your Facility", startPoint);
+                            facilityMarker = createMapMarker("Your Facility", startPoint);
                         }
                     });
                 } else {
                     handler.post(() -> {
                         mapController.setCenter(facilityGeoPoint);
-                        createMapMarker("Your Facility", facilityGeoPoint);
+                        facilityMarker = createMapMarker("Default Location", facilityGeoPoint);
                     });
                 }
 
@@ -195,12 +214,61 @@ public class OrganizerViewMapFragment extends Fragment {
         mapView.getOverlays().add(mapScaleBarOverlay);
     }
 
-    private void createMapMarker(String name, GeoPoint geoPoint){
-        org.osmdroid.views.overlay.Marker facilityMarker = new Marker(mapView);
-        facilityMarker.setPosition(geoPoint);
-        facilityMarker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        facilityMarker.setTitle(name);
-        mapView.getOverlays().add(facilityMarker);
+    private Marker createMapMarker(String name, GeoPoint geoPoint){
+        org.osmdroid.views.overlay.Marker marker = new Marker(mapView);
+        marker.setPosition(geoPoint);
+        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+        marker.setTitle(name);
+        mapView.getOverlays().add(marker);
+        mapView.invalidate();
+        return marker;
+    }
+
+    private void createEntrantLocationMarkers(){
+        List<EntrantLocationData> entrantLocationDataList = mapOptionsViewModel.getEntrantLocationDataList().getValue();
+
+        assert entrantLocationDataList != null;
+        //for every location data object in the list, get the entrant name and create a location maker
+        for (EntrantLocationData entrantLocationData : entrantLocationDataList){
+            //get the entrant name for each location
+            String entrantID = entrantLocationData.getEntrantID();
+            double entrantLatitude = entrantLocationData.getEntrantLatitude();
+            double entrantLongitude = entrantLocationData.getEntrantLongitude();
+            GeoPoint entrantGeoPoint = new GeoPoint(entrantLatitude, entrantLongitude);
+
+            //for every name, create a marker
+            getEntrantUserName(entrantID, entrantNameFetched -> {
+                if (entrantNameFetched != null){
+                    createMapMarker(entrantNameFetched, entrantGeoPoint);
+                } else {
+                    Log.i("Create Entrant GeoMarkers", "createEntrantLocationMarkers: no entrant marker created");
+                }
+            });
+
+        }
+    }
+
+    private interface EntrantNameCallBack{
+        void onEntrantNameFetched(String entrantName);
+    }
+
+    //get the entrant name from database
+    private void getEntrantUserName(String entrantID, EntrantNameCallBack entrantNameCallBack){
+        UsersDB entrantDB = new UsersDB();
+
+        entrantDB.getUser(entrantID, new OnSuccessListener<User>() {
+            @Override
+            public void onSuccess(User user) {
+                User entrantUser = user;
+                String entrantName = entrantUser.getUserName();
+                Log.i("Fetch Entrant Name", "onSuccess: entrant name fetched: " + entrantName);
+                entrantNameCallBack.onEntrantNameFetched(entrantName);
+
+            }
+        }, e -> {
+                    Log.e("Fetch Entrant Name", "getEntrantUserName: error fetching entrant name", e);
+                    entrantNameCallBack.onEntrantNameFetched(null);
+                });
     }
 
     public void onResume(){
@@ -219,10 +287,10 @@ public class OrganizerViewMapFragment extends Fragment {
     }
 
     private interface EntrantLocationDataListCallback{
-        void onEntrantLocationDataListFetched(EntrantLocationData entrantLocationData);
+        void onEntrantLocationDataListFetched(List<EntrantLocationData> entrantLocationDataList);
     }
 
-    //get organizer facility address
+    //get organizer facility address from database
     private void getFacilityAddress(AddressCallback addressCallback){
         userDB.getUser(androidId, new OnSuccessListener<User>() {
             @Override
@@ -255,8 +323,38 @@ public class OrganizerViewMapFragment extends Fragment {
         });
     }
 
+   private void checkAddressFacilityChangedViewModel(IMapController mapController, GeoPoint defaultGeoPoint){
+       //have view model listen for any changes in the facility address and update map marker
+       mapOptionsViewModel.getFacilityAddress().observe(getViewLifecycleOwner(), new Observer<String>() {
+           @Override
+           public void onChanged(String s) {
+               Log.i("Map View Options", "Facility Address: " + mapOptionsViewModel.getFacilityAddress().getValue());
+               addressFacility = s;
+
+               if (facilityMarker != null){
+                   mapView.getOverlays().remove(facilityMarker);
+                   createStartGeoPosition(mapController, addressFacility, defaultGeoPoint);
+                   mapView.invalidate();
+               }
+           }
+       });
+   }
+
     //get entrant location data from database
     private void getEntrantLocationDataList(EntrantLocationDataListCallback entrantLocationDataListCallback){
 
+        eventsDB.loadEvent(eventID, loadedEvent -> {
+            if (loadedEvent != null){
+                event = loadedEvent;
+                List<EntrantLocationData> entrantLocationDataList = event.getEntrantLocationDataList();
+                //mapOptionsViewModel.setEntrantLocationDataList(entrantLocationDataList);
+                Log.i("Fetch Entrant Location Data List", "onSuccess: Entrant location data list fetched " + entrantLocationDataList);
+
+                entrantLocationDataListCallback.onEntrantLocationDataListFetched(entrantLocationDataList);
+            } else {
+                Log.e("Fetch Entrant Location Data List", "getEntrantLocationDataList: error getting entrant location data list");
+                entrantLocationDataListCallback.onEntrantLocationDataListFetched(null);
+            }
+        });
     }
 }
