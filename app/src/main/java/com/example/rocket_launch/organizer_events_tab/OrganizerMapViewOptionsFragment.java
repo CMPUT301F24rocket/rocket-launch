@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -26,6 +27,8 @@ import com.example.rocket_launch.R;
 
 public class OrganizerMapViewOptionsFragment extends Fragment {
     private MapOptionsViewModel mapOptionsViewModel;
+    private EditText radiusEditText;
+    private Button enterRadiusButton;
 
     public OrganizerMapViewOptionsFragment() {
         // Required empty public constructor
@@ -68,6 +71,15 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
             }
         });
 
+        //Get input for radius
+        radiusEditText = view.findViewById(R.id.edit_radius);
+        enterRadiusButton = view.findViewById(R.id.map_options_enter_radius_button);
+
+        enterRadiusButton.setOnClickListener(v -> {
+            defineRadius();
+            radiusEditText.clearFocus();
+        });
+
 
         //back button pressed
         ImageButton backButton = view.findViewById(R.id.map_options_back_button);
@@ -106,6 +118,28 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         entrantsOutOfRangeListControls(entrantOutOfRangeHeader, entrantOutOfRangeList, entrantOutOfRangeDownArrow);
 
         return view;
+    }
+
+    private void defineRadius(){
+        enterRadiusButton.setOnClickListener(v -> {
+            //check if radiusEditText is not null
+            String radiusText = radiusEditText.getText().toString().trim();
+
+
+            if (radiusText.isEmpty()){
+                //set default value to 0 and if radius is 0, don't do anything
+                mapOptionsViewModel.setRadius(0);
+            } else {
+                try {
+                    int radiusInt = Integer.parseInt(radiusText); // verifies input is int
+                    mapOptionsViewModel.setRadius(radiusInt);
+                    Log.i("Define Radius", "Radius: " + mapOptionsViewModel.getRadius().getValue());
+
+                } catch (NumberFormatException e){
+                    radiusEditText.setError("Enter a valid Integer");
+                }
+            }
+        });
     }
 
     private void closeFragment() {

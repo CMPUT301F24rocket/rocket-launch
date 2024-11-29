@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -35,6 +36,7 @@ import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
+import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 
 import java.io.IOException;
@@ -330,7 +332,10 @@ public class OrganizerViewMapFragment extends Fragment {
         refreshOrganizerViewMapFragment.setArguments(bundle);
 
         FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
+        getParentFragmentManager().popBackStackImmediate();
+
         fragmentTransaction.replace(R.id.fragment_frame, refreshOrganizerViewMapFragment);
+        fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
     }
 
@@ -409,5 +414,10 @@ public class OrganizerViewMapFragment extends Fragment {
                 entrantLocationDataListCallback.onEntrantLocationDataListFetched(null);
             }
         });
+    }
+
+    //draw a circle polygon on the map
+    private void createRadiusOutline(Integer radius){
+
     }
 }
