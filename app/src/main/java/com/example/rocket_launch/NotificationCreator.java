@@ -1,33 +1,18 @@
 package com.example.rocket_launch;
 
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.os.Bundle;
-import android.view.Menu;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.appcompat.widget.SwitchCompat;
-import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
 
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+public class NotificationCreator extends Fragment {
 
-public class NotificationCreator extends DialogFragment {
-    @NonNull
-    public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-        View view = getLayoutInflater().inflate(R.layout.select_role_fragment, null);
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.notification_create, container, false);
 
-
-
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
-                .setView(view)
-                .setTitle("Select Role")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Ok", (dialog, which) -> {
-
-                    }
-                })
-                .create();
+        return view;
+    }
 }
