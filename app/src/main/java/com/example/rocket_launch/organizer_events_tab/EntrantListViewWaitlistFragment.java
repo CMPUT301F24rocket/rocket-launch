@@ -53,7 +53,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.organizer_view_waitlist_layout, container, false);
+        View view = inflater.inflate(R.layout.organizer_view_list_waitlist, container, false);
 
         assert getArguments() != null;
         eventId = getArguments().getString("eventId");
@@ -178,20 +178,6 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                         availableSpots));
             }
         }); // reload event as well as to show proper values
-    }
-
-    /**
-     * displays event details fragment. For use when event is clicked
-     * @param userDetailsFragment
-     *  fragment to go display
-     */
-    private void openClickedEvent(UserDetailsFragment userDetailsFragment){
-        requireActivity().getSupportFragmentManager()
-                .beginTransaction()
-                .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
-                .replace(R.id.fragment_frame, userDetailsFragment)
-                .addToBackStack(null)
-                .commit();
     }
 
     /**
