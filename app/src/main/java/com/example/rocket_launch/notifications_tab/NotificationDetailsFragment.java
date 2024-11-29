@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -24,7 +25,7 @@ public class NotificationDetailsFragment extends Fragment {
         String message = args!= null ? args.getString("message") : "No Message";
         boolean isInvitation = args!= null && args.getBoolean("isInvitation", false);
 
-        
+
 
 
 
@@ -34,7 +35,7 @@ public class NotificationDetailsFragment extends Fragment {
         LinearLayout confirmationButtons = view.findViewById(R.id.confirmation_buttons);
         Button acceptButton = view.findViewById(R.id.button_accept);
         Button declineButton = view.findViewById(R.id.button_decline);
-        Button backButton = view.findViewById(R.id.back_button);
+        ImageView backButton = view.findViewById(R.id.back_button);
 
 
         // populate UI elements
