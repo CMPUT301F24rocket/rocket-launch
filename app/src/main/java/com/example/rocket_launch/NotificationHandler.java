@@ -3,43 +3,49 @@ package com.example.rocket_launch;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.j256.ormlite.stmt.query.Not;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.ArrayList;
+
 import java.util.List;
 import java.util.Map;
 
+/**
+ * intermediate class between receiving and showing a notification
+ */
 public class NotificationHandler {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
-    DocumentReference userDocRef;
+    CollectionReference notificationCollectionRef;
     Context context;
     List<Map<String, Object>> receivedNotifications;
+    UsersDB usersDB;
+    String userId;
 
+    /**
+     * initialize local notification handler
+     * @param context
+     *  the application, particularly mainActivity
+     * @param userId
+     *  androidId of device
+     */
     public NotificationHandler(Context context, String userId) {
         this.context = context;
-        UsersDB usersDB = new UsersDB();
-        userDocRef = usersDB.getUsersRef().document(userId);
-        receivedNotifications = new ArrayList<>();
+        this.userId = userId;
+        usersDB = new UsersDB();
+        notificationCollectionRef = usersDB.getUsersRef().
+                document(userId).collection("newNotifications");
+
+        // start listening for new notifications
         startListener();
     }
 
+    /**
+     * start notification listener to respond to new notifications
+     */
     private void startListener() {
-        NotificationHelper.createNotificationChannel(context);
-        userDocRef.addSnapshotListener((snapshot, e) -> {
-            if (e != null) {
-                Log.w("FirestoreListener", "Listen failed.", e);
-                return;
-            }
-
-            if (snapshot != null && snapshot.exists()) {
-
-                List<Map<String, Object>> notifications = (List<Map<String, Object>>) snapshot.get("notifications");
-
-                if (notifications != null) {
-                    handleNotifications(notifications);
-                }
+        notificationCollectionRef.addSnapshotListener((querySnapshot, e) -> {
+            if (querySnapshot != null) {
+                handleNotifications(querySnapshot);
             }
             else {
                 Log.d("FirestoreListener", "No data found.");
@@ -47,11 +53,26 @@ public class NotificationHandler {
         });
     }
 
-    private void handleNotifications(List<Map<String, Object>> notifications) {
-        for (Map<String, Object> notification : notifications) {
-            if (!receivedNotifications.contains(notification)) {
-                NotificationHelper.showNotification(context, (String) notification.get("title"), (String) notification.get("message"), 2);
+    /**
+     * handles and sends out all new notifications contained in querySnapshot
+     * @param querySnapshot
+     *  query of all new notifications in collection
+     */
+    private void handleNotifications(QuerySnapshot querySnapshot) {
+        for (DocumentSnapshot documentSnapshot : querySnapshot) {
+            Notification notification = documentSnapshot.toObject(Notification.class);
+            if (notification != null) {
+                // send notification
+                NotificationHelper.createNotificationChannel(context);
+                NotificationHelper.showNotification(context,
+                        notification.getTitle(),
+                        notification.getMessage(), 2);
+
+                // add to user's notifications
+                usersDB.addNotification(userId, notification);
             }
+            // remove from newNotifications collection (whether null or no)
+            documentSnapshot.getReference().delete();
         }
     }
 }

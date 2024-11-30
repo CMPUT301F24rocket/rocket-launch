@@ -1,6 +1,7 @@
 package com.example.rocket_launch.organizer_events_tab;
 
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,14 +14,13 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.rocket_launch.EditProfileFragment;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.NotificationCreator;
+import com.example.rocket_launch.NotificationHelper;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
-import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
 import com.google.android.gms.tasks.OnSuccessListener;
 
@@ -40,6 +40,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     private Event.UserArrayAdapter adapter;
     private ArrayList<User> users;
     private String eventId;
+    private String userId;
     private int availableSpots;
     private int sampleAmount;
     private int replaceAmount;
@@ -59,6 +60,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
 
         assert getArguments() != null;
         eventId = getArguments().getString("eventId");
+        userId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
@@ -93,7 +95,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 String inviteTitle = String.format(Locale.CANADA, "You are Invited to Join %s", event.getName());
                 inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), inviteTitle, eventId);
                 for (String userId : sampledUsers) {
-                    usersDB.addNotification(userId, inviteNotification);
+                    NotificationHelper.sendPrefabNotification(userId, inviteNotification);
                 }
 
                 // send notifications to all in waitlist saying they were not chosen
@@ -101,7 +103,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 String message = "Keep an eye out for any redraws";
                 Notification declineNotification = new Notification(java.util.UUID.randomUUID().toString(), title, message);
                 for (String userId : event.getWaitingList()) {
-                    usersDB.addNotification(userId, declineNotification);
+                    NotificationHelper.sendPrefabNotification(userId, declineNotification);
                 }
             });
         });

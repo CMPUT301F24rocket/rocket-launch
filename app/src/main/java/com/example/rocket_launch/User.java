@@ -1,7 +1,6 @@
 package com.example.rocket_launch;
 
 
-import android.location.Location;
 import android.media.Image;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class User {
     private String userPhoneNumber;
     private String userFacility;
     private String userFacilityAddress;
-    private Location location;
     private Roles roles;
 
     // profile photo
