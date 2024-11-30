@@ -31,6 +31,16 @@ public class QRCodesDB {
         eventsDB = new EventsDB(); // load eventsDB so we can update event's qr code
     }
 
+    /**
+     * loads an event given a QR code
+     * Author: kaiden
+     * @param code
+     *  QR code in which to load
+     * @param success
+     *  callback for if event exists and firestore retreives it
+     * @param failure
+     *  callback for any failure
+     */
     public void loadEventId(String code, OnSuccessListener<String> success, OnFailureListener failure) {
         qRRef.document(code).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -59,6 +69,12 @@ public class QRCodesDB {
                 .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
     }
 
+    /**
+     * loads all qr codes and adds them to a List of Strings supplied in onSuccessListener
+     * Author: kaiden
+     * @param onSuccessListener
+     *  callback used to pass data from firestore load
+     */
     public void loadAll(OnSuccessListener<List<String>> onSuccessListener) {
         qRRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> codes = new ArrayList<>();
@@ -71,7 +87,15 @@ public class QRCodesDB {
         });
     }
 
-
+    /**
+     * adds a new QR code to QRCode database
+     * @param eventId
+     *  id of event to add
+     * @param onSuccess
+     *  callback for success, is passed new QR code's ID for storage in an event
+     * @param onFailure
+     *  callback if a failure occurs
+     */
     public void addCode(String eventId, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
         eventsDB.loadEvent(eventId, event -> {
             if (event != null) {
@@ -104,6 +128,13 @@ public class QRCodesDB {
         });
     }
 
+    /**
+     * removes a QR code from firestore database
+     * @param code
+     *  QR code in which to remove
+     * @param onSuccess
+     *  callback for a successful removal
+     */
     private void removeCodeFromDatabase(String code, OnSuccessListener<Void> onSuccess) {
         qRRef.document(code).delete() // delete qr code in QR database
                 .addOnSuccessListener(l -> {

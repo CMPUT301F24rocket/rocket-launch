@@ -277,4 +277,27 @@ public class Event {
             return convertView;
         }
     }
+
+    /**
+     * checks if user is in any event list
+     * @return
+     *  true if user in event, false otherwise
+     * Author: Kaiden
+     */
+    public boolean containsUser(String user) {
+        boolean valid = false;
+        if (waitingList.contains(user)) {
+            valid = true;
+        }
+        else if (invitedEntrants.contains(user)) {
+            valid = true;
+        }
+        else if (cancelledEntrants.contains(user)) {
+            valid = true;
+        }
+        else if (registeredEntrants.contains(user)) {
+            valid = true;
+        }
+        return valid;
+    }
 }
