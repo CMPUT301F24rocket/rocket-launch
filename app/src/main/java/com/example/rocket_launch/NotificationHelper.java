@@ -11,6 +11,10 @@ import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.firestore.CollectionReference;
 
+/**
+ * contains helpful functions for sending and creating notifications
+ * Author: Griffin
+ */
 public class NotificationHelper {
 
     private static final String CHANNEL_ID = "My_Notification_Channel";
@@ -19,6 +23,7 @@ public class NotificationHelper {
     /**
      * Creates a notification channel for devices running API 26+.
      * Call this during app initialization or before showing notifications.
+     * Author: griffin
      */
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -37,6 +42,7 @@ public class NotificationHelper {
 
     /**
      * Displays a notification using the NotificationCompat library.
+     * Author: Griffin
      *
      * @param context      The application context.
      * @param title        The notification title.
@@ -57,6 +63,7 @@ public class NotificationHelper {
 
     /**
      * Updates the user's notification list in the database.
+     * Author: Griffin
      *
      * @param androidId The user's unique device ID.
      * @param title     The notification title.
@@ -73,10 +80,14 @@ public class NotificationHelper {
     }
 
     /**
-     *
+     * sends a notification to the given user with title and message
+     * Authors: Griffin, Kaiden
      * @param androidId
+     *  id of user to send to
      * @param title
+     *  title of the notification
      * @param message
+     *  message for the notification
      */
     public static void sendNotification(String androidId, String title, String message) {
         // get user newNotification collection
@@ -94,6 +105,14 @@ public class NotificationHelper {
         notificationCollectionRef.add(notification);
     }
 
+    /**
+     * sends a pre-made notificatoin to users
+     * Authors: Griffin, Kaiden
+     * @param androidId
+     *  android ID of user to send to
+     * @param notification
+     *  notification to send to user
+     */
     public static void sendPrefabNotification(String androidId, Notification notification) {
         // get user newNotification collection
         CollectionReference notificationCollectionRef = usersDB.getUsersRef().

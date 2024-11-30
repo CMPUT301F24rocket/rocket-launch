@@ -31,6 +31,7 @@ public class NotificationCreator extends Fragment {
 
     /**
      * constructor used to pass a list of users
+     * Author: Kaiden
      * @param users
      *  list of users to send a notification to
      */
@@ -61,6 +62,7 @@ public class NotificationCreator extends Fragment {
 
     /**
      * verifies data and send a notification to all users in provided list
+     * Author: Kaiden
      */
     private void sendNotification() {
         String titleText = title.getText().toString();

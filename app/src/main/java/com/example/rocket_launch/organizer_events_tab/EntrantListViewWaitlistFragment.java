@@ -40,7 +40,6 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     private Event.UserArrayAdapter adapter;
     private ArrayList<User> users;
     private String eventId;
-    private String userId;
     private int availableSpots;
     private int sampleAmount;
     private int replaceAmount;
@@ -60,7 +59,6 @@ public class EntrantListViewWaitlistFragment extends Fragment {
 
         assert getArguments() != null;
         eventId = getArguments().getString("eventId");
-        userId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
