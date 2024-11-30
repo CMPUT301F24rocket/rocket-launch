@@ -33,10 +33,12 @@ public class Event {
     private Calendar endTime;
     private int participants;
     private Image photo;
+
+    // lists
     private List<String> waitingList;
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
-    private List<String> finalEntrants;
+    private List<String> registeredEntrants;
   
     private List<EntrantLocationData> entrantLocationDataList;
 
@@ -48,7 +50,7 @@ public class Event {
         // verify lists appear in database -> ensures no access to undefined attribute
         this.waitingList = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
-        this.finalEntrants = new ArrayList<>();
+        this.registeredEntrants = new ArrayList<>();
         this.invitedEntrants = new ArrayList<>();
 
         this.entrantLocationDataList = new ArrayList<>();
@@ -219,12 +221,12 @@ public class Event {
         this.cancelledEntrants = cancelledEntrants;
     }
 
-    public List<String> getFinalEntrants() {
-        return finalEntrants;
+    public List<String> getregisteredEntrants() {
+        return registeredEntrants;
     }
 
-    public void setFinalEntrants(List<String> finalEntrants) {
-        this.finalEntrants = finalEntrants;
+    public void setregisteredEntrants(List<String> registeredEntrants) {
+        this.registeredEntrants = registeredEntrants;
     }
 
     public List<String> getInvitedEntrants() {
