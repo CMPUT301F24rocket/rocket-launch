@@ -136,6 +136,10 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         return view;
     }
 
+    /**
+     * loads / reloads UI whenever we start the fragment or update the database
+     * Author: kaiden
+     */
     void updateUI() {
         if (!event.getWaitingList().isEmpty()) {
             notifyButton.setVisibility(View.VISIBLE);
@@ -191,7 +195,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     }
 
     /**
-     * function that fetches all events created by an organizer and loads them
+     * function that fetches all users in an event's waitlist
      */
     private void fetchUsers(){
         // get waitlist from event and on success, get users from the resulting list
@@ -208,8 +212,9 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 e -> Log.w("Firebase", "Error getting events", e));
     }
 
-        /**
+    /**
      * samples a certain amount of spots form the waitlist
+     * Author: kaiden
      * @param spots
      *  amount of people to sponsor
      * @param onSuccess
