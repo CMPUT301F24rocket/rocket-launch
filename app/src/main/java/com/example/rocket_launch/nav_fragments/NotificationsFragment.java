@@ -53,12 +53,10 @@ public class NotificationsFragment extends Fragment {
         // we are required to have (an) empty constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
-
         db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
@@ -76,7 +74,6 @@ public class NotificationsFragment extends Fragment {
                 intent.setData(uri);
             }
             startActivity(intent);
-
         });
 
         notificationsListView = view.findViewById(R.id.notifications_list_view);
@@ -86,16 +83,22 @@ public class NotificationsFragment extends Fragment {
         notificationsListView.setAdapter(notificationsAdapter);
 
         notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
-            Notification selectedNotification = user.getNotifications().get(position);
-
-            NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment();
+            // get position from the back because of reversed list
+            Notification selectedNotification = user.getNotifications().get(user.getNotifications().size() - 1 - position);
+            NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment(selectedNotification);
 
             Bundle args = new Bundle();
-            args.putString("from", selectedNotification.getTitle());
+
+            args.putString("androidID", user.getAndroidId());
+            args.putString("title", selectedNotification.getTitle());
             args.putString("message", selectedNotification.getMessage());
 
-            args.putBoolean("isInvitation", selectedNotification.getInvitation() != null && selectedNotification.getInvitation());
-
+            if (selectedNotification.getInvitation() != null && selectedNotification.getInvitation()) {
+                args.putBoolean("isInvitation", true);
+                args.putString("eventID", selectedNotification.getEventId());
+            } else {
+                args.putBoolean("isInvitation", false);
+            }
             detailsFragment.setArguments(args);
 
             // go to NotificationDetailsFragment
@@ -106,13 +109,9 @@ public class NotificationsFragment extends Fragment {
                     .addToBackStack(null)
                     .commit();
         });
-
         loadNotifications();
         updateNotificationPreferences();
-
-
         return view;
-
     }
 
     private void updateNotificationPreferences() {
@@ -143,8 +142,8 @@ public class NotificationsFragment extends Fragment {
             // Check and iterate over user notifications (neweset first)
             if (user.getNotifications() != null) {
                 for (int i = user.getNotifications().size() - 1; i >= 0; i--) {
-                    // Concatenate title and message for display
-                    notificationList.add(user.getNotifications().get(i).getTitle() + ": " + user.getNotifications().get(i).getMessage());
+                    // Concatenate title (message will display when clicked)
+                    notificationList.add(user.getNotifications().get(i).getTitle());
                 }
             }
 
