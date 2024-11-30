@@ -25,7 +25,6 @@ public class StartUpFragment extends Fragment {
     private User user;
     private Button finishStartup;
 
-    private UserHomepageFragment newFragment;
     private static final String TAG = "StartUpFragment";
 
     public StartUpFragment(String androidID, User user, UsersDB usersDB) {
@@ -57,14 +56,15 @@ public class StartUpFragment extends Fragment {
      */
     private void saveUserDetails() {
 
-        String name = nameEditTextStartup.getText().toString().trim();
-        String email = emailEditTextStartup.getText().toString().trim();
-        String phone = phoneEditTextStartup.getText().toString().trim();
+        String name = nameEditTextStartup.getText().toString();
+        String email = emailEditTextStartup.getText().toString();
+        String phone = phoneEditTextStartup.getText().toString();
 
-//        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-//            Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
-//            return;
-//        }
+        // Validate that user input isn't empty
+        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
+            Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         // Set username, email and phone number
         user.setUserName(name);
@@ -73,6 +73,7 @@ public class StartUpFragment extends Fragment {
         usersDBStartup.updateUser(androidID, user,
                 success -> {
                     Toast.makeText(getContext(), "New user created", Toast.LENGTH_SHORT).show();
+
                     UserHomepageFragment frag = new UserHomepageFragment(user.getUserName(), user.getProfilePhotoPath());
                     getActivity().getSupportFragmentManager()
                             .beginTransaction()

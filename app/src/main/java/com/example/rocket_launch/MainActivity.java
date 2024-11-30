@@ -87,8 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         usersDB = new UsersDB();
 
-        //String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        String androidID = "23lkjs";
+        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
         usersDB.getUser(androidID, new OnSuccessListener<User>() {
             @Override
