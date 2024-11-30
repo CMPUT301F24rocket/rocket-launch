@@ -42,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
     UserHomepageFragment homepage;
     StartUpFragment startpage;
 
+    NotificationHandler notificationHandler;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,6 +130,9 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
         }, e -> Log.w("Firebase", "Error getting user", e));
+
+        // start notification handler
+        notificationHandler = new NotificationHandler(MainActivity.this, androidID);
     }
 
     /**
@@ -191,4 +196,6 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.navigation_create_events).setVisible(false);
         }
     }
+
+
 }
