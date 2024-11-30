@@ -29,8 +29,6 @@ public class User {
     // notifications
     private Boolean notificationPreferences;
     private List<Notification> notifications;
-    // buffer for new notifications to go to
-    private List<Notification> newNotifications;
 
     // event data
     private List<String> eventsRegistered;
@@ -44,7 +42,6 @@ public class User {
         this.eventsWaitlisted = new ArrayList<>();
         this.eventsCreated = new ArrayList<>();
         this.notifications = new ArrayList<>();
-        this.newNotifications = new ArrayList<>();
 
         this.userName = "";
         this.userEmail = "";
@@ -193,13 +190,5 @@ public class User {
 
     public void setProfilePhotoPath(String profilePhotoPath) {
         this.profilePhotoPath = profilePhotoPath;
-    }
-
-    public List<Notification> getNewNotifications() {
-        return newNotifications;
-    }
-
-    public void setNewNotifications(List<Notification> newNotifications) {
-        this.newNotifications = newNotifications;
     }
 }

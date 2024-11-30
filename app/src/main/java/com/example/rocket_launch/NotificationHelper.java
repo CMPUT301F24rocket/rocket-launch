@@ -9,9 +9,12 @@ import android.os.Build;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
+import com.google.firebase.firestore.CollectionReference;
+
 public class NotificationHelper {
 
     private static final String CHANNEL_ID = "My_Notification_Channel";
+    private static final UsersDB usersDB = new UsersDB();
 
     /**
      * Creates a notification channel for devices running API 26+.
@@ -69,14 +72,35 @@ public class NotificationHelper {
         usersDB.addNotification(androidId, notification);
     }
 
+    /**
+     *
+     * @param androidId
+     * @param title
+     * @param message
+     */
     public static void sendNotification(String androidId, String title, String message) {
-        UsersDB usersDB = new UsersDB();
+        // get user newNotification collection
+        CollectionReference notificationCollectionRef = usersDB.getUsersRef().
+                document(androidId).collection("newNotifications");
+
+        // create new notification
         Notification notification = new Notification(
                 java.util.UUID.randomUUID().toString(),
                 title,
                 message
         );
-        usersDB.addNewNotification(androidId, notification);
+
+        // send notification to recipient
+        notificationCollectionRef.add(notification);
+    }
+
+    public static void sendPrefabNotification(String androidId, Notification notification) {
+        // get user newNotification collection
+        CollectionReference notificationCollectionRef = usersDB.getUsersRef().
+                document(androidId).collection("newNotifications");
+
+        // send notification to recipient
+        notificationCollectionRef.add(notification);
     }
 
 }

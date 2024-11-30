@@ -84,10 +84,9 @@ public class NotificationCreator extends Fragment {
                     java.util.UUID.randomUUID().toString(), titleText, messageText);
 
             // send to all users in list
-            UsersDB usersDB = new UsersDB();
             // TODO - maybe check whether they want notifications or not?
             for (User user : users) {
-                usersDB.addNotification(user.getAndroidId(), notification);
+                NotificationHelper.sendPrefabNotification(user.getAndroidId(), notification);
             }
             Toast.makeText(requireContext(), String.format(Locale.CANADA, "Sent notification to %d users", users.size()), Toast.LENGTH_SHORT).show();
             closeFragment();

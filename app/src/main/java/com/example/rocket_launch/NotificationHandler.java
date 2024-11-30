@@ -3,10 +3,11 @@ package com.example.rocket_launch;
 import android.content.Context;
 import android.util.Log;
 
-import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.QuerySnapshot;
 
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -14,7 +15,7 @@ import java.util.Map;
  * intermediate class between receiving and showing a notification
  */
 public class NotificationHandler {
-    DocumentReference userDocRef;
+    CollectionReference notificationCollectionRef;
     Context context;
     List<Map<String, Object>> receivedNotifications;
     UsersDB usersDB;
@@ -31,8 +32,8 @@ public class NotificationHandler {
         this.context = context;
         this.userId = userId;
         usersDB = new UsersDB();
-        userDocRef = usersDB.getUsersRef().document(userId);
-        receivedNotifications = new ArrayList<>();
+        notificationCollectionRef = usersDB.getUsersRef().
+                document(userId).collection("newNotifications");
 
         // start listening for new notifications
         startListener();
@@ -42,12 +43,9 @@ public class NotificationHandler {
      * start notification listener to respond to new notifications
      */
     private void startListener() {
-        userDocRef.addSnapshotListener((documentSnapshot, e) -> {
-            if (documentSnapshot != null && documentSnapshot.exists()) {
-                User user = documentSnapshot.toObject(User.class);
-                if (user != null && user.getNewNotifications() != null) {
-                    handleNotifications(user.getNewNotifications());
-                }
+        notificationCollectionRef.addSnapshotListener((querySnapshot, e) -> {
+            if (querySnapshot != null) {
+                handleNotifications(querySnapshot);
             }
             else {
                 Log.d("FirestoreListener", "No data found.");
@@ -55,16 +53,26 @@ public class NotificationHandler {
         });
     }
 
-    private void handleNotifications(List<Notification> notifications) {
-        for (Notification notification : notifications) {
-            // send notification
-            NotificationHelper.createNotificationChannel(context);
-            NotificationHelper.showNotification(context,
-                    notification.getTitle(),
-                    notification.getMessage(), 2);
-            // update databases
-            usersDB.addNotification(userId, notification);
-            usersDB.removeNewNotification(userId, notification);
+    /**
+     * handles and sends out all new notifications contained in querySnapshot
+     * @param querySnapshot
+     *  query of all new notifications in collection
+     */
+    private void handleNotifications(QuerySnapshot querySnapshot) {
+        for (DocumentSnapshot documentSnapshot : querySnapshot) {
+            Notification notification = documentSnapshot.toObject(Notification.class);
+            if (notification != null) {
+                // send notification
+                NotificationHelper.createNotificationChannel(context);
+                NotificationHelper.showNotification(context,
+                        notification.getTitle(),
+                        notification.getMessage(), 2);
+
+                // add to user's notifications
+                usersDB.addNotification(userId, notification);
+            }
+            // remove from newNotifications collection (whether null or no)
+            documentSnapshot.getReference().delete();
         }
     }
 }
