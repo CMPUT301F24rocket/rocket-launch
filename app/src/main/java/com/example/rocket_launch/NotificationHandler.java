@@ -7,8 +7,6 @@ import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
-import java.util.List;
-import java.util.Map;
 
 /**
  * intermediate class between receiving and showing a notification
@@ -17,7 +15,6 @@ import java.util.Map;
 public class NotificationHandler {
     CollectionReference notificationCollectionRef;
     Context context;
-    List<Map<String, Object>> receivedNotifications;
     UsersDB usersDB;
     String userId;
 
