@@ -21,7 +21,6 @@ public class User {
     private String userPhoneNumber;
     private String userFacility;
     private String userFacilityAddress;
-    private Location location;
     private Roles roles;
 
     // profile photo
