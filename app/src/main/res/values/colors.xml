@@ -21,5 +21,7 @@
     <!--For Map Markers-->
     <color name="entrant_marker">#007842</color>
     <color name="facility_marker">#C4110E</color>
+    <color name="in_range_marker">#FF7F11</color>
+    <color name="out_of_range_marker">#072AC8</color>
 
 </resources>
