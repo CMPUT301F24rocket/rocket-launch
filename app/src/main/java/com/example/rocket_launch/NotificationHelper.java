@@ -13,6 +13,7 @@ import com.google.firebase.firestore.CollectionReference;
 
 /**
  * contains helpful functions for sending and creating notifications
+ * Author: Griffin
  */
 public class NotificationHelper {
 

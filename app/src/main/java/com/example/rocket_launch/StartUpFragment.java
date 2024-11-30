@@ -1,6 +1,5 @@
 package com.example.rocket_launch;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,10 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.android.gms.tasks.OnSuccessListener;
-
-import java.util.Objects;
-
+/**
+ * Fragment shown on first log in to get user information
+ * Author: Nathan
+ */
 public class StartUpFragment extends Fragment {
 
     private EditText nameEditTextStartup, emailEditTextStartup, phoneEditTextStartup;
