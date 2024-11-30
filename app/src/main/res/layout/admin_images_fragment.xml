@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- RecyclerView for displaying a list of user profile images -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/images_recycler_view"
         android:layout_width="match_parent"
