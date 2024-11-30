@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 
+import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.UsersDB;
 
@@ -66,18 +67,25 @@ public class NotificationDetailsFragment extends Fragment {
 
 
     private void AcceptInvitation(String eventID, String androidID) {
-        //remove from waitlist and add to registered event
+        //remove from invite and add to registered event
         UsersDB usersDB = new UsersDB();
-        usersDB.removeWaitlistedEvent(androidID, eventID);
+        EventsDB eventsDB = new EventsDB();
+        // add to a user's registered events
         usersDB.addRegisteredEvent(androidID, eventID);
+
+        // remove from event invite list and add to final
+        eventsDB.removeUserFromInvitedList(eventID, androidID);
+        eventsDB.addUserToRegisteredList(eventID, androidID);
     }
 
 
     private void DeclineInvitation(String eventID, String androidID){
-        //remove from waitlist and add to cancelled list
-        UsersDB usersDB = new UsersDB();
-        usersDB.removeWaitlistedEvent(androidID, eventID);
-        usersDB.addCancelledEvent(androidID, eventID);
+        EventsDB eventsDB = new EventsDB();
+        // user not effected
+
+        // remove from event invite list and add to cancelled
+        eventsDB.removeUserFromInvitedList(eventID, androidID);
+        eventsDB.addUserToCancelledList(eventID, androidID);
     }
 }
 

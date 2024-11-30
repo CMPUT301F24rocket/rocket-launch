@@ -136,13 +136,17 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         return view;
     }
 
+    /**
+     * loads / reloads UI whenever we start the fragment or update the database
+     * Author: kaiden
+     */
     void updateUI() {
         if (!event.getWaitingList().isEmpty()) {
             notifyButton.setVisibility(View.VISIBLE);
         }
         // amount of space available total
         availableSpots = event.getCapacity() -
-                (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
+                (event.getInvitedEntrants().size() + event.getregisteredEntrants().size());
         // set text for amount of spots available in total
         spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots", availableSpots));
 
@@ -183,7 +187,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
             event = loadedEvent;
             if (event != null) {
                 availableSpots = event.getCapacity() -
-                        (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
+                        (event.getInvitedEntrants().size() + event.getregisteredEntrants().size());
                 spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots in Event",
                         availableSpots));
             }
@@ -191,7 +195,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     }
 
     /**
-     * function that fetches all events created by an organizer and loads them
+     * function that fetches all users in an event's waitlist
      */
     private void fetchUsers(){
         // get waitlist from event and on success, get users from the resulting list
@@ -208,8 +212,9 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 e -> Log.w("Firebase", "Error getting events", e));
     }
 
-        /**
+    /**
      * samples a certain amount of spots form the waitlist
+     * Author: kaiden
      * @param spots
      *  amount of people to sponsor
      * @param onSuccess
@@ -218,6 +223,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     void sampleWaitlist(int spots, OnSuccessListener<List<String>> onSuccess) {
         if (spots > 0) {
             List<String> sampledUsers = event.sampleWaitlist(spots);
+            // update event
             eventsDB.updateEvent(eventId, event, l -> {
                 Toast.makeText(requireContext(), String.format(Locale.CANADA, "invited %d entrant(s)", spots), Toast.LENGTH_SHORT).show();
 
@@ -226,6 +232,10 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 updateUI();
 
             }, l -> Log.d("Firebase", "sample fail :("));
+            // update users
+            for (String androidId : sampledUsers) {
+                usersDB.removeWaitlistedEvent(androidId, eventId);
+            }
             adapter.notifyDataSetChanged();
         }
         else {
