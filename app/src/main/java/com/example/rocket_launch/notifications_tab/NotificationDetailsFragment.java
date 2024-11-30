@@ -12,10 +12,18 @@ import android.widget.TextView;
 import androidx.fragment.app.Fragment;
 
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.UsersDB;
 
 public class NotificationDetailsFragment extends Fragment {
+    public Notification notification;
+
+    public NotificationDetailsFragment() {}
+    public NotificationDetailsFragment(Notification notification) {
+        this.notification = notification;
+    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstances) {
@@ -23,14 +31,15 @@ public class NotificationDetailsFragment extends Fragment {
 
         // get arguments
         Bundle args = getArguments();
-        String from = args != null ? args.getString("from") : "Unknown Sender";
+        // String from = args != null ? args.getString("from") : "Unknown Sender"; // no sender data rn
+        String title = args != null ? args.getString("title") : "No Title";
         String message = args != null ? args.getString("message") : "No Message";
         boolean isInvitation = args != null && args.getBoolean("isInvitation", false);
         String eventID = args != null ? args.getString("eventID") : null;
         String androidID = args != null ? args.getString("androidID") : null;
 
         // get UI elements
-        TextView fromTextView = view.findViewById(R.id.from_event_name);
+        TextView titleTextView = view.findViewById(R.id.title_content);
         TextView messageTextView = view.findViewById(R.id.message_content);
         LinearLayout confirmationButtons = view.findViewById(R.id.confirmation_buttons);
         Button acceptButton = view.findViewById(R.id.button_accept);
@@ -38,7 +47,7 @@ public class NotificationDetailsFragment extends Fragment {
         ImageView backButton = view.findViewById(R.id.back_button);
 
         // populate UI elements
-        fromTextView.setText(from);
+        titleTextView.setText(title);
         messageTextView.setText(message);
 
         // back button to notification fragment
@@ -76,16 +85,22 @@ public class NotificationDetailsFragment extends Fragment {
         // remove from event invite list and add to final
         eventsDB.removeUserFromInvitedList(eventID, androidID);
         eventsDB.addUserToRegisteredList(eventID, androidID);
+
+        // remove notification from user
+        usersDB.removeNotification(androidID, notification);
     }
 
 
     private void DeclineInvitation(String eventID, String androidID){
         EventsDB eventsDB = new EventsDB();
-        // user not effected
+        UsersDB usersDB = new UsersDB();
 
         // remove from event invite list and add to cancelled
         eventsDB.removeUserFromInvitedList(eventID, androidID);
         eventsDB.addUserToCancelledList(eventID, androidID);
+
+        // remove notification from user
+        usersDB.removeNotification(androidID, notification);
     }
 }
 

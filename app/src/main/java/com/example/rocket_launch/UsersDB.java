@@ -119,7 +119,7 @@ public class UsersDB {
      * @param notification
      *  notification to remove
      */
-    public void removeNotification(String androidID, String notification) {
+    public void removeNotification(String androidID, Notification notification) {
         usersRef.document(androidID).update("notifications", FieldValue.arrayRemove(notification))
                 .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added"))
                 .addOnFailureListener(e -> Log.w("Firebase", "notfication added failed", e));

@@ -1,22 +1,8 @@
 package com.example.rocket_launch;
 
-///**
-// * class for notification data
-// */
-//public class Notification {
-//    private String sender; // probably string for name of event created
-//    private String message;
-//    private String messageType; // guessing at the type here
-//
-//    /**
-//     * empty constructor
-//     */
-//    public Notification() {
-//
-//    }
-//}
-
-
+/**
+ * holds data for each notification
+ */
 public class Notification {
     private String id;
     private String title;
@@ -36,6 +22,15 @@ public class Notification {
         this.invitation = false;
     }
 
+    /**
+     * creates a notification structured for an invite
+     * @param id
+     *  id for database
+     * @param title
+     *  title of notification
+     * @param eventId
+     *  id of of event from which the invite came from
+     */
     public void createInvite(String id, String title, String eventId) {
         this.id = id;
         this.title = title;
