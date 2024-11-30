@@ -16,6 +16,9 @@ import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.UsersDB;
 
+/**
+ * Fragment to show details of an individual notification
+ */
 public class NotificationDetailsFragment extends Fragment {
     public Notification notification;
 
@@ -24,7 +27,20 @@ public class NotificationDetailsFragment extends Fragment {
         this.notification = notification;
     }
 
-
+    /**
+     * creates layout
+     * Authors: Griffin
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstances If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     *  view: fragment view
+     */
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstances) {
         View view = inflater.inflate(R.layout.fragment_notification_details, container, false);
@@ -74,7 +90,14 @@ public class NotificationDetailsFragment extends Fragment {
         return view;
     }
 
-
+    /**
+     * accept invitation to event
+     * Authors: Griffin, Kaiden
+     * @param eventID
+     *  id of event to accept
+     * @param androidID
+     *  id of user that accepted event
+     */
     private void AcceptInvitation(String eventID, String androidID) {
         //remove from invite and add to registered event
         UsersDB usersDB = new UsersDB();
@@ -91,6 +114,14 @@ public class NotificationDetailsFragment extends Fragment {
     }
 
 
+    /**
+     * function to decline an invitation
+     * Authors: Griffin, Kaiden
+     * @param eventID
+     *  id of event that was declined
+     * @param androidID
+     *  id of user that declined invitation
+     */
     private void DeclineInvitation(String eventID, String androidID){
         EventsDB eventsDB = new EventsDB();
         UsersDB usersDB = new UsersDB();
