@@ -89,6 +89,7 @@ public class QRCodesDB {
 
     /**
      * adds a new QR code to QRCode database
+     * Author: kaiden
      * @param eventId
      *  id of event to add
      * @param onSuccess
@@ -130,6 +131,7 @@ public class QRCodesDB {
 
     /**
      * removes a QR code from firestore database
+     * Author: kaiden
      * @param code
      *  QR code in which to remove
      * @param onSuccess
@@ -146,6 +148,7 @@ public class QRCodesDB {
 
     /**
      * regenerates the QR code and updates the event, eventsDB and qr codes database
+     * Author: kaiden
      * @param code
      *  QR code string of which we wish to update
      * @param eventId
