@@ -60,16 +60,17 @@ public class QRCodesDB {
     }
 
     public void loadAll(OnSuccessListener<List<String>> onSuccessListener) {
-        // return a List<String> of all QR codes currently in the system
         qRRef.get().addOnSuccessListener(queryDocumentSnapshots -> {
             List<String> codes = new ArrayList<>();
             for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
                 codes.add(document.getId());
-                Log.d("loaded data", "Document ID: " + document.getId());
             }
             onSuccessListener.onSuccess(codes);
+        }).addOnFailureListener(e -> {
+            Log.e("loadAll", "Failed to load QR Codes", e);
         });
     }
+
 
     public void addCode(String eventId, OnSuccessListener<String> onSuccess, OnFailureListener onFailure) {
         eventsDB.loadEvent(eventId, event -> {

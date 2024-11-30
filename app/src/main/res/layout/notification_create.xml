@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Author: Kaiden -->
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- Header for Edit Profile -->
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/periwinkle"
+        android:padding="16dp"
+        android:text="Send Notification"
+        android:textAlignment="center"
+        android:textSize="25sp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!--  Header for title input  -->
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Title"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/header"/>
+
+    <!--  Title input box  -->
+    <EditText
+        android:id="@+id/editTitle"
+        style="@style/FragmentConstants"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Title Text"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <!--  Header for message input  -->
+    <TextView
+        android:id="@+id/message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="message"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@+id/editTitle"/>
+
+    <!--  Message input box  -->
+    <EditText
+        android:id="@+id/editMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/FragmentConstants"
+        android:hint="Notification Message"
+        app:layout_constraintTop_toBottomOf="@+id/message"/>
+
+    <!--  Buttons  -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <Button
+            android:id="@+id/cancelButton"
+            style="@style/ButtonStyleC"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="20dp"
+            android:layout_weight="1"
+            android:text="cancel" />
+
+        <Button
+            android:id="@+id/sendButton"
+            style="@style/ButtonStyleB"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginVertical="20dp"
+            android:layout_weight="1"
+            android:text="send" />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
