@@ -68,5 +68,16 @@ public class NotificationHelper {
         );
         usersDB.addNotification(androidId, notification);
     }
+
+    public static void sendNotification(String androidId, String title, String message) {
+        UsersDB usersDB = new UsersDB();
+        Notification notification = new Notification(
+                java.util.UUID.randomUUID().toString(),
+                title,
+                message
+        );
+        usersDB.addNewNotification(androidId, notification);
+    }
+
 }
 

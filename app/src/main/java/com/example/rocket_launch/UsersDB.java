@@ -121,9 +121,39 @@ public class UsersDB {
      */
     public void removeNotification(String androidID, Notification notification) {
         usersRef.document(androidID).update("notifications", FieldValue.arrayRemove(notification))
-                .addOnSuccessListener(unused -> Log.d("Firebase", "Notification added"))
-                .addOnFailureListener(e -> Log.w("Firebase", "notfication added failed", e));
+                .addOnSuccessListener(unused -> Log.d("Firebase", "Notification removed"))
+                .addOnFailureListener(e -> Log.w("Firebase", "notfication removal failed", e));
     }
+
+    /**
+     * adds a notification to new notification buffer
+     * Author: Kaiden
+     * @param androidId
+     *  id of user to send notification to
+     * @param notification
+     *  notification to add to user
+     */
+    public void addNewNotification(String androidId, Notification notification) {
+        usersRef.document(androidId)
+                .update("newNotifications", FieldValue.arrayUnion(notification))
+                .addOnSuccessListener(unused -> Log.d("Firebase", "New notification added successfully"))
+                .addOnFailureListener(e -> Log.w("Firebase", "Error adding new notification", e));
+    }
+
+    /**
+     * removes new notification from database
+     * Author: Kaiden
+     * @param androidID
+     *  id of user to remove from
+     * @param notification
+     *  notification to remove from user
+     */
+    public void removeNewNotification(String androidID, Notification notification) {
+        usersRef.document(androidID).update("newNotifications", FieldValue.arrayRemove(notification))
+                .addOnSuccessListener(unused -> Log.d("Firebase", "New notification removed"))
+                .addOnFailureListener(e -> Log.w("Firebase", "notfication removal failed", e));
+    }
+
 
     // waitlisted events
 

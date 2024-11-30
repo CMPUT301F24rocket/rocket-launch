@@ -4,41 +4,49 @@ import android.content.Context;
 import android.util.Log;
 
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.j256.ormlite.stmt.query.Not;
+
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * intermediate class between receiving and showing a notification
+ */
 public class NotificationHandler {
-    FirebaseFirestore db = FirebaseFirestore.getInstance();
     DocumentReference userDocRef;
     Context context;
     List<Map<String, Object>> receivedNotifications;
+    UsersDB usersDB;
+    String userId;
 
+    /**
+     * initialize local notification handler
+     * @param context
+     *  the application, particularly mainActivity
+     * @param userId
+     *  androidId of device
+     */
     public NotificationHandler(Context context, String userId) {
         this.context = context;
-        UsersDB usersDB = new UsersDB();
+        this.userId = userId;
+        usersDB = new UsersDB();
         userDocRef = usersDB.getUsersRef().document(userId);
         receivedNotifications = new ArrayList<>();
+
+        // start listening for new notifications
         startListener();
     }
 
+    /**
+     * start notification listener to respond to new notifications
+     */
     private void startListener() {
-        NotificationHelper.createNotificationChannel(context);
-        userDocRef.addSnapshotListener((snapshot, e) -> {
-            if (e != null) {
-                Log.w("FirestoreListener", "Listen failed.", e);
-                return;
-            }
-
-            if (snapshot != null && snapshot.exists()) {
-
-                List<Map<String, Object>> notifications = (List<Map<String, Object>>) snapshot.get("notifications");
-
-                if (notifications != null) {
-                    handleNotifications(notifications);
+        userDocRef.addSnapshotListener((documentSnapshot, e) -> {
+            if (documentSnapshot != null && documentSnapshot.exists()) {
+                User user = documentSnapshot.toObject(User.class);
+                if (user != null && user.getNewNotifications() != null) {
+                    handleNotifications(user.getNewNotifications());
                 }
             }
             else {
@@ -47,11 +55,16 @@ public class NotificationHandler {
         });
     }
 
-    private void handleNotifications(List<Map<String, Object>> notifications) {
-        for (Map<String, Object> notification : notifications) {
-            if (!receivedNotifications.contains(notification)) {
-                NotificationHelper.showNotification(context, (String) notification.get("title"), (String) notification.get("message"), 2);
-            }
+    private void handleNotifications(List<Notification> notifications) {
+        for (Notification notification : notifications) {
+            // send notification
+            NotificationHelper.createNotificationChannel(context);
+            NotificationHelper.showNotification(context,
+                    notification.getTitle(),
+                    notification.getMessage(), 2);
+            // update databases
+            usersDB.addNotification(userId, notification);
+            usersDB.removeNewNotification(userId, notification);
         }
     }
 }
