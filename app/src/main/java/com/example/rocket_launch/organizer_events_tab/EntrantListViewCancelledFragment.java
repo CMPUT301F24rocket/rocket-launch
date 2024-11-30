@@ -14,6 +14,7 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.NotificationCreator;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UserDetailsFragment;
@@ -51,7 +52,15 @@ public class EntrantListViewCancelledFragment extends Fragment {
         listView.setAdapter(adapter);
         notifyButton = view.findViewById(R.id.sendNotification);
         notifyButton.setOnClickListener(l -> {
-            // send notification
+            // open NotificationCreator
+            NotificationCreator notificationCreator = new NotificationCreator(users);
+
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_frame, notificationCreator)
+                    .addToBackStack(null)
+                    .commit();
         });
 
         listView.setOnItemClickListener((parent, itemView, position, id) -> {
@@ -70,7 +79,7 @@ public class EntrantListViewCancelledFragment extends Fragment {
 
 
     /**
-     * function that fetches all events created by an organizer and loads them
+     * function that fetches all users in an event's cancelled list
      */
     private void fetchUsers(){
         // get waitlist from event and on success, get users from the resulting list
@@ -79,6 +88,10 @@ public class EntrantListViewCancelledFragment extends Fragment {
                             EntrantListViewCancelledFragment.this.users.clear();
                             EntrantListViewCancelledFragment.this.users.addAll(users);
                             adapter.notifyDataSetChanged();
+
+                            if (!users.isEmpty()) {
+                                notifyButton.setVisibility(View.VISIBLE);
+                            }
                             }, e -> {
                             Log.w("Firebase", "Error getting users", e);
                             Toast.makeText(requireContext(), "Failed to load users", Toast.LENGTH_SHORT).show();

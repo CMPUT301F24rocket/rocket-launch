@@ -18,6 +18,7 @@
     <Button
         android:id="@+id/sendNotification"
         style="@style/ButtonStyleB"
+        android:visibility="gone"
         android:padding="15dp"
         android:layout_marginHorizontal="50dp"
         android:text="Send Notification to Waitlist"

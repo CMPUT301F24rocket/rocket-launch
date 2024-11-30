@@ -39,8 +39,8 @@ public class MainActivity extends AppCompatActivity {
     UserProfileFragment userProfile;
     NotificationsFragment notifications;
 
-    UserHomepageFragment homepage;
-    StartUpFragment startpage;
+
+    NotificationHandler notificationHandler;
 
 
     @Override
@@ -99,19 +99,12 @@ public class MainActivity extends AppCompatActivity {
                     setupNavBar(user.getRoles());
 
                     // Display the UserHomepageFragment
-                    UserHomepageFragment frag = new UserHomepageFragment(user.getUserName());
+                    UserHomepageFragment frag = new UserHomepageFragment(user.getUserName(), user.getProfilePhotoPath());
                     getSupportFragmentManager()
                             .beginTransaction()
                             .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
                             .commit();
                 } else {
-
-                    // Display the StartUpFragment
-                    StartUpFragment startfrag = new StartUpFragment();
-                    getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_frame, startfrag) // Ensure R.id.fragment_frame is the container
-                            .commit();
 
                     user = new User();
                     user.setAndroidId(androidID);
@@ -125,9 +118,20 @@ public class MainActivity extends AppCompatActivity {
                         }
                     });
                     frag.show(getSupportFragmentManager(), "Create New User");
+
+                    // Display the StartUpFragment
+                    StartUpFragment startfrag = new StartUpFragment(androidID, user, usersDB);
+                    getSupportFragmentManager()
+                            .beginTransaction()
+                            .replace(R.id.fragment_frame, startfrag) // Ensure R.id.fragment_frame is the container
+                            .commit();
+
                 }
             }
         }, e -> Log.w("Firebase", "Error getting user", e));
+
+        // start notification handler
+        notificationHandler = new NotificationHandler(MainActivity.this, androidID);
     }
 
     /**
@@ -191,4 +195,6 @@ public class MainActivity extends AppCompatActivity {
             menu.findItem(R.id.navigation_create_events).setVisible(false);
         }
     }
+
+
 }

@@ -8,6 +8,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdapter.ViewHolder> {
@@ -43,7 +45,12 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
     }
 
     public void updateData(List<User> newUsers) {
-        this.users = newUsers;
+        this.users = new ArrayList<>();
+        for (User user : newUsers) {
+            if (user.getProfilePhotoPath() != null) { // Only include users with valid photo paths
+                this.users.add(user);
+            }
+        }
         notifyDataSetChanged();
     }
 

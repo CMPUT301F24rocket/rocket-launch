@@ -168,7 +168,7 @@ public class ScannedEventDetailsFragment extends Fragment {
             } else{ //Don't need Location Data --> don't run permissions
 
                 //check if user in waitlist already
-                if (!event.getWaitingList().contains(androidId)) {
+                if (!event.containsUser(androidId)) {
                     // add to waitlist of event
                     eventsdb.addUserToWaitingList(eventId, androidId);
 
@@ -198,8 +198,10 @@ public class ScannedEventDetailsFragment extends Fragment {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 
-    //Referenced: https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient.html, Accessed 2024-11-26
-    //Author: Rachel
+    /**
+     * Referenced: https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient.html, Accessed 2024-11-26
+     * Author: Rachel
+     */
     private void getEntrantLocation() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
@@ -227,8 +229,10 @@ public class ScannedEventDetailsFragment extends Fragment {
         }
     }
 
-    //alert dialogue to go to android location settings if location permissions are off
-    //Author: Rachel
+    /**
+     * alert dialogue to go to android location settings if location permissions are off
+     * Author: Rachel
+     */
     private void openLocationSettingsDialogue(){
         new AlertDialog.Builder(requireContext())
                 .setTitle("Location Permission Required")
@@ -241,6 +245,4 @@ public class ScannedEventDetailsFragment extends Fragment {
                 .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
                 .show();
     }
-
-
 }

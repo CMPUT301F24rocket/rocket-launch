@@ -40,6 +40,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -71,7 +73,7 @@ public class EditProfileFragment extends Fragment {
         usersDB = new UsersDB();
         if (getArguments() != null) {
             androidID = getArguments().getString("androidID");
-            }
+        }
     }
 
     @Override
@@ -108,6 +110,7 @@ public class EditProfileFragment extends Fragment {
 
         return view;
     }
+
     private void setDefaultProfilePicture(String userName) {
         // Default background color and text settings
         int width = 200;  // Width of the Bitmap
@@ -195,16 +198,14 @@ public class EditProfileFragment extends Fragment {
 
     /**
      * Save the selected profile picture URL to Firestore
+     *
      * @param imageUrl The URL of the selected image
      */
     private void saveProfilePictureUrlToFirestore(String imageUrl) {
-        // Update the user's profile photo path
         user.setProfilePhotoPath(imageUrl);
-
-        // Save the updated user details in Firestore
-        usersDB.updateUser(androidID, user,
-                success -> Log.d(TAG, "Profile picture URL saved to Firestore."),
-                error -> Log.e(TAG, "Failed to save profile picture URL to Firestore.", error));
+        usersDB.updateUser(androidID, user, success -> {
+            Log.d("Firestore", "Profile picture URL updated in Firestore.");
+        }, error -> Log.e("Firestore", "Failed to update profile picture URL in Firestore.", error));
     }
 
 
@@ -228,12 +229,23 @@ public class EditProfileFragment extends Fragment {
                     if (data != null) {
                         imageUri = data.getData();
                         try {
-                            Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), imageUri);
-                            String savedPath = saveImageLocally(bitmap);
-                            saveImagePathToFirestore(savedPath);
-                            loadProfileImage(savedPath);
-                        } catch (IOException e) {
-                            Log.e(TAG, "Error saving image", e);
+                            // Handle the image URI properly
+                            String savedPath = handleImageUri(imageUri);
+
+                            if (savedPath != null) {
+                                // Save the path to Firebase
+                                uploadImageToFirebase(Uri.fromFile(new File(savedPath)));
+
+                                // Save the path locally in Firestore for reference
+                                saveImagePathToFirestore(savedPath);
+
+                                // Load the image into the UI
+                                loadProfileImage(savedPath);
+                            } else {
+                                Log.e(TAG, "Failed to handle image URI: Path is null");
+                            }
+                        } catch (Exception e) {
+                            Log.e(TAG, "Error handling image selection", e);
                         }
                     }
                 }
@@ -241,12 +253,24 @@ public class EditProfileFragment extends Fragment {
     );
 
     /**
+     * Handle the image URI and save it locally as needed
+     *
+     * @param uri The image URI returned from the gallery
+     * @return The local file path of the saved image
+     */
+    private String handleImageUri(Uri uri) throws IOException {
+        Bitmap bitmap = MediaStore.Images.Media.getBitmap(requireActivity().getContentResolver(), uri);
+
+        // Save the bitmap locally
+        return saveImageLocally(bitmap);
+    }
+
+    /**
      * Save the image locally and return the file path
-     * @param bitmap
-     *  bitmap of image to save
+     *
+     * @param bitmap bitmap of image to save
      * @return String of image path
-     * @throws IOException
-     *  if there was an error saving
+     * @throws IOException if there was an error saving
      */
     private String saveImageLocally(Bitmap bitmap) throws IOException {
         File storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES);
@@ -264,8 +288,8 @@ public class EditProfileFragment extends Fragment {
 
     /**
      * Save the image path to Firestore
-     * @param imagePath
-     *  path to image in database
+     *
+     * @param imagePath path to image in database
      */
     private void saveImagePathToFirestore(String imagePath) {
         user.setProfilePhotoPath(imagePath);
@@ -277,8 +301,8 @@ public class EditProfileFragment extends Fragment {
 
     /**
      * updates path to profile photo
-     * @param imagePath
-     *  path to profile photo to update
+     *
+     * @param imagePath path to profile photo to update
      */
     private void updateProfilePhotoPath(String imagePath) {
         user.setProfilePhotoPath(imagePath);
@@ -303,8 +327,8 @@ public class EditProfileFragment extends Fragment {
 
     /**
      * handles image selection
-     * @param uri
-     *  resource identifier for image
+     *
+     * @param uri resource identifier for image
      */
     private void handleImageSelection(Uri uri) {
         try {
@@ -319,8 +343,8 @@ public class EditProfileFragment extends Fragment {
 
     /**
      * Load the profile picture using Glide
-     * @param imagePath
-     *  path to an image
+     *
+     * @param imagePath path to an image
      */
     private void loadProfileImage(String imagePath) {
         if (imagePath != null && !imagePath.isEmpty()) {
@@ -377,7 +401,6 @@ public class EditProfileFragment extends Fragment {
         }
     }
 
-
     /**
      * Update user details in Firestore
      */
@@ -388,7 +411,10 @@ public class EditProfileFragment extends Fragment {
         user.setUserFacility(facilityEditText.getText().toString());
         user.setUserFacilityAddress(facilityAddressEditText.getText().toString());
         usersDB.updateUser(androidID, user,
-                success -> {Log.d(TAG, "user details updated"); closeFragment();},
+                success -> {
+                    Log.d(TAG, "user details updated");
+                    closeFragment();
+                },
                 error -> Log.e(TAG, "failed to update user details", error));
     }
 
@@ -416,5 +442,20 @@ public class EditProfileFragment extends Fragment {
             }
         });
         frag.show(getParentFragmentManager(), "Edit Roles");
+    }
+
+    private void uploadImageToFirebase(Uri imageUri) {
+        String fileName = "profile_images/" + System.currentTimeMillis() + ".jpg";
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference().child(fileName);
+
+        // Upload the file to Firebase Storage
+        storageRef.putFile(imageUri).addOnSuccessListener(taskSnapshot -> {
+            // Get the download URL after uploading
+            storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                Log.d("FirebaseUpload", "Image uploaded to Firebase: " + uri.toString());
+                saveProfilePictureUrlToFirestore(uri.toString()); // Save the URL in Firestore
+                loadProfileImage(uri.toString()); // Display the uploaded image
+            }).addOnFailureListener(e -> Log.e("FirebaseUpload", "Failed to get Firebase URL: " + e.getMessage()));
+        }).addOnFailureListener(e -> Log.e("FirebaseUpload", "Failed to upload image: " + e.getMessage()));
     }
 }

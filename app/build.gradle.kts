@@ -77,6 +77,7 @@ dependencies {
     implementation ("com.google.firebase:firebase-storage:20.2.0")
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     implementation(libs.firebase.database)
+    implementation(libs.recyclerview)
     // implementation(libs.ui.graphics.android)
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
     implementation ("com.squareup.picasso:picasso:2.71828")
@@ -87,6 +88,9 @@ dependencies {
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
 
+    // Glide for Image Loading
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
-
+    
 }
