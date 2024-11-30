@@ -17,9 +17,7 @@ import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.NotificationCreator;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
-import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragment;
 
 import java.util.ArrayList;
 
@@ -82,7 +80,7 @@ public class EntrantListViewFinalFragment  extends Fragment {
      */
     private void fetchUsers(){
         // get waitlist from event and on success, get users from the resulting list
-        eventsDB.getFinalUserIds(eventId, userIdList ->
+        eventsDB.getRegisteredUserIds(eventId, userIdList ->
                         usersDB.getAllUsersInList(userIdList, users -> {
                             EntrantListViewFinalFragment.this.users.clear();
                             EntrantListViewFinalFragment.this.users.addAll(users);

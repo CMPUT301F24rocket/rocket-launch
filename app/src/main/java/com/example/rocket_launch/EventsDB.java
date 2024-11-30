@@ -20,9 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.Random;
-import java.util.UUID;
-
 
 /**
  * class to help with firestore database
@@ -338,7 +335,7 @@ public class EventsDB {
      * @param onFailure
      *  what to do on failure
      */
-    public void getFinalUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+    public void getRegisteredUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         eventsRef.document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Event event = null;
@@ -346,7 +343,7 @@ public class EventsDB {
                         event = documentSnapshot.toObject(Event.class);
                     }
                     if (event != null) {
-                        List<String> users = event.getFinalEntrants();
+                        List<String> users = event.getregisteredEntrants();
                         if (users != null) {
                             onSuccess.onSuccess(users);
                         }
