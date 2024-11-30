@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class ScannedEventDetailsFragment extends Fragment {
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
     LinearLayout eventCapacityLayout;
+    ImageButton add_event_poster_button;
 
     //For Location Data
     private ActivityResultLauncher<String> locationPermissionLauncher;
@@ -113,6 +115,9 @@ public class ScannedEventDetailsFragment extends Fragment {
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
         eventCapacityLayout = view.findViewById(R.id.waitlist_capacity_layout);
+        add_event_poster_button = view.findViewById(R.id.add_event_poster_button);
+        add_event_poster_button.setVisibility(View.GONE);
+
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
