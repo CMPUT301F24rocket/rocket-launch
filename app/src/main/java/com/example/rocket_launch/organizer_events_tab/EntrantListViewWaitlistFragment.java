@@ -142,7 +142,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         }
         // amount of space available total
         availableSpots = event.getCapacity() -
-                (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
+                (event.getInvitedEntrants().size() + event.getregisteredEntrants().size());
         // set text for amount of spots available in total
         spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots", availableSpots));
 
@@ -183,7 +183,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
             event = loadedEvent;
             if (event != null) {
                 availableSpots = event.getCapacity() -
-                        (event.getInvitedEntrants().size() + event.getFinalEntrants().size());
+                        (event.getInvitedEntrants().size() + event.getregisteredEntrants().size());
                 spotsAvailable.setText(String.format(Locale.CANADA, "%d available spots in Event",
                         availableSpots));
             }
