@@ -11,6 +11,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 /**
  * activity that is displayed if the user is an admin
+ * Author: Pouyan
  */
 public class AdminModeActivity extends AppCompatActivity {
 
