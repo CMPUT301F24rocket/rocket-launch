@@ -17,6 +17,8 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.gms.tasks.OnSuccessListener;
 
+import java.util.Objects;
+
 public class StartUpFragment extends Fragment {
 
     private EditText nameEditTextStartup, emailEditTextStartup, phoneEditTextStartup;
@@ -61,26 +63,34 @@ public class StartUpFragment extends Fragment {
         String phone = phoneEditTextStartup.getText().toString();
 
         // Validate that user input isn't empty
-        if (name.isEmpty() || email.isEmpty() || phone.isEmpty()) {
-            Toast.makeText(requireContext(), "Please fill out all fields", Toast.LENGTH_SHORT).show();
-            return;
+        boolean validData = true;
+        if (name.isEmpty()) {
+            nameEditTextStartup.setError("Name cannot be empty");
+            validData = false;
+        }
+        if (email.isEmpty()) {
+            emailEditTextStartup.setError("Email cannot be empty");
+            validData = false;
         }
 
-        // Set username, email and phone number
-        user.setUserName(name);
-        user.setUserEmail(email);
-        user.setUserPhoneNumber(phone);
-        usersDBStartup.updateUser(androidID, user,
-                success -> {
-                    Toast.makeText(getContext(), "New user created", Toast.LENGTH_SHORT).show();
+        if (validData) {
+            // Set username, email and phone number
+            user.setUserName(name);
+            user.setUserEmail(email);
+            user.setUserPhoneNumber(phone);
 
-                    UserHomepageFragment frag = new UserHomepageFragment(user.getUserName(), user.getProfilePhotoPath());
-                    getActivity().getSupportFragmentManager()
-                            .beginTransaction()
-                            .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
-                            .commit();
-                },
-                error -> Log.e(TAG, "failed to update user details", error));
+            usersDBStartup.updateUser(androidID, user,
+                    success -> {
+                        Toast.makeText(getContext(), "New user created", Toast.LENGTH_SHORT).show();
+
+                        UserHomepageFragment frag = new UserHomepageFragment(user.getUserName(), user.getProfilePhotoPath());
+                        requireActivity().getSupportFragmentManager()
+                                .beginTransaction()
+                                .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
+                                .commit();
+                    },
+                    error -> Log.e(TAG, "failed to update user details", error));
+        }
     }
 
 }
