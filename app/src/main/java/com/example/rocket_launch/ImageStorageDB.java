@@ -39,7 +39,11 @@ public class ImageStorageDB {
         }).addOnFailureListener(onFailureListener);
     }
 
-
+    public static void getImage(String path, OnSuccessListener<Uri> onSuccessListener, OnFailureListener onFailureListener) {
+        StorageReference imageRef = storage.getReference().child(path);
+        Log.d("ImageStorageDB", "Fetching image from path: " + path);
+        imageRef.getDownloadUrl().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+    }
 
     /**
      * removes an image at the given path

@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,15 +24,15 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.ImageStorageDB;
 import com.example.rocket_launch.NotificationHelper;
 import com.example.rocket_launch.R;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
 
+import java.util.UUID;
 
 /**
- * fragment displayed to an organizer when they want to create an event
+ * Fragment displayed to an organizer when they want to create an event.
  */
 public class CreateNewEventFragment extends Fragment {
     private EventsDB eventsDB;
@@ -45,30 +46,27 @@ public class CreateNewEventFragment extends Fragment {
     private CheckBox checkBoxWaitlistLimit;
     private TextView eventNameOverlay;
     private ImageView editEventPosterView;
-    private Event event; // Declare the Event object
+    private Event event;
 
+    private static final int PICK_IMAGE_REQUEST = 1;
 
     /**
-     * default constructor
+     * Default constructor.
      */
-    public CreateNewEventFragment(){
+    public CreateNewEventFragment() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         eventsDB = new EventsDB();
-        androidId = Settings.Secure.getString((requireContext()).getContentResolver(), Settings.Secure.ANDROID_ID);
+        androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         event = new Event();
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.create_new_event_fragment, container, false);
 
         // Initialize views
@@ -84,30 +82,26 @@ public class CreateNewEventFragment extends Fragment {
         // Hide waitlist limit size EditText unless checkbox is checked
         editWaitlistLimitSize.setVisibility(View.INVISIBLE);
 
-        // CheckBox listener for waitlist limit
-        checkBoxWaitlistLimit.setOnCheckedChangeListener(((buttonView, isChecked) -> {
+        checkBoxWaitlistLimit.setOnCheckedChangeListener((buttonView, isChecked) -> {
             if (isChecked) {
                 editWaitlistLimitSize.setVisibility(View.VISIBLE);
             } else {
                 editWaitlistLimitSize.setVisibility(View.INVISIBLE);
                 editWaitlistLimitSize.setText(""); // Clear any text if deselected
             }
-        }));
+        });
 
-        // TextWatcher to update event name overlay on the image
         editEventName.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s,int start,int count,int after) {
-                // Do nothing
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+
             @Override
-            public void onTextChanged(CharSequence s,int start,int before,int count) {
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
                 eventNameOverlay.setText(s);
             }
+
             @Override
-            public void afterTextChanged(Editable s) {
-                // Do nothing
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
         // Initialize buttons
@@ -115,20 +109,17 @@ public class CreateNewEventFragment extends Fragment {
         cancelButton.setOnClickListener(v -> closeFragment());
 
         ImageButton addEventPosterButton = view.findViewById(R.id.add_event_poster_button);
-        addEventPosterButton.setOnClickListener(v -> {
-            // TODO: Implement functionality to add custom event poster
-        });
+        addEventPosterButton.setOnClickListener(v -> openImagePicker());
 
         Button createEventButton = view.findViewById(R.id.create_event_button);
         createEventButton.setOnClickListener(v -> {
-            // Check if capacity is not null
             String capacityInput = editEventCapacity.getText().toString().trim();
 
             if (capacityInput.isEmpty()) {
                 editEventCapacity.setError("Capacity cannot be empty");
             } else {
                 try {
-                    int capacityInt = Integer.parseInt(capacityInput); // Verifies input is int
+                    int capacityInt = Integer.parseInt(capacityInput);
                     createEvent();
                     sendEventNotification(androidId);
                 } catch (NumberFormatException e) {
@@ -136,10 +127,9 @@ public class CreateNewEventFragment extends Fragment {
                 }
             }
         });
-        addEventPosterButton.setOnClickListener(v -> openImagePicker());
+
         return view;
     }
-    private static final int PICK_IMAGE_REQUEST = 1;
 
     private void openImagePicker() {
         Intent intent = new Intent();
@@ -153,117 +143,92 @@ public class CreateNewEventFragment extends Fragment {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == Activity.RESULT_OK && data != null && data.getData() != null) {
             Uri imageUri = data.getData();
-            try {
-                // Use Glide to load the selected image into the ImageView
-                Glide.with(requireContext())
-                        .load(imageUri)
-                        .placeholder(R.drawable.sample_poster) // Placeholder while loading
-                        .centerCrop() // Ensure the image fits in the dimensions
-                        .into(editEventPosterView);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            uploadImageToFirebase(imageUri);
+            Glide.with(requireContext())
+                    .load(imageUri)
+                    .placeholder(R.drawable.sample_poster)
+                    .centerCrop()
+                    .into(editEventPosterView);
+
+            uploadEventPoster(imageUri);
         }
     }
-    private void uploadImageToFirebase(Uri imageUri) {
-        // Firebase Storage reference
-        FirebaseStorage storage = FirebaseStorage.getInstance();
-        StorageReference storageRef = storage.getReference("event_pictures");
 
-        // Generate a unique file name for the image
-        String fileName = "event_" + System.currentTimeMillis() + ".jpg";
-        StorageReference fileRef = storageRef.child(fileName);
+    private void uploadEventPoster(Uri imageUri) {
+        String fileName = "event_pictures/event_" + System.currentTimeMillis() + ".jpg";
 
-        // Upload the file
-        fileRef.putFile(imageUri)
-                .addOnSuccessListener(taskSnapshot -> fileRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    // Retrieve the uploaded file's download URL
-                    String downloadUrl = uri.toString();
-                    saveImageUrlToEvent(downloadUrl); // Save URL to the Event object or database
-                    Toast.makeText(requireContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
-                }))
-                .addOnFailureListener(e -> {
-                    // Handle failed upload
-                    Toast.makeText(requireContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+        // Use ImageStorageDB to upload the image
+        ImageStorageDB.uploadImage(imageUri, fileName,
+                downloadUrl -> {
+                    if (event.getEventID() == null) {
+                        // Generate an event ID if not already set
+                        String eventID = UUID.randomUUID().toString();
+                        event.setEventID(eventID);
+                    }
+                    saveImageUrlToEvent(downloadUrl); // Save the download URL
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                },
+                e -> {
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
                 });
     }
     private void saveImageUrlToEvent(String downloadUrl) {
-        if (event != null) {
-            event.setPosterUrl(downloadUrl);
-
-            // Firestore Database reference
-            FirebaseFirestore db = FirebaseFirestore.getInstance();
-            db.collection("events").document(event.getEventID())
-                    .set(event)
-                    .addOnSuccessListener(aVoid -> {
-                        Toast.makeText(requireContext(), "Event poster updated successfully!", Toast.LENGTH_SHORT).show();
-                    })
-                    .addOnFailureListener(e -> {
-                        // Handle the exception
-                        String errorMessage = e.getMessage(); // Exception's getMessage()
-                        Toast.makeText(requireContext(), "Failed to update event poster: " + errorMessage, Toast.LENGTH_SHORT).show();
-                    });
-        } else {
-            Toast.makeText(requireContext(), "Event is null. Cannot update poster.", Toast.LENGTH_SHORT).show();
+        if (event.getEventID() == null) {
+            Log.e("SaveImageUrl", "Event ID is null, cannot save poster URL.");
+            if (isAdded()) {
+                Toast.makeText(requireContext(), "Event ID is null. Cannot save poster.", Toast.LENGTH_SHORT).show();
+            }
+            return;
         }
+
+        event.setPosterUrl(downloadUrl); // Set the poster URL in the event object
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+        db.collection("events_dev").document(event.getEventID())
+                .set(event)
+                .addOnSuccessListener(aVoid -> {
+                    if (isAdded()) {
+                        Log.d("SaveImageUrl", "Poster URL saved successfully in events_dev: " + downloadUrl);
+                        Toast.makeText(requireContext(), "Event poster updated successfully!", Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("SaveImageUrl", "Failed to save poster URL: " + e.getMessage());
+                    if (isAdded()) {
+                        Toast.makeText(requireContext(), "Failed to save event poster: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 
-
-
-    /**
-     * function used to load new event into database with proper values
-     */
-    private void createEvent(){
-        Event event = new Event();
-
-        //getting input from edit fields
+    private void createEvent() {
         String eventName = editEventName.getText().toString();
         String eventCapacity = editEventCapacity.getText().toString();
-        String waitlistSizeLimit = checkBoxWaitlistLimit.isChecked() ? editWaitlistLimitSize.getText().toString() : null;;
+        String waitlistSizeLimit = checkBoxWaitlistLimit.isChecked() ? editWaitlistLimitSize.getText().toString() : null;
 
         String eventDescription = editEventDescription.getText().toString();
         boolean geolocationRequired = checkBoxGeolocationRequired.isChecked();
 
         event.setName(eventName);
         event.setCapacity(Integer.parseInt(eventCapacity));
-        // set MaxWaitlistSize to be -1 if not specified
         event.setMaxWaitlistSize(waitlistSizeLimit != null ? Integer.parseInt(waitlistSizeLimit) : -1);
         event.setDescription(eventDescription);
         event.setGeolocationRequired(geolocationRequired);
-        event.setWaitingList();
-        event.setEntrantLocationDataList();
 
-        eventsDB.addCreatedEvent(event, androidId, v -> {
-            closeFragment();
-        });
+        String eventID = UUID.randomUUID().toString();
+        event.setEventID(eventID);
+
+        eventsDB.addCreatedEvent(event, androidId, v -> closeFragment());
     }
 
-    /**
-     * Close the fragment and return to the Created Activities view
-     */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 
     private void sendEventNotification(String androidId) {
         NotificationHelper.sendNotification(androidId, "Event Created", "Your event has been successfully created!");
-//        // Ensure the notification channel is created
-//        NotificationHelper.createNotificationChannel(requireContext());
-//
-//        // Show the notification
-//        NotificationHelper.showNotification(
-//                requireContext(),
-//                "Event Created",
-//                "Your event has been successfully created!",
-//                1 // Unique notification ID
-//        );
-//
-//        // Add notification to the user's database entry
-//        NotificationHelper.addNotificationToDatabase(
-//                androidId,
-//                "Event Created",
-//                "Your event has been successfully created!"
-//        );
     }
 }
