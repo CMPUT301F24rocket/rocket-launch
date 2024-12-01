@@ -544,4 +544,32 @@ public class EventsDB {
                 })
                 .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
     }
+
+    /**
+     * Delete an event from the database.
+     * @param eventId The ID of the event to delete.
+     * @param onSuccess Callback for successful deletion.
+     * @param onFailure Callback for failed deletion.
+     */
+    public void deleteEvent(String eventId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        eventsRef.document(eventId).delete()
+                .addOnSuccessListener(onSuccess)
+                .addOnFailureListener(onFailure);
+    }
+
+    public void loadPoster(String androidId) {
+        // TODO
+    }
+
+    public void addPoster(String androidId) {
+        // TODO
+    }
+
+    public void removePoster(String androidId) {
+        // TODO
+    }
+
+    public void editProfilePhoto(String androidId) {
+        // TODO
+    }
 }

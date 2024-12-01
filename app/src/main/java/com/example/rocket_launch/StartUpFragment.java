@@ -7,11 +7,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -25,6 +26,7 @@ public class StartUpFragment extends Fragment {
     private UsersDB usersDBStartup;
     private User user;
     private Button finishStartup;
+    private ConstraintLayout organizerStartupFields;
 
     private static final String TAG = "StartUpFragment";
 
@@ -33,7 +35,6 @@ public class StartUpFragment extends Fragment {
         this.user = user;
         this.usersDBStartup = usersDB;
     }
-
 
     @Nullable
     @Override
@@ -46,9 +47,18 @@ public class StartUpFragment extends Fragment {
         nameEditTextStartup = view.findViewById(R.id.edit_user_name);
         emailEditTextStartup = view.findViewById(R.id.edit_user_email);
         phoneEditTextStartup = view.findViewById(R.id.edit_user_phone);
+        organizerStartupFields = view.findViewById(R.id.organizer_startup_fields);
 
         finishStartup = view.findViewById(R.id.startup_button);
-        finishStartup.setOnClickListener(v -> {saveUserDetails();});
+        finishStartup.setOnClickListener(v -> saveUserDetails());
+
+        // Conditionally render facility and facility address
+        if (user.getRoles().isOrganizer()) {
+            organizerStartupFields.setVisibility(View.VISIBLE);
+        } else {
+            organizerStartupFields.setVisibility(View.GONE);
+        }
+
         return view;
     }
 
@@ -78,6 +88,14 @@ public class StartUpFragment extends Fragment {
             user.setUserEmail(email);
             user.setUserPhoneNumber(phone);
 
+            if (user.getRoles().isOrganizer()) {
+                EditText facilityEditText = requireView().findViewById(R.id.edit_user_facility);
+                EditText facilityAddressEditText = requireView().findViewById(R.id.edit_user_facility_address);
+
+                user.setUserFacility(facilityEditText.getText().toString());
+                user.setUserFacilityAddress(facilityAddressEditText.getText().toString());
+            }
+
             usersDBStartup.updateUser(androidID, user,
                     success -> {
                         Toast.makeText(getContext(), "New user created", Toast.LENGTH_SHORT).show();
@@ -91,7 +109,4 @@ public class StartUpFragment extends Fragment {
                     error -> Log.e(TAG, "failed to update user details", error));
         }
     }
-
 }
-
-

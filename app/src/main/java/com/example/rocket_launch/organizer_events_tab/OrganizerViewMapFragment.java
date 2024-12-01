@@ -48,7 +48,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Fragment used for displaying a map to an organizer
+ * Fragment used for displaying a mapView to an organizer
+ * Displays: map using OSMDROID, location of user facility, locations of entrants, defined range around facility & entrants in/out of that range
  * Author: Rachel
  */
 //References used for map views & processing
@@ -69,21 +70,6 @@ public class OrganizerViewMapFragment extends Fragment {
     private MapOptionsViewModel mapOptionsViewModel;
     private Marker facilityMarker;
     private Polygon definedRadiusPolygon;
-
-    //TODO: display coordinates of entrants
-    // get facility coordinates from address (entered in userProfile) --> geocoding - DONE
-    // make sure the address entered is valid --> Set a default instead: DONE
-    // Get Entrant Locations on event sign up
-    //                      --> ask location permission - DONE
-    //                      --> put all entrant coordinates & Names into a list in EventDB - DONE
-    //                      --> for geoplot markers - DONE
-    // Enable edit facility address in mapView for convenience
-    //                      --> and update facility address in DB - DONE
-    //                      --> Create fragment for editing address - DONE
-    // Add range functionality:
-    //                      --> entrants within a specified range of facility & those outside
-    //                      --> display it in a list so its easier to read
-    //                      --> XML - DONE
 
     public OrganizerViewMapFragment() {
         // Required empty public constructor
@@ -181,8 +167,6 @@ public class OrganizerViewMapFragment extends Fragment {
         ImageButton mapRefreshButton = view.findViewById(R.id.map_refresh_button);
         mapRefreshButton.setOnClickListener(v -> refreshFragment());
 
-
-
         return view;
     }
 
@@ -193,6 +177,15 @@ public class OrganizerViewMapFragment extends Fragment {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 
+    /**
+     * Take the facility address and geocode it to get lat-long coordinates to make a GeoPoint
+     * Set the GeoPoint to a default starting position if geocoding fails
+     * Create a Marker for the geocoded facility address and display it on the mapView
+     * center the mapView on the new facility point when it changes
+     * @param mapController the mapView map controller
+     * @param address the address of the facility
+     * @param defaultGeoPoint the default location if the geocoding fails
+     */
     private void createStartGeoPosition(IMapController mapController,String address, GeoPoint defaultGeoPoint){
         //run geocoding in the background
         //note: nominatim is limited in geocoding --> may not work for specific/complex addresses
@@ -231,6 +224,9 @@ public class OrganizerViewMapFragment extends Fragment {
         });
     }
 
+    /**
+     * Set up and create a scale bar for the mapView
+     */
     private void setMapScaleBarOverlay(){
         //setting up scale bar attributes
         mapScaleBarOverlay = new ScaleBarOverlay(mapView);
@@ -240,6 +236,12 @@ public class OrganizerViewMapFragment extends Fragment {
         mapView.getOverlays().add(mapScaleBarOverlay);
     }
 
+    /**
+     * Create a Marker object for a facility
+     * @param name - name/title of the facility marker
+     * @param geoPoint - GeoPoint containing the location for the marker
+     * @return returns a Marker object for a facility
+     */
     private Marker createFacilityMarker(String name, GeoPoint geoPoint){
         org.osmdroid.views.overlay.Marker marker = new Marker(mapView);
 
@@ -260,6 +262,12 @@ public class OrganizerViewMapFragment extends Fragment {
         return marker;
     }
 
+    /**
+     * Create a Marker object for an entrant
+     * @param name Entrant name - used as the Marker Title
+     * @param geoPoint GeoPoint of Entrant - the coordinates for the Marker location
+     * @return returns a Marker object for a specific Entrant
+     */
     private Marker createEntrantMarker(String name, GeoPoint geoPoint){
         org.osmdroid.views.overlay.Marker marker = new Marker(mapView);
 
@@ -277,6 +285,13 @@ public class OrganizerViewMapFragment extends Fragment {
         return marker;
     }
 
+    /**
+     * Create mapView Markers for every Entrant in the event, using EntrantLocationData
+     * stored in a list the mapOptionsViewModel.
+     * Create Geomarkers from the lat-long data in the EntrantLocationData
+     * Get entrantID from the EntrantLocationData
+     * Display each entrant marker on the mapView
+     */
     private void createEntrantLocationMarkers(){
         List<EntrantLocationData> entrantLocationDataList = mapOptionsViewModel.getEntrantLocationDataList().getValue();
 
@@ -307,11 +322,18 @@ public class OrganizerViewMapFragment extends Fragment {
         }
     }
 
+    /**
+     * Callback interface to handle data fetched through an asynchronous method
+     */
     private interface EntrantNameCallBack{
         void onEntrantNameFetched(String entrantName);
     }
 
-    //get the entrant name from database
+    /**
+     * Fetch the entrant name from the database based on their androidID
+     * @param entrantID the entrantID of an entrant user class
+     * @param entrantNameCallBack callback interface to handle asynchronous data fetch
+     */
     private void getEntrantUserName(String entrantID, EntrantNameCallBack entrantNameCallBack){
         UsersDB entrantDB = new UsersDB();
 
@@ -330,16 +352,25 @@ public class OrganizerViewMapFragment extends Fragment {
                 });
     }
 
+    /**
+     * Resume mapView
+     */
     public void onResume(){
         super.onResume();
         mapView.onResume();
     }
 
+    /**
+     * Pause mapView
+     */
     public void onPause(){
         super.onPause();
         mapView.onPause();
     }
 
+    /**
+     * Refresh the fragment and reset the radius, rangeLists, entrantMarkerList's in the mapOptionsViewModel
+     */
     private void refreshFragment(){
         Bundle bundle = new Bundle();
         bundle.putString("eventId", eventID);
@@ -353,20 +384,31 @@ public class OrganizerViewMapFragment extends Fragment {
         getParentFragmentManager().popBackStackImmediate();
 
         fragmentTransaction.replace(R.id.fragment_frame, refreshOrganizerViewMapFragment);
-        fragmentTransaction.addToBackStack(null);
+        fragmentTransaction.addToBackStack(null); //prevent double stacking of fragments that cause pop backStack issues
         fragmentTransaction.commit();
+        mapView.invalidate();
     }
 
-    //Callback for Address fetched from the Database --> since fetching from the DB is asynchronoua
+    /**
+     * Callback Interface for Address fetched from the Database --> since fetching from the DB is asynchronous
+     */
     private interface AddressCallback{
         void onAddressFetched(String address);
     }
 
+    /**
+     * Callback Interface for entrantLocationDataList fetched from database to handle asynchronous method
+     */
     private interface EntrantLocationDataListCallback{
         void onEntrantLocationDataListFetched(List<EntrantLocationData> entrantLocationDataList);
     }
 
     //get organizer facility address from database
+
+    /**
+     * Get the organizer facility address from the database
+     * @param addressCallback callback function to deal with asynchronous method for fetching address
+     */
     private void getFacilityAddress(AddressCallback addressCallback){
         userDB.getUser(androidId, new OnSuccessListener<User>() {
             @Override
@@ -383,7 +425,9 @@ public class OrganizerViewMapFragment extends Fragment {
         });
     }
 
-    //get organizer facility address
+    /**
+     * Get the Facility Name from the User Database & Set the value in the mapOptionsViewModel
+     */
     private void getFacilityName(){
         userDB.getUser(androidId, new OnSuccessListener<User>() {
             @Override
@@ -399,6 +443,12 @@ public class OrganizerViewMapFragment extends Fragment {
         });
     }
 
+    /**
+     * mapOptionsViewModel observer to see if the facility address changes
+     * If the facility address changed: creates a new facility GeoPoint on the mapView and removes the previous one
+     * @param mapController the mapView mapController
+     * @param defaultGeoPoint the default GeoPoint if geocoding fails
+     */
    private void checkAddressFacilityChangedViewModel(IMapController mapController, GeoPoint defaultGeoPoint){
        //have view model listen for any changes in the facility address and update map marker
        mapOptionsViewModel.getFacilityAddress().observe(getViewLifecycleOwner(), new Observer<String>() {
@@ -416,7 +466,11 @@ public class OrganizerViewMapFragment extends Fragment {
        });
    }
 
-    //get entrant location data from database
+    /**
+     * Gets the entrant location data List from the database
+     * set the list values into the mapOptionsViewModel for later integration
+     * @param entrantLocationDataListCallback callback interface to handle asynchronous data fetch
+     */
     private void getEntrantLocationDataList(EntrantLocationDataListCallback entrantLocationDataListCallback){
 
         eventsDB.loadEvent(eventID, loadedEvent -> {
@@ -434,7 +488,11 @@ public class OrganizerViewMapFragment extends Fragment {
         });
     }
 
-    //draw a circle polygon on the map if the radius value in map options changes
+    /**
+     * A mapOptionsViewModel observer that looks if the the radius value changes
+     * if the radius value changes: draw a circle polygon on the map
+     * @param mapController the mapController
+     */
     private void radiusOutlineViewModel(IMapController mapController){
      //Radius changes in the map options fragment, draw the radius on the mapView
      mapOptionsViewModel.getRadius().observe(getViewLifecycleOwner(), new Observer<Double>() {
@@ -461,7 +519,11 @@ public class OrganizerViewMapFragment extends Fragment {
      });
     }
 
-    //move the circle polygon if the facility location changes
+    /**
+     * A mapOptionsViewModel observer that looks if the the facility location changes
+     * Moves the circle polygon to new facility location if the facility location changes
+     * @param mapController the map controller
+     */
     private void changeRadiusOutlineLocationViewModel(IMapController mapController){
         //check to see if the facility point changed
         mapOptionsViewModel.getFacilityPoint().observe(getViewLifecycleOwner(), new Observer<GeoPoint>() {
@@ -473,7 +535,11 @@ public class OrganizerViewMapFragment extends Fragment {
 
     }
 
-    //Create a circle polygon for the mapView
+    /**
+     * Create a circle polygon and display it on the mapView at a specified coordinate
+     * @param radiusKm the radius in kilometers
+     * @param centerPoint the center GeoPoint for the circle polygon
+     */
     //Referenced: https://github.com/osmdroid/osmdroid/blob/master/osmdroid-android/src/main/java/org/osmdroid/views/overlay/Polygon.java, Accessed 2024-11-29
     private void createCirclePolygon(Double radiusKm, GeoPoint centerPoint){
         double radiusMeterValue = radiusKm * 1000; //change km to meters
@@ -499,7 +565,13 @@ public class OrganizerViewMapFragment extends Fragment {
 
     }
 
-    //Get which entrant markers are in and out of a defined range, change marker colour and create lists
+    /**
+     * Compute if an entrant marker is within a specified range of another GeoPoint
+     * change entrant marker colour based on being in range or out of range
+     * and add markers to mapOptionViewModel lists based on being in range or out of range
+     * @param radiusKm radius in kilometers
+     * @param comparePoint the GeoPoint to compare the entrant location to
+     */
     //Reference: https://github.com/osmdroid/osmdroid/blob/master/osmdroid-android/src/main/java/org/osmdroid/util/GeoPoint.java, Accessed: 2024-11-30
     private void checkEntrantRangeStatus(Double radiusKm, GeoPoint comparePoint){
         List<Marker> entrantMarkersList = mapOptionsViewModel.getEntrantMarkersList().getValue();
@@ -543,6 +615,10 @@ public class OrganizerViewMapFragment extends Fragment {
         }
     }
 
+    /**
+     * Set the range lists in the mapOptionsViewModel to a new ArrayList<>()
+     * to clear data and prevent duplicate values
+     */
     private void resetRangeLists(){
         mapOptionsViewModel.clearEntrantsInRangeList();
         mapOptionsViewModel.clearEntrantsOutOfRangeList();

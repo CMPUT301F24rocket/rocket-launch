@@ -30,6 +30,10 @@ public class MapOptionsViewModel extends ViewModel {
     MutableLiveData<List<String>> inRangeNames = new MutableLiveData<>(new ArrayList<>());
     MutableLiveData<List<String>> outRangeNames = new MutableLiveData<>(new ArrayList<>());
 
+    /**
+     * Getters and Setters and Updaters for Changeable Data in the View Model:
+     */
+
     public void setFacilityAddress(String address){facilityAddress.setValue(address);}
     public LiveData<String> getFacilityAddress(){return facilityAddress;}
 
@@ -46,6 +50,10 @@ public class MapOptionsViewModel extends ViewModel {
     public void setFacilityPoint(GeoPoint geoPoint) {facilityPoint.setValue(geoPoint);}
     public LiveData<GeoPoint> getFacilityPoint(){return facilityPoint;}
 
+    /**
+     * Add entrant Marker objects to the list
+     * @param marker a Marker object
+     */
     public void addToEntrantMarkers(Marker marker){ //add a marker to the list
         List<Marker> markerList = entrantMarkersList.getValue();
         if (markerList != null){
@@ -56,6 +64,10 @@ public class MapOptionsViewModel extends ViewModel {
     public LiveData<List<Marker>> getEntrantMarkersList(){return entrantMarkersList;}
     public void clearEntrantMarkersList(){entrantMarkersList.setValue(new ArrayList<>());}
 
+    /**
+     * Add Markers of Entrants within Range into the list
+     * @param marker a Marker object
+     */
     public void addToEntrantsInRangeList(Marker marker){ //add an entrant location data object to the list
         List<Marker> dataList = entrantsInRangeList.getValue();
         if (dataList != null){
@@ -66,6 +78,10 @@ public class MapOptionsViewModel extends ViewModel {
     public LiveData<List<Marker>> getEntrantsInRangeList(){return entrantsInRangeList;}
     public void clearEntrantsInRangeList() {entrantsInRangeList.setValue(new ArrayList<>());}
 
+    /**
+     * Add Markers of Entrants outside Range into the list
+     * @param marker a Marker object
+     */
     public void addToEntrantsOutOfRangeList(Marker marker){ //add an entrant location data object to the list
         List<Marker> dataList = entrantsOutOfRangeList.getValue();
         if (dataList != null){

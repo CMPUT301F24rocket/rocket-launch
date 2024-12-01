@@ -17,6 +17,9 @@
     <color name="fern_green">#568259</color>
     <color name="thistle">#E4CCE7</color>
     <color name="thistle_dark">#D3B8D7</color>
+    <color name="gray">#BDBDBD</color>
+    <color name="light_gray">#E0E0E0</color>
+
 
     <!--For Map Markers-->
     <color name="entrant_marker">#007842</color>

@@ -116,7 +116,7 @@
                 <TextView
                     style="@style/MapOptionsTextConstants"
                     android:textStyle="bold"
-                    android:text="Lookup Entrant Locations Within A Specified Radius:" />
+                    android:text="Lookup Entrant Within A Specified Radius:" />
 
             </LinearLayout>
 

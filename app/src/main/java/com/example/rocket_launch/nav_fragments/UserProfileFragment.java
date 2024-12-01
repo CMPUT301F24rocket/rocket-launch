@@ -28,6 +28,7 @@ import androidx.fragment.app.FragmentTransaction;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.transition.Transition;
 import com.example.rocket_launch.EditProfileFragment;
+import com.example.rocket_launch.FeedbackFormFragment;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.Roles;
 import com.example.rocket_launch.User;
@@ -59,21 +60,19 @@ public class UserProfileFragment extends Fragment {
     private LinearLayout facilityLayout;
     private LinearLayout facilityAddressLayout;
     private ConstraintLayout profileBodyView;
+    private ConstraintLayout editProfileAndFeedbackView;
     private ImageView profileImageView;
     private ImageView profilePictureView;
-    // Feedback components
-    private LinearLayout feedbackSection;
-    private EditText feedbackText;
-    private int selectedRating = 0;
-    private Button submitFeedbackButton;
-    private Button editFeedbackButton;
-    private boolean isEditingFeedback = false; // Controls edited
+
+    // Navigate to feedback from
+    private Button feedbackButton;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_user_profile, container, false);
 
         profileBodyView = view.findViewById(R.id.user_profile_body);
+        editProfileAndFeedbackView = view.findViewById(R.id.edit_profile_and_feedback);
         nameTextView = view.findViewById(R.id.user_name_textview);
         emailTextView = view.findViewById(R.id.user_email_textview);
         phoneTextView = view.findViewById(R.id.user_phone_textview);
@@ -83,32 +82,29 @@ public class UserProfileFragment extends Fragment {
         facilityLayout = view.findViewById(R.id.display_profile_facility);
         facilityAddressLayout = view.findViewById(R.id.display_profile_facility_address);
 
-        // Feedback UI components
-        feedbackSection = view.findViewById(R.id.feedback_section);
-        feedbackText = view.findViewById(R.id.feedback_text);
-        submitFeedbackButton = view.findViewById(R.id.submit_feedback_button);
-        editFeedbackButton = view.findViewById(R.id.edit_feedback_button);
-
-        // Set up feedback star ratings
-        setupStarRating(view);
-
-        // Submit feedback listener
-        submitFeedbackButton.setOnClickListener(v -> submitFeedback());
-
-        // Edit feedback listener
-        editFeedbackButton.setOnClickListener(v -> enableFeedbackEditing());
 
         // Set up "Edit Profile" button listener
         Button editProfileButton = view.findViewById(R.id.edit_profile_button);
         editProfileButton.setOnClickListener(v -> {
+
             // Hide the profile body and transition to EditProfileFragment
             profileBodyView.setVisibility(View.GONE);
-            feedbackSection.setVisibility(View.GONE); // Hide feedback section during edit profile
+            editProfileAndFeedbackView.setVisibility(View.GONE);
+
             openEditProfileFragment();
         });
 
+        // Set up "Give Feedback"
+        Button feedbackButton = view.findViewById(R.id.feedback_form_button);
+        feedbackButton.setOnClickListener(v -> {
+            FeedbackFormFragment frag  = new FeedbackFormFragment(this.androidId);
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
+                    .commit();
+        });
+
         fetchUserProfile();
-        loadFeedbackFromFirestore();
 
         return view;
     }
@@ -195,116 +191,6 @@ public class UserProfileFragment extends Fragment {
                     }
                 });
     }
-    private void setupStarRating(View view) {
-        for (int i = 1; i <= 5; i++) {
-            int starId = getResources().getIdentifier("star" + i, "id", requireContext().getPackageName());
-            ImageView star = view.findViewById(starId);
-            final int starRating = i;
-
-            // Add click listener for stars
-            star.setOnClickListener(v -> {
-                if (isEditingFeedback) { // Allow clicking stars only if editing is enabled
-                    updateStarRating(starRating, view);
-                } else {
-                    Toast.makeText(requireContext(), "Click 'Edit Feedback' to modify your rating.", Toast.LENGTH_SHORT).show();
-                }
-            });
-        }
-    }
-    private void updateStarRating(int rating, View view) {
-        selectedRating = rating;
-        for (int i = 1; i <= 5; i++) {
-            int starId = getResources().getIdentifier("star" + i, "id", requireContext().getPackageName());
-            ImageView star = view.findViewById(starId);
-            star.setImageResource(i <= rating ? R.drawable.ic_star_filled : R.drawable.ic_star_outline);
-        }
-    }
-
-    private void submitFeedback() {
-        String feedback = feedbackText.getText().toString().trim();
-        if (selectedRating == 0) {
-            Toast.makeText(requireContext(), "Please select a star rating.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        if (feedback.isEmpty()) {
-            Toast.makeText(requireContext(), "Please provide feedback.", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        // Save feedback to Firestore
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        Feedback feedbackData = new Feedback(selectedRating, feedback);
-
-        db.collection("feedback").document(androidId)
-                .set(feedbackData)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(requireContext(), "Feedback submitted successfully!", Toast.LENGTH_SHORT).show();
-                    feedbackText.setEnabled(false); // Disable feedback input
-                    submitFeedbackButton.setVisibility(View.GONE); // Hide submit button
-                    editFeedbackButton.setVisibility(View.VISIBLE); // Show edit button
-                    isEditingFeedback = false; // Disable editing mode
-
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Error submitting feedback", e));
-    }
-
-    private void enableFeedbackEditing() {
-        isEditingFeedback = true; // Enable editing mode
-        feedbackText.setEnabled(true); // Enable feedback text input
-        feedbackText.requestFocus();   // Focus on feedback input
-        submitFeedbackButton.setVisibility(View.VISIBLE); // Show submit button
-        editFeedbackButton.setVisibility(View.GONE); // Hide edit button
-    }
-    private void loadFeedbackFromFirestore() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        db.collection("feedback").document(androidId)
-                .get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        Feedback feedback = documentSnapshot.toObject(Feedback.class);
-                        if (feedback != null) {
-                            selectedRating = feedback.getRating();
-                            updateStarRating(selectedRating, getView());
-                            feedbackText.setText(feedback.getFeedbackText());
-                            feedbackText.setEnabled(false); // Disable input initially
-                            submitFeedbackButton.setVisibility(View.GONE); // Hide submit button
-                            editFeedbackButton.setVisibility(View.VISIBLE); // Show edit button
-                        }
-                    }
-                })
-                .addOnFailureListener(e -> Log.e(TAG, "Error loading feedback", e));
-    }
-
-    public static class Feedback {
-        private int rating;
-        private String feedbackText;
-
-        // Required no-argument constructor
-        public Feedback() {}
-
-        public Feedback(int rating, String feedbackText) {
-            this.rating = rating;
-            this.feedbackText = feedbackText;
-        }
-
-        public int getRating() {
-            return rating;
-        }
-
-        public void setRating(int rating) {
-            this.rating = rating;
-        }
-
-        public String getFeedbackText() {
-            return feedbackText;
-        }
-
-        public void setFeedbackText(String feedbackText) {
-            this.feedbackText = feedbackText;
-        }
-    }
-
 
     private void setDefaultProfilePicture(String userName) {
         // Default background color and text settings
