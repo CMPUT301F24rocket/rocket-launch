@@ -7,14 +7,6 @@
     android:layout_height="match_parent"
     tools:context=".nav_fragments.UserProfileFragment">
 
-    <!--Note: Can change visibilities to "gone", "visible" and "invisible" to deal with roles-->
-    <androidx.fragment.app.FragmentContainerView
-        android:id="@+id/edit_profile_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -268,6 +260,12 @@
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </ScrollView>
-    <!--Bottom Navigation Bar-->
+
+    <!--Note: Can change visibilities to "gone", "visible" and "invisible" to deal with roles-->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/edit_profile_fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
