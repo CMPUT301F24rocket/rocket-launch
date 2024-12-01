@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -52,15 +53,25 @@ public class SelectRolesFragment extends DialogFragment {
         entrant_switch.setChecked(roles.isEntrant());
         organizer_switch.setChecked(roles.isOrganizer());
 
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        return builder
-                .setView(view)
-                .setTitle("Select Role")
-                .setNegativeButton("Cancel", null)
-                .setPositiveButton("Ok", (dialog, which) -> {
-                    roles.setEntrant(entrant_switch.isChecked());
-                    roles.setOrganizer(organizer_switch.isChecked());
+        AlertDialog dialog = new AlertDialog.Builder(getContext())
+            .setView(view)
+            .setTitle("Select Role")
+            .setNegativeButton("Cancel", null)
+            .setPositiveButton("Ok", null)
+            .create();
 
+
+        dialog.setOnShowListener(dialogInterface -> {
+            Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+            okButton.setOnClickListener(l -> {
+                roles.setEntrant(entrant_switch.isChecked());
+                roles.setOrganizer(organizer_switch.isChecked());
+
+                if (!roles.isOrganizer() && !roles.isEntrant()) {
+                    entrant_switch.setError("must be at least one role");
+                    organizer_switch.setError("must be at least one role");
+                }
+                else {
                     BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_nav_view);
 
                     if (bottomNav != null) {
@@ -71,8 +82,13 @@ public class SelectRolesFragment extends DialogFragment {
                     }
 
                     listener.onSuccess(roles);
-                })
-                .create();
+                    dialog.dismiss();
+                }
+            });
+        });
+
+
+        return dialog;
     }
 
     /**
