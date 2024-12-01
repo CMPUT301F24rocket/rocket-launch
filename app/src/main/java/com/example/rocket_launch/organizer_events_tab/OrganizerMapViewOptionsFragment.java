@@ -58,7 +58,8 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.organizer_map_view_options_fragment, container, false);
 
-        //have view model listen for any changes in facility name
+
+        //have view model listen for any changes in facility name and update the TextView for facility name
         mapOptionsViewModel.getFacilityName().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -70,7 +71,8 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
             }
         });
 
-        //have view model listen for any changes in the facility address
+
+        //have view model listen for any changes in the facility address and update the TextView for facility address
         mapOptionsViewModel.getFacilityAddress().observe(getViewLifecycleOwner(), new Observer<String>() {
             @Override
             public void onChanged(String s) {
@@ -82,6 +84,7 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
             }
         });
 
+        //if the in range or out of range lists change, update the content and ListViews
         mapOptionsViewModel.getEntrantsInRangeList().observe(getViewLifecycleOwner(), new Observer<List<Marker>>() {
             @Override
             public void onChanged(List<Marker> markers) {
@@ -147,10 +150,10 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         return view;
     }
 
-
-
-    //display a list of entrants who are in and out of a user defined range
-    //Run this to update the list whenever either of the range lists change content
+    /**
+     * Set a list of entrants who are in and out of a user defined range
+     * Run this to update the list whenever either of the range lists change content
+     */
     private void setListContent(){
         List<String> entrantInRangeNames = new ArrayList<>();
         List<String> entrantOutOfRangeNames = new ArrayList<>();
@@ -181,7 +184,9 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         Log.i("SetListContent", "setListContent: out range names: " + mapOptionsViewModel.getOutRangeNames().getValue());
     }
 
-    //set up the list view layouts with info
+    /**
+     * Set up the list view layouts with info from the range lists
+     */
     private void setListViews(){
         List<String> inRangeNames = mapOptionsViewModel.getInRangeNames().getValue();
         List<String> outRangeNames = mapOptionsViewModel.getOutRangeNames().getValue();
@@ -198,7 +203,10 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         setListViewHeightBasedOnContent(entrantOutOfRangeListView);
     }
 
-    // take user input for a radius to draw a polygon representing a range from their facility
+    /**
+     * Take the user input for a radius as a double, to later draw a polygon representing a range from their facility
+     * update mapOptionsViewModel with the radius for synchronous implementation
+     */
     private void defineRadius(){
         //check if radiusEditText is not null
         String radiusText = radiusEditText.getText().toString().trim();
@@ -225,11 +233,19 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         }
     }
 
+    /**
+     * CLose the Fragment
+     */
     private void closeFragment() {
         getParentFragmentManager().popBackStack();
     }
 
-    //Methods to control the drop down features in the map options UI
+    /**
+     * Dropdown menu controls for radius options
+     * @param defineRadiusOptions Header for the radius options
+     * @param radiusOptionsContent Content for both the define radius option and range lists
+     * @param radiusOptionsDownArrow Image arrow for the drop down menu
+     */
     private void radiusOptionControls(LinearLayout defineRadiusOptions,LinearLayout radiusOptionsContent,ImageView radiusOptionsDownArrow){
         //make radius content visible if clicked
         defineRadiusOptions.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +262,12 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         });
     }
 
+    /**
+     * Dropdown menu controls for entrantsInRange ListView
+     * @param entrantInRangeHeader layout for header
+     * @param entrantInRangeList layout for ListView
+     * @param entrantInRangeDownArrow Image arrow for the dropdown menu
+     */
     private void entrantsInRangeListControls(LinearLayout entrantInRangeHeader,ListView entrantInRangeList,ImageView entrantInRangeDownArrow){
         entrantInRangeHeader.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -261,6 +283,12 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         });
     }
 
+    /**
+     * Dropdown menu controls for entrantOutOfRange ListView
+     * @param entrantOutOfRangeHeader layout for header
+     * @param entrantOutOfRangeList layout for ListView
+     * @param entrantOutOfRangeDownArrow Image arrow for the dropdown menu
+     */
     private void entrantsOutOfRangeListControls(LinearLayout entrantOutOfRangeHeader,ListView entrantOutOfRangeList,ImageView entrantOutOfRangeDownArrow){
         entrantOutOfRangeHeader.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -276,7 +304,10 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         });
     }
 
-    //set list view height based on the number of content, otherwise the scroll view interferes with it
+    /**
+     * set list view height based on the number of content, otherwise the scroll view interferes with it
+     * @param listView ListView to set height
+     */
     private static void setListViewHeightBasedOnContent(ListView listView) {
         ListAdapter listAdapter = listView.getAdapter();
         if (listAdapter == null) return;
