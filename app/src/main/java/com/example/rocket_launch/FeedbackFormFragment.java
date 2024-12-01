@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -15,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.rocket_launch.nav_fragments.UserProfileFragment;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 public class FeedbackFormFragment extends Fragment {
@@ -27,6 +29,7 @@ public class FeedbackFormFragment extends Fragment {
     private Button submitFeedbackButton;
     private Button editFeedbackButton;
     private boolean isEditingFeedback = false;
+    private ImageButton backButton;
 
     private String androidId;
 
@@ -42,6 +45,7 @@ public class FeedbackFormFragment extends Fragment {
         feedbackText = view.findViewById(R.id.feedback_text);
         submitFeedbackButton = view.findViewById(R.id.submit_feedback_button);
         editFeedbackButton = view.findViewById(R.id.edit_feedback_button);
+        backButton = view.findViewById(R.id.back_button);
 
         // Set up feedback star ratings
         setupStarRating(view);
@@ -53,6 +57,15 @@ public class FeedbackFormFragment extends Fragment {
         editFeedbackButton.setOnClickListener(v -> enableFeedbackEditing());
 
         loadFeedbackFromFirestore();
+
+        //back button pressed
+        backButton.setOnClickListener(v -> {
+            UserProfileFragment userFragment = new UserProfileFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_frame, userFragment)
+                    .commit();
+        });
 
         return view;
     }

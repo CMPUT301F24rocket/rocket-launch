@@ -75,6 +75,8 @@
     <ImageButton
         android:id="@+id/organizer_event_details_back_button"
         style="@style/ArrowLeftButtonStyle"
-        tools:layout_editor_absoluteX="21dp"
-        tools:layout_editor_absoluteY="100dp" />
+        android:backgroundTint="@color/periwinkle"
+        app:layout_constraintTop_toTopOf="@id/organizer_event_details_header"
+        app:layout_constraintBottom_toBottomOf="@id/organizer_event_details_header"
+        app:layout_constraintStart_toStartOf="@id/organizer_event_details_header" />
 </androidx.constraintlayout.widget.ConstraintLayout>
