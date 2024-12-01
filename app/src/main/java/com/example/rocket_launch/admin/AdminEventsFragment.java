@@ -63,8 +63,8 @@ public class AdminEventsFragment extends Fragment {
      */
     private void showDeleteConfirmationDialog(Event event) {
         new AlertDialog.Builder(requireContext())
-                .setTitle("Delete Event")
-                .setMessage("Delete selected item?")
+                .setTitle("Delete Event?")
+                .setMessage("This action cannot be undone.")
                 .setPositiveButton("Yes", (dialog, which) -> deleteEvent(event))
                 .setNegativeButton("No", null)
                 .show();
