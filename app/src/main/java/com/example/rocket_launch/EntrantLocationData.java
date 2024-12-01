@@ -1,6 +1,11 @@
 package com.example.rocket_launch;
 
-//Class to store an entrant name and coordinate to store in a list in the Event Class for mapView implementation
+
+/**
+ * Class that creates an object to store entrant name and coordinates
+ * to store in a list in the Event Class for mapView implementation
+ * Author: Rachel
+ */
 public class EntrantLocationData {
     private String entrantID;
     private double entrantLatitude;
