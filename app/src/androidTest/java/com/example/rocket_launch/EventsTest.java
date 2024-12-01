@@ -110,7 +110,7 @@ public class EventsTest {
     public void testGeolocationRequirement(){
         Event event = mockEvent();
         event.setGeolocationRequired(true);
-        assertTrue(event.isGeolocationRequired());
+        assertTrue(event.getGeolocationRequired());
     }
 
     @Test

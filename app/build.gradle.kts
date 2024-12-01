@@ -57,18 +57,40 @@ dependencies {
     implementation("com.google.firebase:firebase-analytics")
     implementation("com.google.firebase:firebase-firestore")
 
+    //OSM
+    implementation("org.osmdroid:osmdroid-android:6.1.11")
+    implementation("org.osmdroid:osmdroid-wms:6.1.11")
+    implementation("org.osmdroid:osmdroid-mapsforge:6.1.11")
+    implementation("org.osmdroid:osmdroid-geopackage:6.1.11")
+
+    //Nominatim (For Geocoding)
+    implementation("com.squareup.okhttp3:okhttp:4.9.1")
+
+    //Google Location Services
+    implementation ("com.google.android.gms:play-services-location:21.0.1")
 
     // Espresso and JUnit for UI Testing
-    implementation ("androidx.appcompat:appcompat:1.6.1")
+    implementation ("androidx.appcompat:appcompat:1.7.0")
     implementation ("com.google.android.material:material:1.6.1")
-    implementation ("androidx.constraintlayout:constraintlayout:2.1.4")
-    
+    implementation ("androidx.constraintlayout:constraintlayout:2.2.0")
+
+    implementation ("com.google.firebase:firebase-storage:20.2.0")
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    implementation(libs.firebase.database)
+    implementation(libs.recyclerview)
+    // implementation(libs.ui.graphics.android)
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+    implementation ("com.squareup.picasso:picasso:2.71828")
+
     testImplementation ("org.junit.jupiter:junit-jupiter-api:5.0.1")
     testRuntimeOnly ("org.junit.jupiter:junit-jupiter-engine:5.0.1")
 
     androidTestImplementation ("androidx.test.ext:junit:1.1.5")
     androidTestImplementation ("androidx.test.espresso:espresso-core:3.5.1")
 
+    // Glide for Image Loading
+    implementation ("com.github.bumptech.glide:glide:4.15.1")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.15.1")
 
-
+    
 }

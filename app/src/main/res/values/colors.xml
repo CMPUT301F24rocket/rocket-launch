@@ -15,5 +15,16 @@
     <color name="desert_sand">#ECC8AE</color>
     <color name="tea_green">#C6D8AF</color>
     <color name="fern_green">#568259</color>
+    <color name="thistle">#E4CCE7</color>
+    <color name="thistle_dark">#D3B8D7</color>
+    <color name="gray">#BDBDBD</color>
+    <color name="light_gray">#E0E0E0</color>
+
+
+    <!--For Map Markers-->
+    <color name="entrant_marker">#007842</color>
+    <color name="facility_marker">#C4110E</color>
+    <color name="in_range_marker">#FF7F11</color>
+    <color name="out_of_range_marker">#072AC8</color>
 
 </resources>

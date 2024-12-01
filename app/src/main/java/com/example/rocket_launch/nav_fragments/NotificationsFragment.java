@@ -1,28 +1,32 @@
 package com.example.rocket_launch.nav_fragments;
 
+import android.content.Intent;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.provider.Settings;
-
+import android.provider.Settings.Secure;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
-import android.provider.Settings.Secure;
-
-import com.example.rocket_launch.NotificationPreferencesFragment;
+import com.example.rocket_launch.Notification;
 import com.example.rocket_launch.R;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.notifications_tab.NotificationDetailsFragment;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 /**
  * fragment used to display all of a user's notifications
@@ -39,7 +43,6 @@ public class NotificationsFragment extends Fragment {
     private FirebaseFirestore db;
     private UsersDB usersDB;
     private String androidId;
-    private List notifications;
 
     private FloatingActionButton notificationSettingsButton;
 
@@ -50,26 +53,27 @@ public class NotificationsFragment extends Fragment {
         // we are required to have (an) empty constructor
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_notifications, container, false);
-
         db = FirebaseFirestore.getInstance();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
 
         notificationSettingsButton = view.findViewById(R.id.notification_settings_button);
         notificationSettingsButton.setOnClickListener(v -> {
-            NotificationPreferencesFragment notifPreferences = new NotificationPreferencesFragment(user.getNotificationPreferences(), usersDB.getUsersRef().document(androidId));
-            notifPreferences.setOnSuccessListener(new NotificationPreferencesFragment.onSuccessListener() {
-                @Override
-                public void onSuccess() {
-                    // this is def inefficient but it works
-                    loadNotifications();
-                }
-            });
-            notifPreferences.show(getParentFragmentManager(), "edit notifs");
+
+            // open app notification settings
+            Intent intent = new Intent();
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // For Android 8.0 (Oreo) and above
+                intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
+                intent.putExtra(Settings.EXTRA_APP_PACKAGE, requireContext().getPackageName());
+            } else {
+                intent.setAction(Settings.ACTION_APPLICATION_DETAILS_SETTINGS);
+                Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
+                intent.setData(uri);
+            }
+            startActivity(intent);
         });
 
         notificationsListView = view.findViewById(R.id.notifications_list_view);
@@ -78,38 +82,74 @@ public class NotificationsFragment extends Fragment {
         notificationsAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, notificationList);
         notificationsListView.setAdapter(notificationsAdapter);
 
+        notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
+            // get position from the back because of reversed list
+            Notification selectedNotification = user.getNotifications().get(user.getNotifications().size() - 1 - position);
+            NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment(selectedNotification);
+
+            Bundle args = new Bundle();
+
+            args.putString("androidID", user.getAndroidId());
+            args.putString("title", selectedNotification.getTitle());
+            args.putString("message", selectedNotification.getMessage());
+
+            if (selectedNotification.getInvitation() != null && selectedNotification.getInvitation()) {
+                args.putBoolean("isInvitation", true);
+                args.putString("eventID", selectedNotification.getEventId());
+            } else {
+                args.putBoolean("isInvitation", false);
+            }
+            detailsFragment.setArguments(args);
+
+            // go to NotificationDetailsFragment
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .setTransition(FragmentTransaction.TRANSIT_FRAGMENT_OPEN)
+                    .replace(R.id.fragment_frame, detailsFragment)
+                    .addToBackStack(null)
+                    .commit();
+        });
         loadNotifications();
-
+        updateNotificationPreferences();
         return view;
+    }
 
+    private void updateNotificationPreferences() {
+        boolean notificationPreferences = NotificationManagerCompat.from(requireContext()).areNotificationsEnabled();
+        Log.d("NotificationPreferences", "Notifications enabled: " + notificationPreferences);
+        String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
+
+        // Update Firestore directly
+        new UsersDB().getUsersRef().document(androidID)
+                .update("notificationPreferences", notificationPreferences)
+                .addOnSuccessListener(aVoid -> Log.d("NotificationPreferences", "Updated successfully in Firestore."))
+                .addOnFailureListener(e -> Log.e("NotificationPreferences", "Failed to update preferences in Firestore.", e));
     }
 
     /**
      * function used to load and display all notifications
      */
     private void loadNotifications() {
-
         usersDB = new UsersDB();
-        // reference https://stackoverflow.com/questions/16869482/how-to-get-unique-device-hardware-id-in-android
         String androidID = Secure.getString(getContext().getContentResolver(), Secure.ANDROID_ID);
 
-        usersDB.getUser(androidID, documentSnapshot -> {
-            user = documentSnapshot.toObject(User.class);
+        usersDB.getUser(androidID, newUser -> {
+            user = newUser;
 
-            assert user != null;
-            List<String> notifications = user.getNotifications();
-            if (notifications != null) {
-                notificationList.clear();
-                notificationList.addAll(notifications);
-                notificationsAdapter.notifyDataSetChanged();
-            } else {
-                Log.d("NotificationFragment", "No notifications found");
+            // Clear current list and load new notifications
+            notificationList.clear();
+
+            // Check and iterate over user notifications (neweset first)
+            if (user.getNotifications() != null) {
+                for (int i = user.getNotifications().size() - 1; i >= 0; i--) {
+                    // Concatenate title (message will display when clicked)
+                    notificationList.add(user.getNotifications().get(i).getTitle());
+                }
             }
 
-        }, e -> {
-            // Handle the failure case
-            Log.e("NotificationFragment", "Error fetching user", e);
-        }); // <-- Closing parenthesis and semicolon added here
-
+            // Notify adapter of data change
+            notificationsAdapter.notifyDataSetChanged();
+        }, e -> Log.e(TAG, "Error fetching user", e));
     }
 }
+
