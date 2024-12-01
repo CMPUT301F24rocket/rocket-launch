@@ -79,7 +79,7 @@ public class EntrantListViewCancelledFragment extends Fragment {
 
 
     /**
-     * function that fetches all events created by an organizer and loads them
+     * function that fetches all users in an event's cancelled list
      */
     private void fetchUsers(){
         // get waitlist from event and on success, get users from the resulting list

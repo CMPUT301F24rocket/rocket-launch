@@ -85,12 +85,12 @@ public class NotificationsFragment extends Fragment {
         notificationsListView.setOnItemClickListener((parent, itemView, position, id) -> {
             // get position from the back because of reversed list
             Notification selectedNotification = user.getNotifications().get(user.getNotifications().size() - 1 - position);
-            NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment();
+            NotificationDetailsFragment detailsFragment = new NotificationDetailsFragment(selectedNotification);
 
             Bundle args = new Bundle();
 
             args.putString("androidID", user.getAndroidId());
-            args.putString("from", selectedNotification.getTitle());
+            args.putString("title", selectedNotification.getTitle());
             args.putString("message", selectedNotification.getMessage());
 
             if (selectedNotification.getInvitation() != null && selectedNotification.getInvitation()) {
@@ -142,8 +142,8 @@ public class NotificationsFragment extends Fragment {
             // Check and iterate over user notifications (neweset first)
             if (user.getNotifications() != null) {
                 for (int i = user.getNotifications().size() - 1; i >= 0; i--) {
-                    // Concatenate title and message for display
-                    notificationList.add(user.getNotifications().get(i).getTitle() + ": " + user.getNotifications().get(i).getMessage());
+                    // Concatenate title (message will display when clicked)
+                    notificationList.add(user.getNotifications().get(i).getTitle());
                 }
             }
 

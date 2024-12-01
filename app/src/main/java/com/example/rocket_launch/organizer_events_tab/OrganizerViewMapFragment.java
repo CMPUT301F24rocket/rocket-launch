@@ -1,5 +1,9 @@
 package com.example.rocket_launch.organizer_events_tab;
 
+import static org.osmdroid.views.overlay.Polygon.pointsAsCircle;
+
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,7 +18,6 @@ import android.widget.ImageButton;
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
@@ -32,7 +35,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import org.json.JSONException;
 import org.osmdroid.api.IMapController;
 import org.osmdroid.tileprovider.tilesource.TileSourceFactory;
-import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
@@ -40,6 +42,7 @@ import org.osmdroid.views.overlay.Polygon;
 import org.osmdroid.views.overlay.ScaleBarOverlay;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -65,6 +68,7 @@ public class OrganizerViewMapFragment extends Fragment {
     private GeoPoint defaultGeoPoint;
     private MapOptionsViewModel mapOptionsViewModel;
     private Marker facilityMarker;
+    private Polygon definedRadiusPolygon;
 
     //TODO: display coordinates of entrants
     // get facility coordinates from address (entered in userProfile) --> geocoding - DONE
@@ -92,6 +96,7 @@ public class OrganizerViewMapFragment extends Fragment {
         eventsDB = new EventsDB();
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
         mapOptionsViewModel = new ViewModelProvider(requireActivity()).get(MapOptionsViewModel.class);
+        definedRadiusPolygon = new Polygon();
 
         assert getArguments() != null;
         eventID = getArguments().getString("eventId");
@@ -140,6 +145,8 @@ public class OrganizerViewMapFragment extends Fragment {
         });
 
         checkAddressFacilityChangedViewModel(mapController, defaultGeoPoint); //create new facility location if the address changes
+        radiusOutlineViewModel(mapController);
+        changeRadiusOutlineLocationViewModel(mapController);
 
         //Get the list of entrant locations
         getEntrantLocationDataList(locationListFetched -> {
@@ -174,6 +181,8 @@ public class OrganizerViewMapFragment extends Fragment {
         ImageButton mapRefreshButton = view.findViewById(R.id.map_refresh_button);
         mapRefreshButton.setOnClickListener(v -> refreshFragment());
 
+
+
         return view;
     }
 
@@ -184,7 +193,7 @@ public class OrganizerViewMapFragment extends Fragment {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 
-    private void createStartGeoPosition(IMapController mapController,String address, GeoPoint facilityGeoPoint){
+    private void createStartGeoPosition(IMapController mapController,String address, GeoPoint defaultGeoPoint){
         //run geocoding in the background
         //note: nominatim is limited in geocoding --> may not work for specific/complex addresses
         ExecutorService executor = Executors.newSingleThreadExecutor();
@@ -202,14 +211,17 @@ public class OrganizerViewMapFragment extends Fragment {
                     //post geopoint onto map
                     handler.post(() -> {
                         if (startPoint != null) {
+                            //put start point in view model
+                            mapOptionsViewModel.setFacilityPoint(startPoint); //will update whenever this method is ran
                             mapController.setCenter(startPoint);
                             facilityMarker = createFacilityMarker("Your Facility", startPoint);
                         }
                     });
-                } else {
+                } else { //can't geocode the address, use default start point
                     handler.post(() -> {
-                        mapController.setCenter(facilityGeoPoint);
-                        facilityMarker = createFacilityMarker("Default Location", facilityGeoPoint);
+                        mapOptionsViewModel.setFacilityPoint(defaultGeoPoint);
+                        mapController.setCenter(defaultGeoPoint);
+                        facilityMarker = createFacilityMarker("Default Location", defaultGeoPoint);
                     });
                 }
 
@@ -262,11 +274,8 @@ public class OrganizerViewMapFragment extends Fragment {
 
         marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
 
-        mapView.getOverlays().add(marker);
-        mapView.invalidate();
         return marker;
     }
-
 
     private void createEntrantLocationMarkers(){
         List<EntrantLocationData> entrantLocationDataList = mapOptionsViewModel.getEntrantLocationDataList().getValue();
@@ -283,7 +292,13 @@ public class OrganizerViewMapFragment extends Fragment {
             //for every name, create a marker
             getEntrantUserName(entrantID, entrantNameFetched -> {
                 if (entrantNameFetched != null){
-                    createEntrantMarker(entrantNameFetched, entrantGeoPoint);
+                    Marker entrantMarker = new Marker(mapView);
+                    entrantMarker = createEntrantMarker(entrantNameFetched, entrantGeoPoint);
+                    mapView.getOverlays().add(entrantMarker);
+                    mapOptionsViewModel.addToEntrantMarkers(entrantMarker);
+                    mapView.invalidate();
+                    Log.i("CreateEntrantMarker", "createEntrantLocationMarkers: " + entrantMarker);
+
                 } else {
                     Log.i("Create Entrant GeoMarkers", "createEntrantLocationMarkers: no entrant marker created");
                 }
@@ -330,6 +345,9 @@ public class OrganizerViewMapFragment extends Fragment {
         bundle.putString("eventId", eventID);
         OrganizerViewMapFragment refreshOrganizerViewMapFragment = new OrganizerViewMapFragment();
         refreshOrganizerViewMapFragment.setArguments(bundle);
+        resetRangeLists();
+        mapOptionsViewModel.clearRadius();
+        mapOptionsViewModel.clearEntrantMarkersList();
 
         FragmentTransaction fragmentTransaction = getParentFragmentManager().beginTransaction();
         getParentFragmentManager().popBackStackImmediate();
@@ -416,8 +434,117 @@ public class OrganizerViewMapFragment extends Fragment {
         });
     }
 
-    //draw a circle polygon on the map
-    private void createRadiusOutline(Integer radius){
+    //draw a circle polygon on the map if the radius value in map options changes
+    private void radiusOutlineViewModel(IMapController mapController){
+     //Radius changes in the map options fragment, draw the radius on the mapView
+     mapOptionsViewModel.getRadius().observe(getViewLifecycleOwner(), new Observer<Double>() {
+         @Override
+         public void onChanged(Double radiusKm) {
+             GeoPoint centerPoint = mapOptionsViewModel.getFacilityPoint().getValue();
+             resetRangeLists(); //If range changes --> reset the lists to prevent duplication
 
+             Log.i("MapViewModel Radius Observer", "onChanged: Radius: " + radiusKm);
+             Log.i("MapViewModel Radius Observer", "onChanged: Center point: " + centerPoint);
+
+             if (radiusKm == null){ //if there's no value set, draw nothing
+                 return;
+             } else if (radiusKm == 0.0) { //don't draw anything/delete anything drawn
+                 mapView.getOverlays().remove(definedRadiusPolygon);
+
+             } else {
+                 //draw the polygon & create the range list data
+                 createCirclePolygon(radiusKm, centerPoint);
+                 checkEntrantRangeStatus(radiusKm, centerPoint);
+                 Log.i("Map View", "onChanged: radius used for polygon: " + radiusKm);
+             }
+         }
+     });
+    }
+
+    //move the circle polygon if the facility location changes
+    private void changeRadiusOutlineLocationViewModel(IMapController mapController){
+        //check to see if the facility point changed
+        mapOptionsViewModel.getFacilityPoint().observe(getViewLifecycleOwner(), new Observer<GeoPoint>() {
+            @Override
+            public void onChanged(GeoPoint geoPoint) {
+                radiusOutlineViewModel(mapController);
+            }
+        });
+
+    }
+
+    //Create a circle polygon for the mapView
+    //Referenced: https://github.com/osmdroid/osmdroid/blob/master/osmdroid-android/src/main/java/org/osmdroid/views/overlay/Polygon.java, Accessed 2024-11-29
+    private void createCirclePolygon(Double radiusKm, GeoPoint centerPoint){
+        double radiusMeterValue = radiusKm * 1000; //change km to meters
+        ArrayList<GeoPoint> circlePoints = pointsAsCircle(centerPoint, radiusMeterValue); //create an array of geopoints in a circle around the facility
+        mapView.getOverlays().remove(definedRadiusPolygon); //to prevent overlap of the same polygon
+        definedRadiusPolygon.setPoints(circlePoints);
+
+        //define style of polygon
+        Paint polygonFill = new Paint();
+        polygonFill.setARGB(50,225,0,0);
+        polygonFill.setStyle(Paint.Style.FILL);
+
+        Paint polygonOutline = new Paint();
+        polygonOutline.setColor(ContextCompat.getColor(requireContext(), R.color.facility_marker));
+        polygonOutline.setStyle(Paint.Style.STROKE);
+        polygonOutline.setStrokeWidth(2);
+
+        definedRadiusPolygon.getFillPaint().setARGB(30,225,0,0);
+        definedRadiusPolygon.getOutlinePaint().setColor(ContextCompat.getColor(requireContext(), R.color.facility_marker));
+        definedRadiusPolygon.getOutlinePaint().setStrokeWidth(2);
+        mapView.getOverlays().add(definedRadiusPolygon);
+        mapView.invalidate();
+
+    }
+
+    //Get which entrant markers are in and out of a defined range, change marker colour and create lists
+    //Reference: https://github.com/osmdroid/osmdroid/blob/master/osmdroid-android/src/main/java/org/osmdroid/util/GeoPoint.java, Accessed: 2024-11-30
+    private void checkEntrantRangeStatus(Double radiusKm, GeoPoint comparePoint){
+        List<Marker> entrantMarkersList = mapOptionsViewModel.getEntrantMarkersList().getValue();
+        double rangeMeterValue = radiusKm * 1000;
+
+        assert entrantMarkersList != null;
+        for (Marker entrantMarker : entrantMarkersList){
+            assert entrantMarker != null;
+            GeoPoint entrantGeoPoint = entrantMarker.getPosition();
+            double distance;
+            distance = entrantGeoPoint.distanceToAsDouble(comparePoint); //get the distance between the two geopoints in meters
+
+            if (distance <= rangeMeterValue){ //distance lower than the range value, it is in range
+                Log.i("EntrantRange", "checkEntrantRangeStatus: is within range" + entrantMarker.getTitle());
+
+                //change the marker colour
+                Drawable markerIcon = entrantMarker.getIcon();
+                Drawable markerNewColor = DrawableCompat.wrap(markerIcon);
+                DrawableCompat.setTint(markerNewColor, ContextCompat.getColor(requireContext(), R.color.in_range_marker));
+
+                entrantMarker.setIcon(markerNewColor);
+                mapView.invalidate();
+                //add to the in range list
+                mapOptionsViewModel.addToEntrantsInRangeList(entrantMarker);
+                Log.i("IN RANGE LIST", "checkEntrantRangeStatus: Range list markers: " + mapOptionsViewModel.getEntrantsInRangeList().getValue().toString());
+            }
+            else { //entrant not in range, add them to the not in range list
+                Log.i("EntrantRange", "checkEntrantRangeStatus: is NOT within range" + entrantMarker.getTitle());
+
+                //change the marker colour
+                Drawable markerIcon = entrantMarker.getIcon();
+                Drawable markerNewColor = DrawableCompat.wrap(markerIcon);
+                DrawableCompat.setTint(markerNewColor, ContextCompat.getColor(requireContext(), R.color.out_of_range_marker));
+
+                entrantMarker.setIcon(markerNewColor);
+                mapView.invalidate();
+                mapOptionsViewModel.addToEntrantsOutOfRangeList(entrantMarker);
+                Log.i("OUT OF RANGE LIST", "checkEntrantRangeStatus: Range list markers: " + mapOptionsViewModel.getEntrantsOutOfRangeList().getValue().toString());
+            }
+
+        }
+    }
+
+    private void resetRangeLists(){
+        mapOptionsViewModel.clearEntrantsInRangeList();
+        mapOptionsViewModel.clearEntrantsOutOfRangeList();
     }
 }

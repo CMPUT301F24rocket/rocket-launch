@@ -20,130 +20,142 @@ android:padding="16dp">
     app:layout_constraintStart_toStartOf="parent"
     app:layout_constraintEnd_toEndOf="parent"/>
 
-<!--Image view for event poster-->
-<ImageView
-    android:id="@+id/edit_event_poster_view"
-    android:layout_width="wrap_content"
-    android:layout_height="200dp"
-    tools:srcCompat="@tools:sample/backgrounds/scenic"
-
-    app:layout_constraintTop_toBottomOf="@id/edit_event_header"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent" />
-
-<ImageButton
-    android:id="@+id/cancel_button"
-    style="@style/XButtonStyle"
-
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-
-    app:layout_constraintVertical_bias="0.1"
-    app:layout_constraintHorizontal_bias="0"/>
-
-<ImageButton
-    android:id="@+id/add_event_poster_button"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:padding="20sp"
-    android:backgroundTint="@color/gunmetal"
-    android:src="@drawable/image_multiple"
-
-    app:layout_constraintTop_toTopOf="@id/edit_event_poster_view"
-    app:layout_constraintBottom_toBottomOf="@id/edit_event_poster_view"
-    app:layout_constraintStart_toStartOf="@id/edit_event_poster_view"
-    app:layout_constraintEnd_toEndOf="@id/edit_event_poster_view"
-
-    app:layout_constraintVertical_bias="0.95"
-    app:layout_constraintHorizontal_bias="0.95"/>
-
-<LinearLayout
-    android:layout_width="match_parent"
-    android:layout_height="0dp"
-    android:orientation="vertical"
-    app:layout_constraintTop_toBottomOf="@id/edit_event_poster_view"
-    app:layout_constraintBottom_toBottomOf="parent">
-
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@id/edit_event_header"
+        app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/view_event_name"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textAlignment="center"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:padding="16dp"/> </LinearLayout>
+            android:layout_height="match_parent">
 
-    <!--Set Event Waitlist Capacity Size-->
-    <LinearLayout
-        android:id="@+id/waitlist_capacity_layout"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        android:orientation="horizontal">
+            <!--Image view for event poster-->
+            <ImageView
+                android:id="@+id/edit_event_poster_view"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                tools:srcCompat="@tools:sample/backgrounds/scenic"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="waitlist capacity: "/>
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent" />
 
-        <TextView
-            android:id="@+id/view_waitlist_capacity"
-            android:layout_width="100dp"
-            android:textAlignment="center"
-            android:textSize="20dp"
-            android:layout_height="wrap_content"/>
+            <ImageButton
+                android:id="@+id/cancel_button"
+                style="@style/XButtonStyle"
 
-    </LinearLayout>
-    <!--Require Geolocation Option-->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="@color/tea_green"
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20dp"
-            android:text="Require Entrant Geolocation"/>
-        <CheckBox
-            android:id="@+id/view_checkbox_geolocation_requirement"
-            android:enabled="false"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-    </LinearLayout>
+                app:layout_constraintVertical_bias="0"
+                app:layout_constraintHorizontal_bias="0"/>
 
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingTop="10dp"
-        android:textSize="20dp"
-        android:text="Event Description:"/>
+            <ImageButton
+                android:id="@+id/add_event_poster_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="20sp"
+                android:backgroundTint="@color/gunmetal"
+                android:src="@drawable/image_multiple"
 
-    <TextView
-        android:id="@+id/view_event_description"
-        android:textSize="20dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+                app:layout_constraintTop_toTopOf="@id/edit_event_poster_view"
+                app:layout_constraintBottom_toBottomOf="@id/edit_event_poster_view"
+                app:layout_constraintStart_toStartOf="@id/edit_event_poster_view"
+                app:layout_constraintEnd_toEndOf="@id/edit_event_poster_view"
 
-</LinearLayout>
+                app:layout_constraintVertical_bias="0.95"
+                app:layout_constraintHorizontal_bias="0.95"/>
 
-<Button
-    android:id="@+id/cancel_waitlist_button"
-    style="@style/ButtonStyleC"
-    app:layout_constraintTop_toTopOf="parent"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toStartOf="parent"
-    app:layout_constraintEnd_toEndOf="parent"
-    app:layout_constraintVertical_bias="0.95"
-    app:layout_constraintHorizontal_bias="0.5"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:orientation="vertical"
+                app:layout_constraintTop_toBottomOf="@id/edit_event_poster_view">
 
-    android:text="cancel waitlist"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:id="@+id/view_event_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textAlignment="center"
+                        android:textSize="24sp"
+                        android:textStyle="bold"
+                        android:padding="16dp"/> </LinearLayout>
+
+                <View style="@style/DividerLineStyle"/>
+
+                <!--Set Event Waitlist Capacity Size-->
+                <LinearLayout
+                    android:id="@+id/waitlist_capacity_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:visibility="gone"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:text="waitlist capacity: "/>
+
+                    <TextView
+                        android:id="@+id/view_waitlist_capacity"
+                        android:layout_width="100dp"
+                        android:textAlignment="center"
+                        android:textSize="20dp"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+                <!--Require Geolocation Option-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textSize="20dp"
+                        android:text="Require Entrant Geolocation"/>
+                    <CheckBox
+                        android:id="@+id/view_checkbox_geolocation_requirement"
+                        android:enabled="false"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+                </LinearLayout>
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingTop="10dp"
+                    android:textSize="20dp"
+                    android:text="Event Description:"/>
+
+                <TextView
+                    android:id="@+id/view_event_description"
+                    android:textSize="20dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+                <View style="@style/DividerLineStyle"/>
+
+                <Button
+                    android:id="@+id/cancel_waitlist_button"
+                    style="@style/ButtonStyleC"
+                    android:layout_margin="15dp"
+                    android:layout_gravity="center"
+
+                    android:text="cancel waitlist"/>
+
+            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

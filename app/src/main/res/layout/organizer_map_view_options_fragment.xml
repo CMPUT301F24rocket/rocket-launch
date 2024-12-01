@@ -97,7 +97,6 @@
             <View
                 style="@style/DividerLineStyle"/>
 
-            <!--TODO: Add radius measurement, Add pins within defined radius-->
             <!--Dropdown Header-->
             <LinearLayout
                 android:id="@+id/radius_options_header"
@@ -128,7 +127,7 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
                 android:padding="10dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <!--Enter A Defined Radius-->
                 <LinearLayout
@@ -144,9 +143,19 @@
                         style="@style/MapOptionsTextConstants"
                         android:paddingEnd="10dp"
                         android:textStyle="italic"
-                        android:hint="Enter Radius"/>
+                        android:hint="Enter Radius"
+                        android:focusableInTouchMode="true"
+                        android:focusable="true"/>
 
                 </LinearLayout>
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:textStyle="italic"
+                    android:textSize="15sp"
+                    android:text="Maximum radius: 20km"/>
 
                 <Button
                     android:id="@+id/map_options_enter_radius_button"
@@ -181,7 +190,7 @@
                     android:id="@+id/list_entrants_in_defined_radius"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
 
                 <!--For Entrants out of Range-->
                 <LinearLayout
@@ -207,7 +216,7 @@
                     android:id="@+id/list_entrants_outside_defined_radius"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:visibility="gone"/>
+                    android:visibility="visible"/>
 
             </LinearLayout>
 
