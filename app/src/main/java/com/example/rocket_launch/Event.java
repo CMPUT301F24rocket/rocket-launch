@@ -37,13 +37,14 @@ public class Event {
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
     private List<String> registeredEntrants;
-  
-    private List<String> finalEntrants;
+
     private String posterUrl;
     private List<EntrantLocationData> entrantLocationDataList;
 
     private int maxWaitlistSize;// Integer
     private List<Notification> notifications; // new notification list
+
+    private String organizer;
 
 
     public Event(){
@@ -138,8 +139,6 @@ public class Event {
     public int getCapacity() {return capacity;}
 
     public boolean getGeolocationRequired() {return geolocationRequired;}
-
-    // public boolean isGeolocationRequired() {return geolocationRequired;}
 
     public Calendar getStartTime() {
         return startTime;
@@ -242,6 +241,14 @@ public class Event {
 
     public void setInvitedEntrants(List<String> invitedEntrants) {
         this.invitedEntrants = invitedEntrants;
+    }
+
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
     }
 
     public static class UserArrayAdapter extends ArrayAdapter<User> {

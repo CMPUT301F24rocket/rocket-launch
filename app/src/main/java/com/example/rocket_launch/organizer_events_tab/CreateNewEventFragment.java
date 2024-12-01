@@ -221,6 +221,8 @@ public class CreateNewEventFragment extends Fragment {
         String eventID = UUID.randomUUID().toString();
         event.setEventID(eventID);
 
+        event.setOrganizer(androidId);
+
         eventsDB.addCreatedEvent(event, androidId, v -> closeFragment());
     }
 
