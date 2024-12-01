@@ -23,6 +23,23 @@
         app:layout_constraintEnd_toEndOf="@id/map_view_header"
         app:layout_constraintHorizontal_bias="0.97"/>
 
+    <TextView
+        android:id="@+id/no_entrant_location_data"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15sp"
+        android:textStyle="italic"
+        android:text="**No Entrant Geolocation Data for this Event"
+
+        app:layout_constraintTop_toTopOf="@id/map_view_header"
+        app:layout_constraintBottom_toBottomOf="@id/map_view_header"
+        app:layout_constraintStart_toStartOf="@id/map_view_header"
+        app:layout_constraintEnd_toEndOf="@id/map_view_header"
+        app:layout_constraintVertical_bias="0.9"
+        android:gravity="center"
+
+        android:visibility="gone"/>
+
     <org.osmdroid.views.MapView
         android:id="@+id/organizer_map_view"
         android:layout_width="match_parent"

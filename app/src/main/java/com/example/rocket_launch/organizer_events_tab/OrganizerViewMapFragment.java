@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.core.content.ContextCompat;
 import androidx.core.graphics.drawable.DrawableCompat;
@@ -70,6 +71,7 @@ public class OrganizerViewMapFragment extends Fragment {
     private MapOptionsViewModel mapOptionsViewModel;
     private Marker facilityMarker;
     private Polygon definedRadiusPolygon;
+    TextView noEventGeolocationTextView;
 
     public OrganizerViewMapFragment() {
         // Required empty public constructor
@@ -95,6 +97,8 @@ public class OrganizerViewMapFragment extends Fragment {
         View view = inflater.inflate(R.layout.organizer_view_map_fragment, container, false);
         getFacilityName();
         Log.i("View Map Fragment Facility Name", "onCreateView: facility name: " + mapOptionsViewModel.getFacilityName().getValue());
+
+        noEventGeolocationTextView = view.findViewById(R.id.no_entrant_location_data);
 
         //Setting up mapView
         mapView = view.findViewById(R.id.organizer_map_view);
@@ -485,6 +489,10 @@ public class OrganizerViewMapFragment extends Fragment {
                 Log.e("Fetch Entrant Location Data List", "getEntrantLocationDataList: error getting entrant location data list");
                 entrantLocationDataListCallback.onEntrantLocationDataListFetched(null);
             }
+
+            if (!event.getGeolocationRequired()){
+                noEventGeolocationTextView.setVisibility(View.VISIBLE);
+            } else {noEventGeolocationTextView.setVisibility(View.GONE);}
         });
     }
 
