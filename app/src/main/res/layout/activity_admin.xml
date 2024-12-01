@@ -2,19 +2,36 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
-    <!-- Header Text -->
-    <TextView
-        android:id="@+id/adminHeader"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/periwinkle"
-        android:gravity="center"
-        android:padding="16dp"
-        android:text="Admin Mode"
-        android:textColor="@color/black"
-        android:textSize="24sp" />
+        android:layout_height="wrap_content">
+
+        <!-- Header Text -->
+        <TextView
+            android:id="@+id/adminHeader"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/periwinkle"
+            android:gravity="center"
+            android:padding="16dp"
+            android:text="Admin Mode"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+
+            app:layout_constraintTop_toTopOf="parent"/>
+
+        <ImageButton
+            android:id="@+id/back_to_main_activity_button"
+            style="@style/ArrowLeftButtonStyle"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:backgroundTint="@color/periwinkle"
+            android:visibility="gone"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <!-- TabLayout for the admin tabs -->
     <com.google.android.material.tabs.TabLayout

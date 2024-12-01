@@ -36,6 +36,19 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
+                <ImageButton
+                    android:id="@+id/admin_activity_button"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/account_cog"
+                    android:backgroundTint="@color/periwinkle"
+                    app:layout_constraintHorizontal_bias="0.95"
+
+                    app:layout_constraintTop_toTopOf="@+id/user_profile_header"
+                    app:layout_constraintBottom_toBottomOf="@id/user_profile_header"
+                    app:layout_constraintStart_toStartOf="@id/user_profile_header"
+                    app:layout_constraintEnd_toEndOf="@id/user_profile_header"/>
+
                 <!--User Profile Picture-->
                 <ImageView
                     android:id="@+id/profile_picture_display"
