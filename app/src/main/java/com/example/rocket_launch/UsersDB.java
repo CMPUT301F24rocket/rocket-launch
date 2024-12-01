@@ -326,10 +326,11 @@ public class UsersDB {
                 .addOnFailureListener(onFailure);
     }
 
-    public void deleteFacility(String androidId) {
+    public void deleteFacility(String androidId, OnSuccessListener<Void> onSuccessListener) {
         getUser(androidId, user -> {
             // remove organizer role
             user.getRoles().setOrganizer(false);
+
             // remove all created events
             EventsDB eventsDB = new EventsDB();
             for (String event : user.getEventsCreated()) {
@@ -341,13 +342,21 @@ public class UsersDB {
             // if both roles are false, remove from database
             if (!user.getRoles().isEntrant()) {
                 usersRef.document(androidId).delete()
-                        .addOnSuccessListener(l -> Log.d("delete facility", "full deletion successful"))
+                        .addOnSuccessListener(onSuccessListener)
                         .addOnFailureListener(e -> Log.d("delete facility", "full deletion error", e));
+            } else {
+                // remove facility name and address
+                user.setUserFacility("");
+                user.setUserFacilityAddress("");
+                user.setEventsCreated(new ArrayList<String>());
+                updateUser(androidId, user, onSuccessListener, e -> {
+                    Log.d("delete facility", "error updating user");
+                });
             }
         }, e -> Log.e("delete facility", "error retrieving facility", e));
     }
 
-    public void deleteUser(String androidId) {
+    public void deleteUser(String androidId, OnSuccessListener<Void> onSuccessListener) {
         getUser(androidId, user -> {
             // remove user role
             user.getRoles().setEntrant(false);
@@ -370,6 +379,13 @@ public class UsersDB {
                 usersRef.document(androidId).delete()
                         .addOnSuccessListener(l -> Log.d("delete user", "full deletion successful"))
                         .addOnFailureListener(e -> Log.d("delete user", "full deletion error", e));
+            } else {
+                user.setUserName("");
+                user.setUserEmail("");
+                user.setUserPhoneNumber("");
+                updateUser(androidId, user, onSuccessListener, e -> {
+                    Log.d("delete user", "error updating user", e);
+                });
             }
         }, e -> Log.e("delete user", "error retrieving user", e));
     }

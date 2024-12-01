@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,15 +77,20 @@ public class AdminEventsFragment extends Fragment {
      * @param event The event to delete.
      */
     private void deleteEvent(Event event) {
-        eventsDB.getEventsRef().document(event.getEventID())
-                .delete()
-                .addOnSuccessListener(aVoid -> {
-                    // Refresh the list after deletion
-                    loadEvents();
-                })
-                .addOnFailureListener(e -> {
-                    // Handle deletion failure (e.g., show a toast or log the error)
-                });
+        eventsDB.deleteEvent(event.getEventID(), l -> {
+            loadEvents();
+        }, e -> {
+            Log.e("admin delete event", "error deleting event", e);
+        });
+//        eventsDB.getEventsRef().document(event.getEventID())
+//                .delete()
+//                .addOnSuccessListener(aVoid -> {
+//                    // Refresh the list after deletion
+//                    loadEvents();
+//                })
+//                .addOnFailureListener(e -> {
+//                    // Handle deletion failure (e.g., show a toast or log the error)
+//                });
     }
 
     /**
