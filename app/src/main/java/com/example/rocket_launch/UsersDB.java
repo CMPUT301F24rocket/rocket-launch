@@ -325,4 +325,20 @@ public class UsersDB {
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(users);})
                 .addOnFailureListener(onFailure);
     }
+
+    public void loadProfilePhoto(String androidId) {
+        // TODO
+    }
+
+    public void addProfilePhoto(String androidId) {
+        // TODO
+    }
+
+    public void removeProfilePhoto(String androidId) {
+        // TODO
+    }
+
+    public void editProfilePhoto(String androidId) {
+        // TODO
+    }
 }
