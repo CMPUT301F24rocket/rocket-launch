@@ -7,6 +7,8 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,15 +28,6 @@ public class AdminEventsFragment extends Fragment {
     private AdminEventsAdapter adapter;
     private EventsDB eventsDB;
 
-    /**
-     * Sets up the UI for the admin events tab.
-     *
-     * @param inflater Used to inflate the layout.
-     * @param container The parent view group.
-     * @param savedInstanceState Saved state of the fragment.
-     * @return The root view for the fragment.
-     * Author: Pouyan
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,7 +50,41 @@ public class AdminEventsFragment extends Fragment {
         eventsDB = new EventsDB();
         loadEvents();
 
+        // Handle delete events
+        adapter.setOnEventDeleteListener(event -> showDeleteConfirmationDialog(event));
+
         return view;
+    }
+
+    /**
+     * Shows a confirmation dialog before deleting an event.
+     *
+     * @param event The event to delete.
+     */
+    private void showDeleteConfirmationDialog(Event event) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Event")
+                .setMessage("Delete selected item?")
+                .setPositiveButton("Yes", (dialog, which) -> deleteEvent(event))
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    /**
+     * Deletes the specified event from the database.
+     *
+     * @param event The event to delete.
+     */
+    private void deleteEvent(Event event) {
+        eventsDB.getEventsRef().document(event.getEventID())
+                .delete()
+                .addOnSuccessListener(aVoid -> {
+                    // Refresh the list after deletion
+                    loadEvents();
+                })
+                .addOnFailureListener(e -> {
+                    // Handle deletion failure (e.g., show a toast or log the error)
+                });
     }
 
     /**

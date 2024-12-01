@@ -54,18 +54,17 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Event event = events.get(position);
 
-        // Show "No event name provided" if name is missing
-        String eventName = (event.getName() != null && !event.getName().isEmpty())
-                ? event.getName()
-                : "No event name provided";
-        holder.eventName.setText(eventName);
+        holder.eventName.setText(event.getName() != null ? event.getName() : "No name provided");
+        holder.eventDescription.setText(event.getDescription() != null ? event.getDescription() : "No description provided");
 
-        // Show "No description provided" if description is missing
-        String eventDescription = (event.getDescription() != null && !event.getDescription().isEmpty())
-                ? event.getDescription()
-                : "No description provided";
-        holder.eventDescription.setText(eventDescription);
+        holder.itemView.setOnLongClickListener(v -> {
+            if (onEventDeleteListener != null) {
+                onEventDeleteListener.onEventDelete(event);
+            }
+            return true;
+        });
     }
+
 
     /**
      * Returns the number of events in the list.
@@ -109,4 +108,15 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
             eventDescription = itemView.findViewById(R.id.event_description);
         }
     }
+
+    public interface OnEventDeleteListener {
+        void onEventDelete(Event event);
+    }
+
+    private OnEventDeleteListener onEventDeleteListener;
+
+    public void setOnEventDeleteListener(OnEventDeleteListener listener) {
+        this.onEventDeleteListener = listener;
+    }
+
 }
