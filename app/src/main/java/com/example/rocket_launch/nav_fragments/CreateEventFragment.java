@@ -20,6 +20,8 @@ import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.organizer_events_tab.CreateNewEventFragment;
 import com.example.rocket_launch.organizer_events_tab.CreatedEventDetailsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
@@ -115,16 +117,37 @@ public class CreateEventFragment extends Fragment {
     /**
      * function that fetches all events created by an organizer and loads them
      */
-    private void fetchEvents(){
-        // get created events and on success, get events from eventsDB
-        usersDB.getCreatedEventIds(androidID, eventTitleList ->
-                        eventsDB.getAllEventsInList(eventTitleList, events -> {
-                            CreateEventFragment.this.events.clear();
-                            CreateEventFragment.this.events.addAll(events);
-                            adapter.notifyDataSetChanged();
-                        }, e -> {
-                            Log.w("Firebase", "Error getting user", e);
-                            Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();}),
-                e -> Log.w("Firebase", "Error getting events title list", e));
+    private void fetchEvents() {
+        usersDB.getCreatedEventIds(androidID, eventTitleList -> {
+            FirebaseFirestore db = FirebaseFirestore.getInstance();
+
+            // Fetch events only from the `events_dev` collection
+            db.collection("events_dev")
+                    .whereIn("eventID", eventTitleList) // Ensure we fetch events matching IDs
+                    .get()
+                    .addOnSuccessListener(querySnapshot -> {
+                        events.clear(); // Clear the old list
+
+                        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                            Event event = document.toObject(Event.class); // Map the Firestore document to Event object
+                            if (event != null) {
+                                events.add(event); // Add the event to the list
+                                Log.d("FetchEvents", "Event: " + event.getName() + ", Poster URL: " + event.getPosterUrl());
+                            } else {
+                                Log.w("FetchEvents", "Event object is null for document: " + document.getId());
+                            }
+                        }
+
+                        adapter.notifyDataSetChanged(); // Notify the adapter of changes
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("FetchEvents", "Error fetching events from events_dev collection", e);
+                        Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
+                    });
+        }, e -> Log.e("FetchEvents", "Error fetching event IDs", e));
     }
+
+
+
+
 }

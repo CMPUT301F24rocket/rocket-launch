@@ -3,6 +3,7 @@ package com.example.rocket_launch;
 import android.net.Uri;
 import android.util.Log;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -24,16 +25,25 @@ public class ImageStorageDB {
      * @param path
      *  path to upload image to
      */
-    public static void uploadImage(Uri imageUri, String path) {
+    public static void uploadImage(Uri imageUri, String path,
+                                   OnSuccessListener<String> onSuccessListener,
+                                   OnFailureListener onFailureListener) {
         StorageReference imageRef = storage.getReference().child(path);
         UploadTask uploadTask = imageRef.putFile(imageUri);
-        uploadTask.addOnSuccessListener(l -> {
-            Log.d("Image Storage", "upload successful");
-        }).addOnFailureListener(e -> {
-            Log.d("Image Storage", "upload successful", e);
-        });
+
+        uploadTask.addOnSuccessListener(taskSnapshot -> {
+            // Get the download URL
+            imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                onSuccessListener.onSuccess(uri.toString()); // Pass the download URL as a String
+            }).addOnFailureListener(onFailureListener);
+        }).addOnFailureListener(onFailureListener);
     }
 
+    public static void getImage(String path, OnSuccessListener<Uri> onSuccessListener, OnFailureListener onFailureListener) {
+        StorageReference imageRef = storage.getReference().child(path);
+        Log.d("ImageStorageDB", "Fetching image from path: " + path);
+        imageRef.getDownloadUrl().addOnSuccessListener(onSuccessListener).addOnFailureListener(onFailureListener);
+    }
 
     /**
      * removes an image at the given path
