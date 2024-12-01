@@ -1,0 +1,49 @@
+Index: app/src/main/res/layout/fragment_feedback_form.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\n<androidx.constraintlayout.widget.ConstraintLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\n    xmlns:tools=\"http://schemas.android.com/tools\"\n    android:layout_width=\"match_parent\"\n    android:layout_height=\"match_parent\">\n\n    <!--User Profile Header-->\n    <TextView\n        android:id=\"@+id/user_profile_header\"\n        style=\"@style/ActivityHeaderStyle\"\n        android:text=\"Feedback Form\"\n        android:gravity=\"center\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintTop_toTopOf=\"parent\">\n\n    </TextView>\n\n    <LinearLayout\n        android:id=\"@+id/feedback_section\"\n        android:layout_width=\"402dp\"\n        android:layout_height=\"374dp\"\n        android:orientation=\"vertical\"\n        app:layout_constraintBottom_toBottomOf=\"parent\"\n        app:layout_constraintEnd_toEndOf=\"parent\"\n        app:layout_constraintStart_toStartOf=\"parent\"\n        app:layout_constraintTop_toBottomOf=\"@+id/user_profile_header\">\n\n        <TextView\n            android:id=\"@+id/feedback_prompt\"\n            android:layout_width=\"match_parent\"\n            android:layout_height=\"wrap_content\"\n            android:padding=\"16dp\"\n            android:paddingBottom=\"8dp\"\n            android:text=\"Rate your experience:\"\n            android:textSize=\"34sp\" />\n\n        <LinearLayout\n            android:id=\"@+id/star_rating_layout\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_gravity=\"center_horizontal\"\n            android:orientation=\"horizontal\">\n\n            <!-- Star icons -->\n            <ImageView\n                android:id=\"@+id/star1\"\n                android:layout_width=\"32dp\"\n                android:layout_height=\"32dp\"\n                android:contentDescription=\"Star 1\"\n                android:src=\"@drawable/ic_star_outline\" />\n\n            <ImageView\n                android:id=\"@+id/star2\"\n                android:layout_width=\"32dp\"\n                android:layout_height=\"32dp\"\n                android:contentDescription=\"Star 2\"\n                android:src=\"@drawable/ic_star_outline\" />\n\n            <ImageView\n                android:id=\"@+id/star3\"\n                android:layout_width=\"32dp\"\n                android:layout_height=\"32dp\"\n                android:contentDescription=\"Star 3\"\n                android:src=\"@drawable/ic_star_outline\" />\n\n            <ImageView\n                android:id=\"@+id/star4\"\n                android:layout_width=\"32dp\"\n                android:layout_height=\"32dp\"\n                android:contentDescription=\"Star 4\"\n                android:src=\"@drawable/ic_star_outline\" />\n\n            <ImageView\n                android:id=\"@+id/star5\"\n                android:layout_width=\"32dp\"\n                android:layout_height=\"32dp\"\n                android:contentDescription=\"Star 5\"\n                android:src=\"@drawable/ic_star_outline\" />\n        </LinearLayout>\n\n        <EditText\n            android:id=\"@+id/feedback_text\"\n            android:layout_width=\"369dp\"\n            android:layout_height=\"79dp\"\n            android:layout_marginTop=\"8dp\"\n            android:enabled=\"false\"\n            android:hint=\"Write your feedback here...\">\n\n        </EditText>\n\n        <Button\n            android:id=\"@+id/submit_feedback_button\"\n            android:layout_width=\"wrap_content\"\n            android:layout_height=\"wrap_content\"\n            android:layout_gravity=\"center_horizontal\"\n            android:layout_marginTop=\"8dp\"\n            android:padding=\"16dp\"\n            android:text=\"Submit Feedback\"\n            android:visibility=\"gone\" /> <!-- Hidden by default -->\n\n        <Button\n            android:id=\"@+id/edit_feedback_button\"\n            android:layout_width=\"151dp\"\n            android:layout_height=\"wrap_content\"\n            android:layout_gravity=\"center_horizontal\"\n            android:layout_marginTop=\"8dp\"\n            android:padding=\"16dp\"\n            android:text=\"Edit Feedback\"\n            android:visibility=\"visible\" /> <!-- Shown initially -->\n\n    </LinearLayout>\n\n</androidx.constraintlayout.widget.ConstraintLayout>
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_feedback_form.xml b/app/src/main/res/layout/fragment_feedback_form.xml
+--- a/app/src/main/res/layout/fragment_feedback_form.xml	(revision d89f157a31c0359eefa60afef30c59ae3416f5ba)
++++ b/app/src/main/res/layout/fragment_feedback_form.xml	(date 1733024246441)
+@@ -5,6 +5,7 @@
+     android:layout_width="match_parent"
+     android:layout_height="match_parent">
+ 
++
+     <!--User Profile Header-->
+     <TextView
+         android:id="@+id/user_profile_header"
+@@ -19,8 +20,9 @@
+ 
+     <LinearLayout
+         android:id="@+id/feedback_section"
+-        android:layout_width="402dp"
+-        android:layout_height="374dp"
++        android:layout_width="393dp"
++        android:layout_height="322dp"
++        android:layout_margin="10dp"
+         android:orientation="vertical"
+         app:layout_constraintBottom_toBottomOf="parent"
+         app:layout_constraintEnd_toEndOf="parent"
+@@ -34,7 +36,7 @@
+             android:padding="16dp"
+             android:paddingBottom="8dp"
+             android:text="Rate your experience:"
+-            android:textSize="34sp" />
++            android:textSize="20sp" />
+ 
+         <LinearLayout
+             android:id="@+id/star_rating_layout"
+@@ -82,9 +84,8 @@
+ 
+         <EditText
+             android:id="@+id/feedback_text"
+-            android:layout_width="369dp"
+-            android:layout_height="79dp"
+-            android:layout_marginTop="8dp"
++            android:layout_width="372dp"
++            android:layout_height="wrap_content"
+             android:enabled="false"
+             android:hint="Write your feedback here...">
+ 
