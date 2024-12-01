@@ -121,29 +121,34 @@ public class CreateEventFragment extends Fragment {
         usersDB.getCreatedEventIds(androidID, eventTitleList -> {
             FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-            // Fetch events only from the `events_dev` collection
-            db.collection("events_dev")
-                    .whereIn("eventID", eventTitleList) // Ensure we fetch events matching IDs
-                    .get()
-                    .addOnSuccessListener(querySnapshot -> {
-                        events.clear(); // Clear the old list
+            if (eventTitleList == null || eventTitleList.isEmpty()){
+                Log.e("Cannot Fetch Events", "fetchEvents: user eventsCreated is null");
+            } else {
+                // Fetch events only from the `events_dev` collection
+                db.collection("events_dev")
+                        .whereIn("eventID", eventTitleList) // Ensure we fetch events matching IDs
+                        .get()
+                        .addOnSuccessListener(querySnapshot -> {
+                            events.clear(); // Clear the old list
 
-                        for (DocumentSnapshot document : querySnapshot.getDocuments()) {
-                            Event event = document.toObject(Event.class); // Map the Firestore document to Event object
-                            if (event != null) {
-                                events.add(event); // Add the event to the list
-                                Log.d("FetchEvents", "Event: " + event.getName() + ", Poster URL: " + event.getPosterUrl());
-                            } else {
-                                Log.w("FetchEvents", "Event object is null for document: " + document.getId());
+                            for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                                Event event = document.toObject(Event.class); // Map the Firestore document to Event object
+                                if (event != null) {
+                                    events.add(event); // Add the event to the list
+                                    Log.d("FetchEvents", "Event: " + event.getName() + ", Poster URL: " + event.getPosterUrl());
+                                } else {
+                                    Log.w("FetchEvents", "Event object is null for document: " + document.getId());
+                                }
                             }
-                        }
 
-                        adapter.notifyDataSetChanged(); // Notify the adapter of changes
-                    })
-                    .addOnFailureListener(e -> {
-                        Log.e("FetchEvents", "Error fetching events from events_dev collection", e);
-                        Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
-                    });
+                            adapter.notifyDataSetChanged(); // Notify the adapter of changes
+                        })
+                        .addOnFailureListener(e -> {
+                            Log.e("FetchEvents", "Error fetching events from events_dev collection", e);
+                            Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
+                        });
+            }
+
         }, e -> Log.e("FetchEvents", "Error fetching event IDs", e));
     }
 
