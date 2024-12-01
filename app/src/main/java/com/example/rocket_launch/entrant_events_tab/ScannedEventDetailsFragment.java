@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -49,6 +50,7 @@ public class ScannedEventDetailsFragment extends Fragment {
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
     LinearLayout eventCapacityLayout;
+    ImageButton add_event_poster_button;
 
     //For Location Data
     private ActivityResultLauncher<String> locationPermissionLauncher;
@@ -113,6 +115,9 @@ public class ScannedEventDetailsFragment extends Fragment {
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
         eventCapacityLayout = view.findViewById(R.id.waitlist_capacity_layout);
+        add_event_poster_button = view.findViewById(R.id.add_event_poster_button);
+        add_event_poster_button.setVisibility(View.GONE);
+
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
@@ -168,7 +173,7 @@ public class ScannedEventDetailsFragment extends Fragment {
             } else{ //Don't need Location Data --> don't run permissions
 
                 //check if user in waitlist already
-                if (!event.getWaitingList().contains(androidId)) {
+                if (!event.containsUser(androidId)) {
                     // add to waitlist of event
                     eventsdb.addUserToWaitingList(eventId, androidId);
 
@@ -198,8 +203,10 @@ public class ScannedEventDetailsFragment extends Fragment {
         requireActivity().getSupportFragmentManager().popBackStack();
     }
 
-    //Referenced: https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient.html, Accessed 2024-11-26
-    //Author: Rachel
+    /**
+     * Referenced: https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient.html, Accessed 2024-11-26
+     * Author: Rachel
+     */
     private void getEntrantLocation() {
         if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             locationProviderClient.getCurrentLocation(Priority.PRIORITY_HIGH_ACCURACY, null)
@@ -227,8 +234,10 @@ public class ScannedEventDetailsFragment extends Fragment {
         }
     }
 
-    //alert dialogue to go to android location settings if location permissions are off
-    //Author: Rachel
+    /**
+     * alert dialogue to go to android location settings if location permissions are off
+     * Author: Rachel
+     */
     private void openLocationSettingsDialogue(){
         new AlertDialog.Builder(requireContext())
                 .setTitle("Location Permission Required")
@@ -241,6 +250,4 @@ public class ScannedEventDetailsFragment extends Fragment {
                 .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
                 .show();
     }
-
-
 }

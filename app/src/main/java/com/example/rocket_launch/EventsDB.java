@@ -20,9 +20,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import java.util.Random;
-import java.util.UUID;
-
 
 /**
  * class to help with firestore database
@@ -42,6 +39,7 @@ public class EventsDB {
 
     /**
      * add a created event to database
+     * Author: Kaiden
      * @param event
      *  event to add
      * @param androidId
@@ -72,6 +70,7 @@ public class EventsDB {
 
     /**
      * Add user to waiting list and check max waiting list size
+     * Author: Kaiden
      * @param eventID
      *  add user to event wit heventID
      * @param userID
@@ -107,6 +106,7 @@ public class EventsDB {
 
     /**
      * Remove user from waiting list
+     * Author: Kaiden
      * @param eventID
      *  id of event who's waitlist we want to remove from
      * @param userID
@@ -134,6 +134,7 @@ public class EventsDB {
 
     /**
      * Remove user from registered list
+     * Author: Kaiden
      * @param eventID
      *  id of event who's registered list we want to remove from
      * @param userID
@@ -146,14 +147,14 @@ public class EventsDB {
                 .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
                     public void onSuccess(Void aVoid) {
-                        Log.d("Firebase", "User removed from registered list");
+                        Log.d("Firebase", "User added to registered list");
                     }
                 })
 
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w("Firebase", "Error removing user", e);
+                        Log.w("Firebase", "Error adding user", e);
                     }
                 });
 
@@ -161,6 +162,7 @@ public class EventsDB {
 
     /**
      * Remove user from registered list
+     * Author: Kaiden
      * @param eventID
      *  id of event who's registered list we want to remove from
      * @param userID
@@ -187,6 +189,7 @@ public class EventsDB {
 
     /**
      * remove a user from an events invited list
+     * Author: Kaiden
      * @param eventId
      *  id of event
      * @param userId
@@ -205,7 +208,37 @@ public class EventsDB {
     }
 
     /**
-     * update eventDB
+     * adds a user to a given event's cancelled list
+     * Author: Kaiden
+     * @param eventId
+     *  event to add user to
+     * @param userId
+     *  user to add
+     */
+    public void addUserToCancelledList(String eventId, String userId) {
+        DocumentReference eventDocRef = eventsRef.document(eventId);
+
+        eventDocRef.update("cancelledEntrants", FieldValue.arrayUnion(userId))
+                .addOnSuccessListener(l -> {
+                    Log.d("Firebase", "User added to cancelled list");
+                })
+                .addOnFailureListener(e -> {
+                    Log.w("Firebase", "Error adding user", e);
+                });
+    }
+
+
+    /**
+     * updates a given event(eventId) with new event data store in event
+     * Author: Kaiden
+     * @param eventId
+     *  id of event to update
+     * @param event
+     *  updated data to load
+     * @param onSuccess
+     *  callback for if firestore succeeds
+     * @param onFailureListener
+     *  callback for if firestore fails
      */
     public void updateEvent(String eventId, Event event, OnSuccessListener<Void> onSuccess, OnFailureListener onFailureListener) {
         eventsRef.document(eventId).set(event)
@@ -325,7 +358,7 @@ public class EventsDB {
      * @param onFailure
      *  what to do on failure
      */
-    public void getFinalUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
+    public void getRegisteredUserIds(String eventId, OnSuccessListener<List<String>> onSuccess, OnFailureListener onFailure) {
         eventsRef.document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     Event event = null;
@@ -333,7 +366,7 @@ public class EventsDB {
                         event = documentSnapshot.toObject(Event.class);
                     }
                     if (event != null) {
-                        List<String> users = event.getFinalEntrants();
+                        List<String> users = event.getregisteredEntrants();
                         if (users != null) {
                             onSuccess.onSuccess(users);
                         }
@@ -344,6 +377,7 @@ public class EventsDB {
 
     /**
      * get all events in a string of eventId's
+     * Author: Kaiden
      * @param eventsList
      *  list of events to get
      * @param onSuccess
@@ -375,7 +409,14 @@ public class EventsDB {
                 .addOnFailureListener(onFailure);
     }
 
-
+    /**
+     * adds entrant location to list of location data for the event
+     * Author: Rachel
+     * @param eventID
+     *  id of event to add
+     * @param entrantLocation
+     *  location of entrant signing up
+     */
     public void addToEntrantLocationDataList(String eventID, EntrantLocationData entrantLocation) {
         DocumentReference eventDocRef = eventsRef.document(eventID);
 
@@ -404,7 +445,14 @@ public class EventsDB {
         });
     }
 
-    //Remove location data from the database
+    /**
+     * Remove location data from the database
+     * Author: Rachel
+     * @param eventID
+     *  id of event to remove user location form
+     * @param entrantID
+     *  id of user of which to remove data
+     */
     public void removeFromEntrantLocationDataList(String eventID, String entrantID) {
       
         DocumentReference eventDocRef = eventsRef.document(eventID);

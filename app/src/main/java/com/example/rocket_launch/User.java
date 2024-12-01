@@ -1,7 +1,6 @@
 package com.example.rocket_launch;
 
 
-import android.location.Location;
 import android.media.Image;
 
 import java.util.ArrayList;
@@ -21,7 +20,6 @@ public class User {
     private String userPhoneNumber;
     private String userFacility;
     private String userFacilityAddress;
-    private Location location;
     private Roles roles;
 
     // profile photo
@@ -36,7 +34,6 @@ public class User {
     private List<String> eventsRegistered;
     private List<String> eventsWaitlisted;
     private List<String> eventsCreated;
-    private List<String> eventsCancelled;
 
 
     public User() {
@@ -194,34 +191,4 @@ public class User {
     public void setProfilePhotoPath(String profilePhotoPath) {
         this.profilePhotoPath = profilePhotoPath;
     }
-
-    // cancelled list
-
-    public List<String> getEventsCancelled() {return eventsCancelled;}
-
-    public void setEventsCancelled(List<String> eventsCancelled) {
-        this.eventsCancelled = eventsCancelled;
-    }
-
-    /**
-     * Adds an event to the cancelled events list
-     * @param id ID of the event to add
-     */
-    public void addCancelledEvent(String id) {
-        if (eventsCancelled == null) {
-            eventsCancelled = new ArrayList<>();
-        }
-        eventsCancelled.add(id);
-    }
-
-    /**
-     * Removes an event from the cancelled events list
-     * @param id ID of the event to remove
-     */
-    public void removeCancelledEvent(String id) {
-        if (eventsCancelled != null) {
-            eventsCancelled.remove(id);
-        }
-    }
-
 }

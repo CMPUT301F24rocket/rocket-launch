@@ -247,22 +247,23 @@ public class CreateNewEventFragment extends Fragment {
     }
 
     private void sendEventNotification(String androidId) {
-        // Ensure the notification channel is created
-        NotificationHelper.createNotificationChannel(requireContext());
-
-        // Show the notification
-        NotificationHelper.showNotification(
-                requireContext(),
-                "Event Created",
-                "Your event has been successfully created!",
-                1 // Unique notification ID
-        );
-
-        // Add notification to the user's database entry
-        NotificationHelper.addNotificationToDatabase(
-                androidId,
-                "Event Created",
-                "Your event has been successfully created!"
-        );
+        NotificationHelper.sendNotification(androidId, "Event Created", "Your event has been successfully created!");
+//        // Ensure the notification channel is created
+//        NotificationHelper.createNotificationChannel(requireContext());
+//
+//        // Show the notification
+//        NotificationHelper.showNotification(
+//                requireContext(),
+//                "Event Created",
+//                "Your event has been successfully created!",
+//                1 // Unique notification ID
+//        );
+//
+//        // Add notification to the user's database entry
+//        NotificationHelper.addNotificationToDatabase(
+//                androidId,
+//                "Event Created",
+//                "Your event has been successfully created!"
+//        );
     }
 }

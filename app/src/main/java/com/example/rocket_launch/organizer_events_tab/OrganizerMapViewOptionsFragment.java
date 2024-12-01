@@ -5,11 +5,13 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -20,6 +22,12 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.rocket_launch.MapOptionsViewModel;
 import com.example.rocket_launch.R;
 
+import org.osmdroid.views.overlay.Marker;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
 /**
  * Fragment used for setting up additional organizer map options for the map view fragment.
  * Author: Rachel
@@ -29,6 +37,9 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
     private MapOptionsViewModel mapOptionsViewModel;
     private EditText radiusEditText;
     private Button enterRadiusButton;
+    ListView entrantInRangeListView;
+    ListView entrantOutOfRangeListView;
+
 
     public OrganizerMapViewOptionsFragment() {
         // Required empty public constructor
@@ -71,15 +82,30 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
             }
         });
 
+        mapOptionsViewModel.getEntrantsInRangeList().observe(getViewLifecycleOwner(), new Observer<List<Marker>>() {
+            @Override
+            public void onChanged(List<Marker> markers) {
+                setListContent();
+                setListViews();
+            }
+        });
+
+        mapOptionsViewModel.getEntrantsOutOfRangeList().observe(getViewLifecycleOwner(), new Observer<List<Marker>>() {
+            @Override
+            public void onChanged(List<Marker> markers) {
+                setListContent();
+                setListViews();
+            }
+        });
+
         //Get input for radius
         radiusEditText = view.findViewById(R.id.edit_radius);
         enterRadiusButton = view.findViewById(R.id.map_options_enter_radius_button);
-
         enterRadiusButton.setOnClickListener(v -> {
             defineRadius();
-            radiusEditText.clearFocus();
+            setListContent();
+            setListViews(); //run this whenever the defined range changes
         });
-
 
         //back button pressed
         ImageButton backButton = view.findViewById(R.id.map_options_back_button);
@@ -107,45 +133,103 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
         //collapsable options for lists
         LinearLayout entrantInRangeHeader = view.findViewById(R.id.entrants_in_range_header);
         ImageView entrantInRangeDownArrow = view.findViewById(R.id.entrants_in_range_down_arrow);
-        ListView entrantInRangeList = view.findViewById(R.id.list_entrants_in_defined_radius);
+        entrantInRangeListView = view.findViewById(R.id.list_entrants_in_defined_radius);
+
         LinearLayout entrantOutOfRangeHeader = view.findViewById(R.id.entrants_out_of_range_header);
         ImageView entrantOutOfRangeDownArrow = view.findViewById(R.id.entrants_out_of_range_down_arrow);
-        ListView entrantOutOfRangeList = view.findViewById(R.id.list_entrants_outside_defined_radius);
+        entrantOutOfRangeListView = view.findViewById(R.id.list_entrants_outside_defined_radius);
 
         //controls for collapsable menu options
         radiusOptionControls(defineRadiusOptions, radiusOptionsContent, radiusOptionsDownArrow);
-        entrantsInRangeListControls(entrantInRangeHeader, entrantInRangeList, entrantInRangeDownArrow);
-        entrantsOutOfRangeListControls(entrantOutOfRangeHeader, entrantOutOfRangeList, entrantOutOfRangeDownArrow);
+        entrantsInRangeListControls(entrantInRangeHeader, entrantInRangeListView, entrantInRangeDownArrow);
+        entrantsOutOfRangeListControls(entrantOutOfRangeHeader, entrantOutOfRangeListView, entrantOutOfRangeDownArrow);
 
         return view;
     }
 
+
+
+    //display a list of entrants who are in and out of a user defined range
+    //Run this to update the list whenever either of the range lists change content
+    private void setListContent(){
+        List<String> entrantInRangeNames = new ArrayList<>();
+        List<String> entrantOutOfRangeNames = new ArrayList<>();
+        List<Marker> markerInRange = mapOptionsViewModel.getEntrantsInRangeList().getValue();
+        List<Marker> markerOutOfRange = mapOptionsViewModel.getEntrantsOutOfRangeList().getValue();
+
+        assert markerInRange!= null;
+        //get names of entrants in range
+        for (Marker marker: markerInRange){
+            assert marker != null;
+            String name = marker.getTitle();
+
+            if (name != null){
+                entrantInRangeNames.add(name);
+            }
+        } mapOptionsViewModel.setInRangeNames(entrantInRangeNames);
+
+        //get names of entrants out of range
+        assert markerOutOfRange != null;
+        for (Marker marker: markerOutOfRange){
+            String name = marker.getTitle();
+            if (name != null){
+                entrantOutOfRangeNames.add(name);
+            }
+        } mapOptionsViewModel.setOutRangeNames(entrantOutOfRangeNames);
+
+        Log.i("SetListContent", "setListContent: in range names: " + mapOptionsViewModel.getInRangeNames().getValue());
+        Log.i("SetListContent", "setListContent: out range names: " + mapOptionsViewModel.getOutRangeNames().getValue());
+    }
+
+    //set up the list view layouts with info
+    private void setListViews(){
+        List<String> inRangeNames = mapOptionsViewModel.getInRangeNames().getValue();
+        List<String> outRangeNames = mapOptionsViewModel.getOutRangeNames().getValue();
+
+        ArrayAdapter<String> inRangeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, inRangeNames);
+        entrantInRangeListView.setAdapter(inRangeAdapter);
+        inRangeAdapter.notifyDataSetChanged();
+
+        ArrayAdapter<String> OutOfRangeAdapter = new ArrayAdapter<>(requireContext(), android.R.layout.simple_list_item_1, outRangeNames);
+        entrantOutOfRangeListView.setAdapter(OutOfRangeAdapter);
+        OutOfRangeAdapter.notifyDataSetChanged();
+
+        setListViewHeightBasedOnContent(entrantInRangeListView);
+        setListViewHeightBasedOnContent(entrantOutOfRangeListView);
+    }
+
+    // take user input for a radius to draw a polygon representing a range from their facility
     private void defineRadius(){
-        enterRadiusButton.setOnClickListener(v -> {
-            //check if radiusEditText is not null
-            String radiusText = radiusEditText.getText().toString().trim();
+        //check if radiusEditText is not null
+        String radiusText = radiusEditText.getText().toString().trim();
 
-
-            if (radiusText.isEmpty()){
-                //set default value to 0 and if radius is 0, don't do anything
-                mapOptionsViewModel.setRadius(0);
-            } else {
-                try {
-                    int radiusInt = Integer.parseInt(radiusText); // verifies input is int
+        if (radiusText.isEmpty()){
+            //set default value to 0 and if radius is 0, don't do anything
+            mapOptionsViewModel.setRadius(null);
+        } else {
+            try {
+                Double radiusInt = Double.parseDouble(radiusText); // verifies input is int
+                //make sure its bigger than 1 (at least 1km radius) and smaller than 20km (based on Edmonton & surrounding area)
+                if (radiusInt >= 0.0 && radiusInt <= 20.0){ //set radius in map view model to entered radius
                     mapOptionsViewModel.setRadius(radiusInt);
                     Log.i("Define Radius", "Radius: " + mapOptionsViewModel.getRadius().getValue());
-
-                } catch (NumberFormatException e){
-                    radiusEditText.setError("Enter a valid Integer");
+                } else {
+                    radiusEditText.setError("Max 20km");
+                    Log.i("Define Radius", "Radius out of range " + radiusInt);
                 }
+                radiusEditText.clearFocus();
+
+            } catch (NumberFormatException e){
+                radiusEditText.setError("Enter a valid Integer");
             }
-        });
+        }
     }
 
     private void closeFragment() {
         getParentFragmentManager().popBackStack();
     }
 
+    //Methods to control the drop down features in the map options UI
     private void radiusOptionControls(LinearLayout defineRadiusOptions,LinearLayout radiusOptionsContent,ImageView radiusOptionsDownArrow){
         //make radius content visible if clicked
         defineRadiusOptions.setOnClickListener(new View.OnClickListener() {
@@ -191,4 +275,24 @@ public class OrganizerMapViewOptionsFragment extends Fragment {
             }
         });
     }
+
+    //set list view height based on the number of content, otherwise the scroll view interferes with it
+    private static void setListViewHeightBasedOnContent(ListView listView) {
+        ListAdapter listAdapter = listView.getAdapter();
+        if (listAdapter == null) return;
+
+        //base layout height of a listview based on the content inside it
+        int totalHeight = 0;
+        for (int i = 0; i < listAdapter.getCount(); i++) {
+            View listItem = listAdapter.getView(i, null, listView);
+            listItem.measure(0, 0);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+
+        ViewGroup.LayoutParams params = listView.getLayoutParams();
+        params.height = totalHeight + (listView.getDividerHeight() * (listAdapter.getCount() - 1));
+        listView.setLayoutParams(params);
+        listView.requestLayout();
+    }
+
 }

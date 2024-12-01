@@ -36,6 +36,8 @@ public class Event {
     private List<String> waitingList;
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
+    private List<String> registeredEntrants;
+  
     private List<String> finalEntrants;
     private String posterUrl;
     private List<EntrantLocationData> entrantLocationDataList;
@@ -48,7 +50,7 @@ public class Event {
         // verify lists appear in database -> ensures no access to undefined attribute
         this.waitingList = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
-        this.finalEntrants = new ArrayList<>();
+        this.registeredEntrants = new ArrayList<>();
         this.invitedEntrants = new ArrayList<>();
 
         this.entrantLocationDataList = new ArrayList<>();
@@ -226,12 +228,12 @@ public class Event {
         this.cancelledEntrants = cancelledEntrants;
     }
 
-    public List<String> getFinalEntrants() {
-        return finalEntrants;
+    public List<String> getregisteredEntrants() {
+        return registeredEntrants;
     }
 
-    public void setFinalEntrants(List<String> finalEntrants) {
-        this.finalEntrants = finalEntrants;
+    public void setregisteredEntrants(List<String> registeredEntrants) {
+        this.registeredEntrants = registeredEntrants;
     }
 
     public List<String> getInvitedEntrants() {
@@ -281,5 +283,28 @@ public class Event {
 
             return convertView;
         }
+    }
+
+    /**
+     * checks if user is in any event list
+     * @return
+     *  true if user in event, false otherwise
+     * Author: Kaiden
+     */
+    public boolean containsUser(String user) {
+        boolean valid = false;
+        if (waitingList.contains(user)) {
+            valid = true;
+        }
+        else if (invitedEntrants.contains(user)) {
+            valid = true;
+        }
+        else if (cancelledEntrants.contains(user)) {
+            valid = true;
+        }
+        else if (registeredEntrants.contains(user)) {
+            valid = true;
+        }
+        return valid;
     }
 }
