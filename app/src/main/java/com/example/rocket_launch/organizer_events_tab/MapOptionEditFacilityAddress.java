@@ -22,13 +22,12 @@ import com.google.android.gms.tasks.OnSuccessListener;
 
 /**
  * Edit an Organizer Facility Address in the MapView options
- * update the database and also send info back through the view model
+ * update the database and also send info back through the view model to live update mapView
  * Author: Rachel
  */
 public class MapOptionEditFacilityAddress extends Fragment {
-    //TODO: change facility address and update ViewModel with it
+
     private MapOptionsViewModel mapOptionsViewModel;
-    private String newAddress;
     private UsersDB usersDB;
     private User user;
     private String androidID;
@@ -37,7 +36,6 @@ public class MapOptionEditFacilityAddress extends Fragment {
     public MapOptionEditFacilityAddress() {
         // Required empty public constructor
     }
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -74,7 +72,7 @@ public class MapOptionEditFacilityAddress extends Fragment {
     }
 
     /**
-     * Load user details from Firestore
+     * Load user details of organizer from Firebase
      */
     private void loadUserDetails() {
         usersDB.getUser(androidID, new OnSuccessListener<User>() {
@@ -85,6 +83,9 @@ public class MapOptionEditFacilityAddress extends Fragment {
         }, e -> Log.w("Firebase", "Error loading user", e));
     }
 
+    /**
+     * Save the new address from the edit text field and update the facilty address in the database
+     */
     private void saveNewAddress(){
         user.setUserFacilityAddress(facilityAddressEditText.getText().toString());
         usersDB.updateUser(androidID,user,
@@ -93,7 +94,9 @@ public class MapOptionEditFacilityAddress extends Fragment {
                 error -> Log.e("Map Option Edit Facility Address", "saveNewAddressToDB: failed to update user address", error));
     }
 
-
+    /**
+     * Close the fragment
+     */
     private void closeFragment() {
         getParentFragmentManager().popBackStack();
     }

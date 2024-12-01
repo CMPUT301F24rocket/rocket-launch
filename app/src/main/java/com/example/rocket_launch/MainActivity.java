@@ -110,11 +110,16 @@ public class MainActivity extends AppCompatActivity {
                     user.setAndroidId(androidID);
                     usersDB.addUser(androidID, user);
                     SelectRolesFragment frag = new SelectRolesFragment(user.getRoles());
+                    User finalUser = user;
                     frag.setOnSuccessListener(new SelectRolesFragment.onSuccessListener() {
                         @Override
                         public void onSuccess(Roles roles) {
                             usersDB.setRoles(androidID, roles);
                             setupNavBar(roles);
+
+
+                            // Refresh the StartUpFragment
+                            refreshStartupFragment(androidID, finalUser, usersDB);
                         }
                     });
                     frag.show(getSupportFragmentManager(), "Create New User");
@@ -194,6 +199,16 @@ public class MainActivity extends AppCompatActivity {
             // if not organizer, don't show create events
             menu.findItem(R.id.navigation_create_events).setVisible(false);
         }
+    }
+
+    private void refreshStartupFragment(String AndroidId, User user, UsersDB userdb) {
+
+        // Display the StartUpFragment
+        StartUpFragment startfrag = new StartUpFragment(AndroidId, user, usersDB);
+        getSupportFragmentManager()
+                .beginTransaction()
+                .replace(R.id.fragment_frame, startfrag) // Ensure R.id.fragment_frame is the container
+                .commit();
     }
 
 

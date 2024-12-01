@@ -37,6 +37,7 @@ import java.util.Locale;
 
 /**
  * fragment used to show details of an event
+ * Author: Kaiden
  */
 public class ScannedEventDetailsFragment extends Fragment {
 
@@ -204,6 +205,7 @@ public class ScannedEventDetailsFragment extends Fragment {
     }
 
     /**
+     * For an event requiring geolocation from entrants, get the lat-long coordinates of the entrant at their current position upon sign-up
      * Referenced: https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient.html, Accessed 2024-11-26
      * Author: Rachel
      */

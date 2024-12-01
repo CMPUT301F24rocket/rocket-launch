@@ -1,10 +1,5 @@
 package com.example.rocket_launch;
 
-
-//References:
-// https://square.github.io/okhttp/, Accessed 2024-11-24
-// https://nominatim.org/release-docs/latest/library/NominatimAPI/, Accessed 2024-11-24
-
 import android.util.Log;
 
 import org.json.JSONArray;
@@ -18,8 +13,16 @@ import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
+/**
+ * Class that takes an address, passes it into a 3rd party API: NominatimGeocode
+ * To get a JSON file to derive lat-long coordinates for osmdroid implementation
+ * uses OkHttp to handle url and Nominatim integration
+ */
+//References:
+// https://square.github.io/okhttp/, Accessed 2024-11-24
+// https://nominatim.org/release-docs/latest/library/NominatimAPI/, Accessed 2024-11-24
 public class NominatimGeocode {
-    private static final String BASE_URL =  "https://nominatim.openstreetmap.org/search?format=json&q=";
+    private static final String BASE_URL =  "https://nominatim.openstreetmap.org/search?format=json&q="; //base url to enter an address and return a geocoded JSON file type
     GeoPoint defaultStartPoint = new GeoPoint(53.52741517718694, -113.52959166397568); //ETLC Coordinates
 
     //OkHttp reference
@@ -29,7 +32,12 @@ public class NominatimGeocode {
         client = new OkHttpClient();
     }
 
-    //Get a JSON file from a string address
+    /**
+     * Gets a JSON file from an address through NominatimGeocode
+     * @param address address that will be geocoded
+     * @return a responseBody (JSON file response from 3rd party)
+     * @throws IOException exception if the responseBody is null, or an unexpected value
+     */
     public String geocodeAddress(String address) throws IOException {
         //encode address into a URL
         String url = BASE_URL + java.net.URLEncoder.encode(address, "UTF-8");
@@ -59,7 +67,12 @@ public class NominatimGeocode {
             }
         }
 
-    //get the latitude and longitude and return a geopoint
+    /**
+     * Get the latitude and longitude values from the JSON file and create a GeoPoint
+     * @param jsonResponse JSON file containing an array of best matching results for an address
+     * @return a GeoPoint object for an address
+     * @throws JSONException if GeoPoint can not be made from JSON file, set to a default start point
+     */
     public GeoPoint getLatLongFromJson(String jsonResponse) throws JSONException {
         JSONArray jsonArray = new JSONArray(jsonResponse);
 

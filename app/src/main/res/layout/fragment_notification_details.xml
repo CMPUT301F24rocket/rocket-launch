@@ -12,7 +12,7 @@
         android:id="@+id/view_message_header"
         style="@style/ActivityHeaderStyle"
         android:text="View Message"
-        android:background="@color/tea_green"
+        android:background="@color/periwinkle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

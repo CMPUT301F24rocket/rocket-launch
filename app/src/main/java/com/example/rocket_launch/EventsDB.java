@@ -556,4 +556,20 @@ public class EventsDB {
                 .addOnSuccessListener(onSuccess)
                 .addOnFailureListener(onFailure);
     }
+
+    public void loadPoster(String androidId) {
+        // TODO
+    }
+
+    public void addPoster(String androidId) {
+        // TODO
+    }
+
+    public void removePoster(String androidId) {
+        // TODO
+    }
+
+    public void editProfilePhoto(String androidId) {
+        // TODO
+    }
 }
