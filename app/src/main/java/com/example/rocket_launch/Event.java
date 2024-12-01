@@ -37,7 +37,7 @@ public class Event {
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
     private List<String> finalEntrants;
-  
+    private String posterUrl;
     private List<EntrantLocationData> entrantLocationDataList;
 
     private int maxWaitlistSize;// Integer
@@ -124,6 +124,13 @@ public class Event {
 
     public String getDescription() {
         return description;
+    }
+    public String getPosterUrl() {
+        return posterUrl;
+    }
+
+    public void setPosterUrl(String posterUrl) {
+        this.posterUrl = posterUrl;
     }
 
     public int getCapacity() {return capacity;}
