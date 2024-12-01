@@ -204,8 +204,9 @@
         private void saveProfilePictureUrlToFirestore(String imageUrl) {
             user.setProfilePhotoPath(imageUrl);
             usersDB.updateUser(androidID, user, success -> {
-                Log.d("Firestore", "Profile picture URL updated in Firestore.");
-            }, error -> Log.e("Firestore", "Failed to update profile picture URL in Firestore.", error));
+                Log.d(TAG, "Profile picture URL updated in Firestore.");
+                Snackbar.make(requireView(), "Profile photo updated", Snackbar.LENGTH_SHORT).show();
+            }, error -> Log.e(TAG, "Failed to update profile picture URL in Firestore.", error));
         }
 
 
@@ -223,34 +224,28 @@
         private final ActivityResultLauncher<Intent> galleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
-                    requireActivity();
                     if (result.getResultCode() == Activity.RESULT_OK) {
                         Intent data = result.getData();
                         if (data != null) {
                             imageUri = data.getData();
-                            try {
-                                // Handle the image URI properly
-                                String savedPath = handleImageUri(imageUri);
+                            // Generate a unique path for the image
+                            String imagePath = "images/profile_" + androidID + ".jpg";
 
-                                if (savedPath != null) {
-                                    // Save the path to Firebase
-                                    uploadImageToFirebase(Uri.fromFile(new File(savedPath)));
-
-                                    // Save the path locally in Firestore for reference
-                                    saveImagePathToFirestore(savedPath);
-
-                                    // Load the image into the UI
-                                    loadProfileImage(savedPath);
-                                } else {
-                                    Log.e(TAG, "Failed to handle image URI: Path is null");
-                                }
-                            } catch (Exception e) {
-                                Log.e(TAG, "Error handling image selection", e);
-                            }
+                            // Use ImageStorageDB to upload the image
+                            ImageStorageDB.uploadImage(imageUri, imagePath, downloadUrl -> {
+                                // Save the download URL to Firestore
+                                saveProfilePictureUrlToFirestore(downloadUrl);
+                                // Load the image into the UI
+                                loadProfileImage(downloadUrl);
+                            }, e -> {
+                                Log.e(TAG, "Failed to upload image using ImageStorageDB", e);
+                                Snackbar.make(requireView(), "Failed to upload image", Snackbar.LENGTH_SHORT).show();
+                            });
                         }
                     }
                 }
         );
+
 
         /**
          * Handle the image URI and save it locally as needed
@@ -341,23 +336,18 @@
             }
         }
 
-        /**
-         * Load the profile picture using Glide
-         *
-         * @param imagePath path to an image
-         */
-        private void loadProfileImage(String imagePath) {
-            if (imagePath != null && !imagePath.isEmpty()) {
-                Glide.with(this)
-                        .load(new File(imagePath))
-                        .skipMemoryCache(true) // Bypass Glide's memory cache
-                        .diskCacheStrategy(com.bumptech.glide.load.engine.DiskCacheStrategy.NONE) // Bypass disk cache
+
+        private void loadProfileImage(String imageUrl) {
+            if (imageUrl != null && !imageUrl.isEmpty()) {
+                Picasso.get()
+                        .load(imageUrl)
                         .into(profileImageView);
             } else {
-                // Set default image if no path is available
+                // Set default image if no URL is available
                 setDefaultProfilePicture(user.getUserName());
             }
         }
+
 
 
         /**
