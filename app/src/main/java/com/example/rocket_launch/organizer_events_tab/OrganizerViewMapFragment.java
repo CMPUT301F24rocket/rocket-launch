@@ -48,7 +48,8 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /**
- * Fragment used for displaying a map to an organizer
+ * Fragment used for displaying a mapView to an organizer
+ * Displays: map using OSMDROID, location of user facility, locations of entrants, defined range around facility & entrants in/out of that range
  * Author: Rachel
  */
 //References used for map views & processing

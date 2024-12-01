@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- Layout for the admin profiles fragment -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- RecyclerView to display a list of user profiles -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/profiles_recycler_view"
         android:layout_width="match_parent"

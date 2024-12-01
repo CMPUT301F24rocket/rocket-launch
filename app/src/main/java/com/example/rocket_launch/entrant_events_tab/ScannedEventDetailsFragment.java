@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -36,6 +37,7 @@ import java.util.Locale;
 
 /**
  * fragment used to show details of an event
+ * Author: Kaiden
  */
 public class ScannedEventDetailsFragment extends Fragment {
 
@@ -49,6 +51,7 @@ public class ScannedEventDetailsFragment extends Fragment {
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
     LinearLayout eventCapacityLayout;
+    ImageButton add_event_poster_button;
 
     //For Location Data
     private ActivityResultLauncher<String> locationPermissionLauncher;
@@ -113,6 +116,9 @@ public class ScannedEventDetailsFragment extends Fragment {
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
         eventCapacityLayout = view.findViewById(R.id.waitlist_capacity_layout);
+        add_event_poster_button = view.findViewById(R.id.add_event_poster_button);
+        add_event_poster_button.setVisibility(View.GONE);
+
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
@@ -199,6 +205,7 @@ public class ScannedEventDetailsFragment extends Fragment {
     }
 
     /**
+     * For an event requiring geolocation from entrants, get the lat-long coordinates of the entrant at their current position upon sign-up
      * Referenced: https://developers.google.com/android/reference/com/google/android/gms/location/FusedLocationProviderClient.html, Accessed 2024-11-26
      * Author: Rachel
      */

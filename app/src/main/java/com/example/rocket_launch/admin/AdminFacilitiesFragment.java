@@ -18,11 +18,24 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
+/**
+ * Fragment for managing and displaying the list of facilities in the admin view.
+ * Author: Pouyan
+ */
 public class AdminFacilitiesFragment extends Fragment {
     private RecyclerView recyclerView;
     private AdminFacilitiesAdapter adapter;
     private ArrayList<Facility> facilitiesList = new ArrayList<>();
 
+    /**
+     * Inflates the layout for the fragment and initializes the RecyclerView.
+     *
+     * @param inflater LayoutInflater for inflating the view.
+     * @param container The container ViewGroup.
+     * @param savedInstanceState Saved instance state bundle.
+     * @return The created view for this fragment.
+     * Author: Pouyan
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -47,6 +60,11 @@ public class AdminFacilitiesFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Loads the list of facilities from the Firestore database.
+     * Queries the "user_info_dev" collection and updates the RecyclerView.
+     * Author: Pouyan
+     */
     private void loadFacilities() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
         db.collection("user_info_dev") // Querying user_info_dev collection

@@ -41,7 +41,7 @@ public class UserHomepageFragment extends Fragment {
 
         // Initialize the TextView and set the welcome message
         welcome = view.findViewById(R.id.welcome_user);
-        welcome.setText(String.format("Welcome %s", username));
+        welcome.setText(String.format("Welcome, %s!", username));
 
         // Initialize ImageViews
         profilePicture = view.findViewById(R.id.profile_picture_homepage);
