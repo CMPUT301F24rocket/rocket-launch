@@ -326,6 +326,54 @@ public class UsersDB {
                 .addOnFailureListener(onFailure);
     }
 
+    public void deleteFacility(String androidId) {
+        getUser(androidId, user -> {
+            // remove organizer role
+            user.getRoles().setOrganizer(false);
+            // remove all created events
+            EventsDB eventsDB = new EventsDB();
+            for (String event : user.getEventsCreated()) {
+                eventsDB.deleteEvent(event,
+                        l -> Log.d("delete facility", "created event deleted successfully"),
+                        e -> Log.d("delete facility", "created event deletion error", e));
+            }
+
+            // if both roles are false, remove from database
+            if (!user.getRoles().isEntrant()) {
+                usersRef.document(androidId).delete()
+                        .addOnSuccessListener(l -> Log.d("delete facility", "full deletion successful"))
+                        .addOnFailureListener(e -> Log.d("delete facility", "full deletion error", e));
+            }
+        }, e -> Log.e("delete facility", "error retrieving facility", e));
+    }
+
+    public void deleteUser(String androidId) {
+        getUser(androidId, user -> {
+            // remove user role
+            user.getRoles().setEntrant(false);
+            EventsDB eventsDB = new EventsDB();
+
+            // remove from waitlisted events
+            for (String eventId : user.getEventsWaitlisted()) {
+                eventsDB.removeUserFromWaitingList(eventId, androidId);
+                removeWaitlistedEvent(androidId, eventId);
+            }
+
+            // remove from registered events
+            for (String eventId : user.getEventsRegistered()) {
+                eventsDB.removeUserFromRegisteredList(eventId, androidId);
+                removeRegisteredEvent(androidId, eventId);
+            }
+
+            // if both roles are false, remove from database
+            if (!user.getRoles().isOrganizer()) {
+                usersRef.document(androidId).delete()
+                        .addOnSuccessListener(l -> Log.d("delete user", "full deletion successful"))
+                        .addOnFailureListener(e -> Log.d("delete user", "full deletion error", e));
+            }
+        }, e -> Log.e("delete user", "error retrieving user", e));
+    }
+
     public void loadProfilePhoto(String androidId) {
         // TODO
     }
