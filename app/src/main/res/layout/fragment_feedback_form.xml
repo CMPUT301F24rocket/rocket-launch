@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:layout_margin="10dp">
 
     <!--User Profile Header-->
     <TextView
@@ -16,6 +17,14 @@
         app:layout_constraintTop_toTopOf="parent">
 
     </TextView>
+
+    <ImageButton
+        android:id="@+id/back_button"
+        style="@style/ArrowLeftButtonStyle"
+        android:backgroundTint="@color/periwinkle"
+        app:layout_constraintTop_toTopOf="@id/user_profile_header"
+        app:layout_constraintBottom_toBottomOf="@id/user_profile_header"
+        app:layout_constraintStart_toStartOf="@id/user_profile_header" />
 
     <LinearLayout
         android:id="@+id/feedback_section"
@@ -34,7 +43,8 @@
             android:padding="16dp"
             android:paddingBottom="8dp"
             android:text="Rate your experience:"
-            android:textSize="34sp" />
+            android:textSize="34sp"
+            android:gravity="center"/>
 
         <LinearLayout
             android:id="@+id/star_rating_layout"
@@ -86,6 +96,8 @@
             android:layout_height="79dp"
             android:layout_marginTop="8dp"
             android:enabled="false"
+            android:layout_margin="15dp"
+            android:gravity="center"
             android:hint="Write your feedback here...">
 
         </EditText>
