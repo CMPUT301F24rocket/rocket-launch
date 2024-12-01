@@ -146,9 +146,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkUserRole(User user) {
         if (user.getRoles().isAdmin()) {
-            Intent intent = new Intent(this, AdminModeActivity.class);
-            startActivity(intent);
-            finish();
+            if (user.getRoles().isOrganizer() || user.getRoles().isEntrant()){
+                return;
+            } else {
+                Intent intent = new Intent(this, AdminModeActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
