@@ -37,7 +37,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
     private EventsDB eventsDB;
     private UsersDB usersDB;
     private Event event;
-    private Event.UserArrayAdapter adapter;
+    private UserListArrayAdapter adapter;
     private ArrayList<User> users;
     private String eventId;
     private int availableSpots;
@@ -65,7 +65,7 @@ public class EntrantListViewWaitlistFragment extends Fragment {
         users = new ArrayList<>();
         
         listView = view.findViewById(R.id.view_list_listview); // Users list
-        adapter = new Event.UserArrayAdapter(requireContext(), users);
+        adapter = new UserListArrayAdapter(requireContext(), users);
         listView.setAdapter(adapter);
 
         spotsAvailable = view.findViewById(R.id.spotsAvailable); // text above list
@@ -112,12 +112,6 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 String title = String.format(Locale.CANADA, "You are invited to join %s in a redraw!", event.getName());
                 inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), title, eventId);
             });
-        });
-
-
-        listView.setOnItemClickListener((parent, itemView, position, id) -> {
-            // TODO - do something on clicking a user
-            User clickedUser = users.get(position);
         });
 
 

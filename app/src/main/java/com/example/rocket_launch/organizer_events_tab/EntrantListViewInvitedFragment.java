@@ -1,5 +1,6 @@
 package com.example.rocket_launch.organizer_events_tab;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,14 +13,11 @@ import android.widget.Toast;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.example.rocket_launch.NotificationCreator;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
-import com.example.rocket_launch.UserDetailsFragment;
 import com.example.rocket_launch.UsersDB;
-import com.example.rocket_launch.entrant_events_tab.WaitlistedEventDetailsFragment;
 
 import java.util.ArrayList;
 
@@ -30,7 +28,7 @@ public class EntrantListViewInvitedFragment extends Fragment {
     private EventsDB eventsDB;
     private UsersDB usersDB;
     private ListView listView;
-    private Event.UserArrayAdapter adapter;
+    private UserListArrayAdapter adapter;
     private ArrayList<User> users;
     private String eventId;
     private Button notifyButton;
@@ -46,8 +44,21 @@ public class EntrantListViewInvitedFragment extends Fragment {
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
         users = new ArrayList<>();
-        adapter = new Event.UserArrayAdapter(requireContext(), users);
+        adapter = new UserListArrayAdapter(requireContext(), users);
         listView.setAdapter(adapter);
+        listView.setOnItemLongClickListener((parent, itemView, position, id) -> {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle("remove invite?")
+                    .setMessage("This action cannot be undone.")
+                    .setPositiveButton("Yes", (dialog, which) -> {
+                        eventsDB.removeUserFromInvitedList(eventId, users.get(position).getAndroidId());
+                        users.remove(position);
+                        adapter.notifyDataSetChanged();
+                    })
+                    .setNegativeButton("No", null)
+                    .show();
+            return false;
+        });
 
         notifyButton = view.findViewById(R.id.sendNotification);
         notifyButton.setOnClickListener(l -> {
@@ -62,10 +73,6 @@ public class EntrantListViewInvitedFragment extends Fragment {
                     .commit();
         });
 
-        listView.setOnItemClickListener((parent, itemView, position, id) -> {
-            // TODO - maybe?
-            User clickedUser = users.get(position);
-        });
 
         return view;
     }
