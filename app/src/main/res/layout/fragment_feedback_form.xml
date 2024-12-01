@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!--User Profile Header-->
+    <TextView
+        android:id="@+id/user_profile_header"
+        style="@style/ActivityHeaderStyle"
+        android:text="Feedback Form"
+        android:gravity="center"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+    </TextView>
+
+    <LinearLayout
+        android:id="@+id/feedback_section"
+        android:layout_width="402dp"
+        android:layout_height="374dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/user_profile_header">
+
+        <TextView
+            android:id="@+id/feedback_prompt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="16dp"
+            android:paddingBottom="8dp"
+            android:text="Rate your experience:"
+            android:textSize="34sp" />
+
+        <LinearLayout
+            android:id="@+id/star_rating_layout"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:orientation="horizontal">
+
+            <!-- Star icons -->
+            <ImageView
+                android:id="@+id/star1"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Star 1"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star2"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Star 2"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star3"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Star 3"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star4"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Star 4"
+                android:src="@drawable/ic_star_outline" />
+
+            <ImageView
+                android:id="@+id/star5"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:contentDescription="Star 5"
+                android:src="@drawable/ic_star_outline" />
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/feedback_text"
+            android:layout_width="369dp"
+            android:layout_height="79dp"
+            android:layout_marginTop="8dp"
+            android:enabled="false"
+            android:hint="Write your feedback here...">
+
+        </EditText>
+
+        <Button
+            android:id="@+id/submit_feedback_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:padding="16dp"
+            android:text="Submit Feedback"
+            android:visibility="gone" /> <!-- Hidden by default -->
+
+        <Button
+            android:id="@+id/edit_feedback_button"
+            android:layout_width="151dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:padding="16dp"
+            android:text="Edit Feedback"
+            android:visibility="visible" /> <!-- Shown initially -->
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
