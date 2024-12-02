@@ -30,7 +30,7 @@ import java.util.ArrayList;
  * Author: Rachel
  */
 public class CreateEventFragment extends Fragment {
-    FloatingActionButton addNewEventButton;
+    private FloatingActionButton addNewEventButton;
     private EventsDB eventsDB;
     private UsersDB usersDB;
     private ListView listView;

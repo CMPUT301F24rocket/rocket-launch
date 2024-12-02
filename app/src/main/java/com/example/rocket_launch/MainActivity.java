@@ -33,14 +33,14 @@ import org.osmdroid.config.Configuration;
  * Authors: Rachel, Nathan, Griffin, Kaiden
  */
 public class MainActivity extends AppCompatActivity {
-    UsersDB usersDB;
-    BottomNavigationView bottomNav;
+    private UsersDB usersDB;
+    private BottomNavigationView bottomNav;
 
-    CreateEventFragment createEvent;
-    UserEventsFragment userEvents;
-    UserProfileFragment userProfile;
-    NotificationsFragment notifications;
-    NotificationHandler notificationHandler;
+    private CreateEventFragment createEvent;
+    private UserEventsFragment userEvents;
+    private UserProfileFragment userProfile;
+    private NotificationsFragment notifications;
+    private NotificationHandler notificationHandler;
 
 
     @Override
@@ -119,7 +119,7 @@ public class MainActivity extends AppCompatActivity {
                             usersDB.setRoles(androidID, roles);
                             setupNavBar(roles);
                             // Refresh the StartUpFragment
-                            refreshStartupFragment(androidID, finalUser, usersDB);
+                            refreshStartupFragment(androidID, finalUser);
 
                         }
                     });
@@ -209,10 +209,9 @@ public class MainActivity extends AppCompatActivity {
      * Refreshes the startup fragment if user chooses the organizer role
      * @param AndroidId Android ID of user
      * @param user  Current User object
-     * @param userdb    Current userdb object
      * Author: Nathan
      */
-    private void refreshStartupFragment(String AndroidId, User user, UsersDB userdb) {
+    private void refreshStartupFragment(String AndroidId, User user) {
 
         // Display the StartUpFragment
         StartUpFragment startfrag = new StartUpFragment(AndroidId, user, usersDB);
