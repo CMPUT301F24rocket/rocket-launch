@@ -4,44 +4,44 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.rocket_launch.R;
-import com.example.rocket_launch.data.Facility;
+import com.example.rocket_launch.User;
 
-import java.util.ArrayList;
+import java.util.List;
 
 /**
- * Adapter for displaying facilities in the admin view.
- * Author: Pouyan
+ * Adapter for displaying facilities in a RecyclerView.
  */
-public class AdminFacilitiesAdapter extends RecyclerView.Adapter<AdminFacilitiesAdapter.FacilityViewHolder> {
+public class AdminFacilitiesAdapter extends RecyclerView.Adapter<AdminFacilitiesAdapter.ViewHolder> {
+    private List<User> facilities;
+    private final OnItemLongClickListener listener;
 
-    private ArrayList<Facility> facilities;
-    private OnItemLongClickListener longClickListener;
+    public interface OnItemLongClickListener {
+        void onItemLongClick(User user, int position);
+    }
 
-    public AdminFacilitiesAdapter(ArrayList<Facility> facilities, OnItemLongClickListener longClickListener) {
+    public AdminFacilitiesAdapter(List<User> facilities, OnItemLongClickListener listener) {
         this.facilities = facilities;
-        this.longClickListener = longClickListener;
+        this.listener = listener;
     }
 
     @NonNull
     @Override
-    public FacilityViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_facilities, parent, false);
-        return new FacilityViewHolder(view);
+        return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull FacilityViewHolder holder, int position) {
-        Facility facility = facilities.get(position);
-        holder.tvFacilityName.setText(facility.getFacilityName());
-        holder.tvFacilityAddress.setText(facility.getFacilityAddress());
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        User user = facilities.get(position);
+        holder.facilityName.setText(user.getUserFacility());
+        holder.facilityAddress.setText(user.getUserFacilityAddress());
 
         holder.itemView.setOnLongClickListener(v -> {
-            longClickListener.onItemLongClick(position);
+            listener.onItemLongClick(user, position);
             return true;
         });
     }
@@ -51,17 +51,24 @@ public class AdminFacilitiesAdapter extends RecyclerView.Adapter<AdminFacilities
         return facilities.size();
     }
 
-    public static class FacilityViewHolder extends RecyclerView.ViewHolder {
-        TextView tvFacilityName, tvFacilityAddress;
-
-        public FacilityViewHolder(@NonNull View itemView) {
-            super(itemView);
-            tvFacilityName = itemView.findViewById(R.id.facility_name);
-            tvFacilityAddress = itemView.findViewById(R.id.facility_address);
-        }
+    public void removeFacility(int position) {
+        facilities.remove(position);
+        notifyItemRemoved(position);
     }
 
-    public interface OnItemLongClickListener {
-        void onItemLongClick(int position);
+    public void updateData(List<User> newFacilities) {
+        facilities.clear();
+        facilities.addAll(newFacilities);
+        notifyDataSetChanged();
+    }
+
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView facilityName, facilityAddress;
+
+        ViewHolder(@NonNull View itemView) {
+            super(itemView);
+            facilityName = itemView.findViewById(R.id.facility_name);
+            facilityAddress = itemView.findViewById(R.id.facility_address);
+        }
     }
 }

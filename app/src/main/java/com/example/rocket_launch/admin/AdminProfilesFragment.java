@@ -81,13 +81,13 @@ public class AdminProfilesFragment extends Fragment {
     }
 
     private void deleteProfile(User user, int position) {
-        usersDB.getUsersRef().document(user.getAndroidId()).delete()
-                .addOnSuccessListener(aVoid -> {
+        usersDB.deleteUser(user.getAndroidId(),
+                unused -> {
                     adapter.removeProfile(position); // Remove from RecyclerView
                     Toast.makeText(requireContext(), "Profile deleted successfully", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(requireContext(), "Failed to delete profile", Toast.LENGTH_SHORT).show();
-                });
+                }
+        );
     }
 }
+
+

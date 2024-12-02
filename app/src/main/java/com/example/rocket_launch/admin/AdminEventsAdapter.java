@@ -54,17 +54,21 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Event event = events.get(position);
 
-        holder.eventName.setText(event.getName() != null ? event.getName() : "No name provided");
-        holder.eventDescription.setText(event.getDescription() != null ? event.getDescription() : "No description provided");
+        // Handle null or empty fields with default values
+        String name = (event.getName() != null && !event.getName().trim().isEmpty()) ? event.getName().trim() : "No name provided";
+        String description = (event.getDescription() != null && !event.getDescription().trim().isEmpty()) ? event.getDescription().trim() : "No description provided";
 
+        holder.eventName.setText(name);
+        holder.eventDescription.setText(description);
+
+        // Handle long-click deletion
         holder.itemView.setOnLongClickListener(v -> {
             if (onEventDeleteListener != null) {
-                onEventDeleteListener.onEventDelete(event);
+                onEventDeleteListener.onEventDelete(event, holder.getAdapterPosition());
             }
             return true;
         });
     }
-
 
     /**
      * Returns the number of events in the list.
@@ -109,14 +113,26 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
         }
     }
 
+    /**
+     * Interface for handling event deletions via long press.
+     */
     public interface OnEventDeleteListener {
-        void onEventDelete(Event event);
+        void onEventDelete(Event event, int position);
     }
 
     private OnEventDeleteListener onEventDeleteListener;
 
+    /**
+     * Sets the listener for handling event deletions.
+     *
+     * @param listener The listener for deletion events.
+     */
     public void setOnEventDeleteListener(OnEventDeleteListener listener) {
         this.onEventDeleteListener = listener;
     }
 
+    public void removeEvent(int position) {
+        events.remove(position);
+        notifyItemRemoved(position); // Triggers the animation
+    }
 }
