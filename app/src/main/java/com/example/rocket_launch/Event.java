@@ -32,10 +32,7 @@ public class Event {
     private String description;
     private int capacity;
     private boolean geolocationRequired;
-    private Calendar startTime;
-    private Calendar endTime;
     private int participants;
-    private Image photo;
     private List<String> waitingList;
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
@@ -90,13 +87,10 @@ public class Event {
     public void setDescription(String description){this.description = description;}
     public void setCapacity(int capacity){this.capacity = capacity;}
     public void setGeolocationRequired(boolean geolocationRequired){this.geolocationRequired = geolocationRequired;}
-    public void setStartTime(Calendar startTime){this.startTime = startTime;}
-    public void setEndTime(Calendar endTime){this.endTime = endTime;}
     public void setParticipants(Integer participants) {
         this.participants = (participants != null) ? participants : 0; // Default to 0 if participants is null
     }
 
-    public void setPhoto(Image photo){this.photo = photo;}
     public void setWaitingList(){this.waitingList = new ArrayList<>();}
     public void setMaxWaitlistSize(int maxWaitlistSize){this.maxWaitlistSize = maxWaitlistSize;}
 
@@ -118,10 +112,6 @@ public class Event {
 
     public List<String> getWaitingList() {
         return waitingList;
-    }
-
-    public Image getPhoto() {
-        return photo;
     }
 
     public String getEventID() {
@@ -147,20 +137,8 @@ public class Event {
 
     public boolean getGeolocationRequired() {return geolocationRequired;}
 
-    public Calendar getStartTime() {
-        return startTime;
-    }
-
-    public Calendar getEndTime() {
-        return endTime;
-    }
-
     public int getParticipants() {
         return participants;
-    }
-
-    public boolean canJoinWaitingList(){
-        return waitingList.size() < maxWaitlistSize;
     }
 
     public boolean acceptInvitation(String userID) {
@@ -304,28 +282,5 @@ public class Event {
 
             return convertView;
         }
-    }
-
-    /**
-     * checks if user is in any event list
-     * @return
-     *  true if user in event, false otherwise
-     * Author: Kaiden
-     */
-    public boolean containsUser(String user) {
-        boolean valid = false;
-        if (waitingList.contains(user)) {
-            valid = true;
-        }
-        else if (invitedEntrants.contains(user)) {
-            valid = true;
-        }
-        else if (cancelledEntrants.contains(user)) {
-            valid = true;
-        }
-        else if (registeredEntrants.contains(user)) {
-            valid = true;
-        }
-        return valid;
     }
 }
