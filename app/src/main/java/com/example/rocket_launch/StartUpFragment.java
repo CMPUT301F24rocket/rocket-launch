@@ -115,13 +115,13 @@ public class StartUpFragment extends Fragment {
             }
 
             // Validate that user enters correct phone pattern
-            String phonePattern = "\\+?[1-9]\\d{1,14}";
+            String phonePattern = "\\+?[1-9]\\d{0,3}(-\\d{1,4}){1,3}";;
 
             // Checks if phone number matches phone number pattern
             if (!phone.isEmpty()) {
                 if (!phone.matches(phonePattern)) {
                     validData = false;
-                    Toast.makeText(getContext(), "Enter a valid phone number", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Enter a valid phone number (with dasher)", Toast.LENGTH_SHORT).show();
                 }
             }
         }
