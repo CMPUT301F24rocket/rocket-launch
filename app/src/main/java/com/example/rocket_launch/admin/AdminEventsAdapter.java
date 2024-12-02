@@ -11,16 +11,18 @@ import com.example.rocket_launch.R;
 import java.util.List;
 
 /**
- * This adapter handles showing a list of events in the admin section.
+ * Adapter for displaying a list of events in the admin panel.
+ * Handles setting up each event's details and enabling deletion through a long press.
  * Author: Pouyan
  */
 public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.ViewHolder> {
     private List<Event> events;
+    private OnEventDeleteListener onEventDeleteListener;
 
     /**
-     * Sets up the adapter with a list of events.
+     * Initializes the adapter with a list of events.
      *
-     * @param events List of events to display.
+     * @param events List of events to display in the RecyclerView.
      * Author: Pouyan
      */
     public AdminEventsAdapter(List<Event> events) {
@@ -28,40 +30,40 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
     }
 
     /**
-     * Creates a ViewHolder when RecyclerView needs a new one.
+     * Creates a new ViewHolder for an event item when needed.
      *
-     * @param parent The parent ViewGroup.
-     * @param viewType The type of the view (not used here).
-     * @return A ViewHolder for event items.
+     * @param parent   The parent ViewGroup.
+     * @param viewType The view type (not used in this case).
+     * @return A ViewHolder for the event item.
      * Author: Pouyan
      */
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Inflate the layout for an event item
+        // Inflate the XML layout for an individual event item
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_admin_event, parent, false);
         return new ViewHolder(view);
     }
 
     /**
-     * Fills the ViewHolder with data for a specific position in the list.
+     * Binds the data of an event to the ViewHolder.
      *
-     * @param holder The ViewHolder to update.
-     * @param position Index of the event in the list.
+     * @param holder   The ViewHolder to bind data to.
+     * @param position The position of the event in the list.
      * Author: Pouyan
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         Event event = events.get(position);
 
-        // Handle null or empty fields with default values
+        // Check for null or empty values and use defaults
         String name = (event.getName() != null && !event.getName().trim().isEmpty()) ? event.getName().trim() : "No name provided";
         String description = (event.getDescription() != null && !event.getDescription().trim().isEmpty()) ? event.getDescription().trim() : "No description provided";
 
         holder.eventName.setText(name);
         holder.eventDescription.setText(description);
 
-        // Handle long-click deletion
+        // Set up a long press listener for deleting an event
         holder.itemView.setOnLongClickListener(v -> {
             if (onEventDeleteListener != null) {
                 onEventDeleteListener.onEventDelete(event, holder.getAdapterPosition());
@@ -71,9 +73,9 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
     }
 
     /**
-     * Returns the number of events in the list.
+     * Returns the total number of events in the list.
      *
-     * @return Number of events.
+     * @return The size of the events list.
      * Author: Pouyan
      */
     @Override
@@ -82,57 +84,71 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
     }
 
     /**
-     * Replaces the current event list with a new one and refreshes the RecyclerView.
+     * Updates the list of events and refreshes the RecyclerView.
      *
-     * @param newEvents The updated list of events.
+     * @param newEvents The new list of events.
      * Author: Pouyan
      */
     public void updateData(List<Event> newEvents) {
         this.events = newEvents;
-        notifyDataSetChanged(); // Tells RecyclerView to refresh
+        notifyDataSetChanged(); // Notify RecyclerView that the data has changed
     }
 
     /**
-     * Holds the views for each event item in the list.
+     * Removes an event from the list and notifies the RecyclerView to update.
+     *
+     * @param position The position of the event to remove.
+     * Author: Pouyan
+     */
+    public void removeEvent(int position) {
+        events.remove(position);
+        notifyItemRemoved(position); // Animates the removal
+    }
+
+    /**
+     * Sets the listener for handling event deletions.
+     *
+     * @param listener The listener to handle event deletion logic.
+     * Author: Pouyan
+     */
+    public void setOnEventDeleteListener(OnEventDeleteListener listener) {
+        this.onEventDeleteListener = listener;
+    }
+
+    /**
+     * ViewHolder for an event item.
+     * Holds references to the event's name and description views.
      * Author: Pouyan
      */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView eventName, eventDescription;
 
         /**
-         * Connects the UI elements of the item view to this ViewHolder.
+         * Initializes the ViewHolder by linking the UI elements.
          *
-         * @param itemView The layout of an individual event item.
+         * @param itemView The root view of the event item layout.
          * Author: Pouyan
          */
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            // Link the TextViews to their XML counterparts
+            // Find the TextViews for event name and description
             eventName = itemView.findViewById(R.id.event_name);
             eventDescription = itemView.findViewById(R.id.event_description);
         }
     }
 
     /**
-     * Interface for handling event deletions via long press.
+     * Interface for handling long-press deletion of events.
+     * Author: Pouyan
      */
     public interface OnEventDeleteListener {
+        /**
+         * Called when an event is long-pressed for deletion.
+         *
+         * @param event    The event to delete.
+         * @param position The position of the event in the list.
+         * Author: Pouyan
+         */
         void onEventDelete(Event event, int position);
-    }
-
-    private OnEventDeleteListener onEventDeleteListener;
-
-    /**
-     * Sets the listener for handling event deletions.
-     *
-     * @param listener The listener for deletion events.
-     */
-    public void setOnEventDeleteListener(OnEventDeleteListener listener) {
-        this.onEventDeleteListener = listener;
-    }
-
-    public void removeEvent(int position) {
-        events.remove(position);
-        notifyItemRemoved(position); // Triggers the animation
     }
 }
