@@ -24,6 +24,10 @@ import com.example.rocket_launch.R;
 public class CreatedEventDetailsFragment extends Fragment {
     private EventsDB eventsDB;
     private Event event;
+    private String eventId;
+
+    private TextView eventName;
+    private ImageView eventPoster;
 
     /**
      * Default constructor.
@@ -38,6 +42,17 @@ public class CreatedEventDetailsFragment extends Fragment {
      */
     public CreatedEventDetailsFragment(Event event) {
         this.event = event;
+        this.eventId = event.getEventID();
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        eventsDB = new EventsDB();
+        if (getArguments() != null) {
+            eventId = getArguments().getString("eventId");
+        }
     }
 
     @Override
@@ -46,23 +61,9 @@ public class CreatedEventDetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_created_event_details, container, false);
 
-        TextView eventName = view.findViewById(R.id.organizer_event_details_name);
-        ImageView eventPoster = view.findViewById(R.id.organizer_event_details_poster);
-
-        // Set event name
-        eventName.setText(event.getName());
-
-        // Load the event poster
-        if (event.getPosterUrl() != null && !event.getPosterUrl().isEmpty()) {
-            Glide.with(requireContext())
-                    .load(event.getPosterUrl())
-                    .placeholder(R.drawable.sample_poster) // Placeholder while loading
-                    .centerCrop()
-                    .into(eventPoster);
-        } else {
-            // Set placeholder if no poster URL is available
-            eventPoster.setImageResource(R.drawable.sample_poster);
-        }
+        // Initialize UI components
+        eventName = view.findViewById(R.id.organizer_event_details_name);
+        eventPoster = view.findViewById(R.id.organizer_event_details_poster);
 
         // Back button
         ImageButton backButton = view.findViewById(R.id.organizer_event_details_back_button);
@@ -76,7 +77,7 @@ public class CreatedEventDetailsFragment extends Fragment {
 
         // Create bundle for passing eventID
         Bundle bundle = new Bundle();
-        bundle.putString("eventId", event.getEventID());
+        bundle.putString("eventId", eventId);
 
         // Edit button
         editEventButton.setOnClickListener(v -> {
@@ -106,15 +107,41 @@ public class CreatedEventDetailsFragment extends Fragment {
             pressButton(organizerViewQrCodeFragment);
         });
 
+        loadEventDetails();
+
         return view;
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            // Handle arguments if needed
+    public void onResume() {
+        super.onResume();
+        loadEventDetails(); // Reload event details when fragment resumes
+    }
+
+    /**
+     * Fetch and load event details into the UI.
+     */
+    private void loadEventDetails() {
+        if (eventId == null || eventId.isEmpty()) {
+            return;
         }
+
+        eventsDB.loadEvent(eventId, fetchedEvent -> {
+            if (fetchedEvent != null) {
+                event = fetchedEvent;
+                eventName.setText(event.getName());
+
+                if (event.getPosterUrl() != null && !event.getPosterUrl().isEmpty()) {
+                    Glide.with(requireContext())
+                            .load(event.getPosterUrl())
+                            .placeholder(R.drawable.sample_poster) // Placeholder while loading
+                            .centerCrop()
+                            .into(eventPoster);
+                } else {
+                    eventPoster.setImageResource(R.drawable.sample_poster);
+                }
+            }
+        });
     }
 
     /**
