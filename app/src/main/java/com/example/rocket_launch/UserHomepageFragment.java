@@ -19,6 +19,10 @@ import androidx.fragment.app.Fragment;
 
 import com.bumptech.glide.Glide;
 
+/**
+ * Fragment shown on user homepage
+ * Author: Nathan
+ */
 public class UserHomepageFragment extends Fragment {
 
     private TextView welcome;
@@ -27,7 +31,12 @@ public class UserHomepageFragment extends Fragment {
     private String username;
     private String profilePictureUrl; // URL or path to the profile picture
 
-    // Constructor
+    /**
+     * Default constructor for UserHomepageFragment
+     * @param username Username for user
+     * @param profilePictureUrl String containing the profile picture URL of user
+     * Author: Nathan
+     */
     public UserHomepageFragment(String username, String profilePictureUrl) {
         this.username = username;
         this.profilePictureUrl = profilePictureUrl;
@@ -68,7 +77,11 @@ public class UserHomepageFragment extends Fragment {
         return view;
     }
 
-    // This function was taken by EditProfileFragment to generate the default user profile picture
+    /**
+     * Sets the default profile picture for user
+     * @param userName Username of user
+     * Author: Nathan
+     */
     private void setDefaultProfilePicture(String userName) {
         // Default background color and text settings
         int width = 200;  // Width of the Bitmap

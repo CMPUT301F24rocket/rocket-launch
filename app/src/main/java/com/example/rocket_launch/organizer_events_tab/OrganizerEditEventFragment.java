@@ -10,7 +10,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -22,107 +21,110 @@ import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.ImageStorageDB;
 import com.example.rocket_launch.R;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.storage.FirebaseStorage;
-import com.google.firebase.storage.StorageReference;
-import com.google.firebase.storage.UploadTask;
 
 import java.io.IOException;
 import java.util.UUID;
 
-/**
- * Fragment to edit an event, including updating the poster image.
- */
 public class OrganizerEditEventFragment extends Fragment {
 
+    private static final String ARG_EVENT_ID = "eventId";
     private static final int PICK_IMAGE_REQUEST = 22;
-
-    // Firebase storage
-    private FirebaseStorage firebaseStorage;
-    private StorageReference storageReference;
 
     // UI elements
     private ImageView editEventPosterView;
-    private EditText editEventName, editEventCapacity, editEventDescription;
-    private CheckBox checkBoxGeolocationRequired, checkBoxWaitlistLimit;
+    private EditText editEventDescription;
+    private Button saveChangesButton;
     private Uri newPosterUri;
 
-    // Event object
+    // Firebase and Event object
+    private EventsDB eventsDB;
     private Event event;
+    private String currentPosterPath;
 
-    /**
-     * Default constructor
-     */
     public OrganizerEditEventFragment() {
-        // Required empty public constructor
+        // Default constructor
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        firebaseStorage = FirebaseStorage.getInstance();
-        storageReference = firebaseStorage.getReference("event_pictures");
+        eventsDB = new EventsDB();
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.organizer_edit_event_fragment, container, false);
 
         // Initialize UI elements
         editEventPosterView = view.findViewById(R.id.edit_event_poster_view);
-        editEventName = view.findViewById(R.id.edit_event_name);
-        editEventCapacity = view.findViewById(R.id.edit_event_capacity);
         editEventDescription = view.findViewById(R.id.edit_event_description);
-        checkBoxGeolocationRequired = view.findViewById(R.id.checkbox_geolocation_requirement);
-        checkBoxWaitlistLimit = view.findViewById(R.id.checkbox_waitlist_limit);
+        saveChangesButton = view.findViewById(R.id.save_event_edits_button);
+        ImageButton addPosterButton = view.findViewById(R.id.add_event_poster_button);
+        ImageButton cancelButton = view.findViewById(R.id.cancel_edit_event_button);
 
-        // Set up event data
-        if (event != null) {
-            loadEventData();
-        }
+        // Load event details from Firestore
+        fetchEventDetails();
 
-        // Back button functionality
-        ImageButton backButton = view.findViewById(R.id.cancel_edit_event_button);
-        backButton.setOnClickListener(v -> closeFragment());
+        // Handle adding a new poster
+        addPosterButton.setOnClickListener(v -> selectImage());
 
-        // Add new poster functionality
-        ImageButton addEventPosterButton = view.findViewById(R.id.add_event_poster_button);
-        addEventPosterButton.setOnClickListener(v -> selectImage());
+        // Save changes to event description and poster
+        saveChangesButton.setOnClickListener(v -> saveEventEdits());
 
-        // Save changes functionality
-        Button saveButton = view.findViewById(R.id.save_event_edits_button);
-        saveButton.setOnClickListener(v -> saveEventEdits());
+        // Handle cancel button
+        cancelButton.setOnClickListener(v -> closeFragment());
 
         return view;
     }
 
     /**
-     * Load event data into the UI.
+     * Fetch event details from Firestore and populate UI.
      */
-    private void loadEventData() {
-        // Display event details
-        editEventName.setText(event.getName());
-        editEventCapacity.setText(String.valueOf(event.getCapacity()));
-        editEventDescription.setText(event.getDescription());
-
-        // Load the poster image
-        if (event.getPosterUrl() != null && !event.getPosterUrl().isEmpty()) {
-            Glide.with(requireContext())
-                    .load(event.getPosterUrl())
-                    .placeholder(R.drawable.sample_poster) // Show placeholder while loading
-                    .into(editEventPosterView);
-        } else {
-            // Display the sample poster as a default image
-            editEventPosterView.setImageResource(R.drawable.sample_poster);
+    private void fetchEventDetails() {
+        String eventId = getArguments() != null ? getArguments().getString(ARG_EVENT_ID) : null;
+        if (eventId == null || eventId.isEmpty()) {
+            Toast.makeText(requireContext(), "Error: Event ID is missing.", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        eventsDB.loadEvent(eventId, new OnSuccessListener<Event>() {
+            @Override
+            public void onSuccess(Event fetchedEvent) {
+                if (fetchedEvent != null) {
+                    event = fetchedEvent;
+                    currentPosterPath = event.getPosterUrl();
+                    loadEventData(); // Populate the UI with fetched event details
+                } else {
+                    Toast.makeText(requireContext(), "Error: Event not found.", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
     }
 
 
     /**
-     * Select a new image for the event poster.
+     * Load event data into UI components.
+     */
+    private void loadEventData() {
+        editEventDescription.setText(event.getDescription());
+
+        // Load poster image
+        if (event.getPosterUrl() != null && !event.getPosterUrl().isEmpty()) {
+            Glide.with(requireContext())
+                    .load(event.getPosterUrl())
+                    .placeholder(R.drawable.sample_poster)
+                    .into(editEventPosterView);
+        } else {
+            editEventPosterView.setImageResource(R.drawable.sample_poster);
+        }
+    }
+
+    /**
+     * Open image picker to select a new poster.
      */
     private void selectImage() {
         Intent intent = new Intent();
@@ -147,45 +149,52 @@ public class OrganizerEditEventFragment extends Fragment {
     }
 
     /**
-     * Save the updated event details.
+     * Save the updated poster and description.
      */
     private void saveEventEdits() {
+        ProgressDialog progressDialog = new ProgressDialog(requireContext());
+        progressDialog.setTitle("Saving changes...");
+        progressDialog.show();
+
+        // Update description
+        event.setDescription(editEventDescription.getText().toString());
+
         if (newPosterUri != null) {
-            uploadNewPoster();
+            // Upload the new poster
+            String fileName = "event_pictures/event_" + UUID.randomUUID().toString() + ".jpg";
+            ImageStorageDB.uploadImage(newPosterUri, fileName,
+                    downloadUrl -> {
+                        event.setPosterUrl(downloadUrl);
+                        updateEventInDatabase(progressDialog);
+                    },
+                    e -> {
+                        progressDialog.dismiss();
+                        Toast.makeText(requireContext(), "Failed to upload poster: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    });
         } else {
+            // Update the event without changing the poster
+            updateEventInDatabase(progressDialog);
         }
     }
 
     /**
-     * Upload a new poster image to Firebase Storage.
+     * Update the event in Firestore.
      */
-    private void uploadNewPoster() {
-        ProgressDialog progressDialog = new ProgressDialog(requireContext());
-        progressDialog.setTitle("Uploading...");
-        progressDialog.show();
-
-        String fileName = "poster_" + UUID.randomUUID().toString() + ".jpg";
-        StorageReference posterRef = storageReference.child(fileName);
-
-        posterRef.putFile(newPosterUri)
-                .addOnSuccessListener(taskSnapshot -> posterRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                    // Update event with the new poster URL
-                    event.setPosterUrl(uri.toString());
+    private void updateEventInDatabase(ProgressDialog progressDialog) {
+        eventsDB.updateEvent(event.getEventID(), event,
+                v -> {
                     progressDialog.dismiss();
-                }))
-                .addOnFailureListener(e -> {
+                    Toast.makeText(requireContext(), "Event updated successfully!", Toast.LENGTH_SHORT).show();
+                    closeFragment();
+                },
+                e -> {
                     progressDialog.dismiss();
-                    Toast.makeText(requireContext(), "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Failed to update event: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 });
     }
 
     /**
-     * Save the updated event details to the database.
-     */
-
-
-    /**
-     * Close the fragment and return to the Created Activities view.
+     * Close the fragment and return to the previous view.
      */
     private void closeFragment() {
         requireActivity().getSupportFragmentManager().popBackStack();

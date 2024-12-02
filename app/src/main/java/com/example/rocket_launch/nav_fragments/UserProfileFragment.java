@@ -45,6 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * fragment for displaying all user profile information
+ * Author: Rachel
  */
 public class UserProfileFragment extends Fragment {
 
@@ -208,6 +209,10 @@ public class UserProfileFragment extends Fragment {
                 });
     }
 
+    /**
+     * Generates and sets a default profile name for the user
+     * @param userName Gets the name of the user
+     */
     private void setDefaultProfilePicture(String userName) {
         // Default background color and text settings
         int width = 200;  // Width of the Bitmap

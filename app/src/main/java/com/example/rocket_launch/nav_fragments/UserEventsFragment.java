@@ -26,12 +26,13 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 /**
  * fragment used to display all events related to an entrant
+ * Author: Rachel
  */
 public class UserEventsFragment extends Fragment {
 
-    FloatingActionButton addEvent;
-    ActivityResultLauncher<ScanOptions> QRLauncher;
-    QRCodesDB qrCodesDB;
+    private FloatingActionButton addEvent;
+    private ActivityResultLauncher<ScanOptions> QRLauncher;
+    private QRCodesDB qrCodesDB;
 
     /**
      * default constructor
