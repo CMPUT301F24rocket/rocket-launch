@@ -11,4 +11,4 @@ link: [Backlog](https://github.com/orgs/CMPUT301F24rocket/projects/1/views/1)
 link: [JavaDocs](https://cmput301f24rocket.github.io/rocket-launch/)
 
 
-<img src="launch_wp.png" alt="launch_wp">
+<img src="rlaunch.png" alt="launch_wp">
