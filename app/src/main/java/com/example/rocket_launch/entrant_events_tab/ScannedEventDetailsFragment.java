@@ -174,17 +174,28 @@ public class ScannedEventDetailsFragment extends Fragment {
             } else{ //Don't need Location Data --> don't run permissions
 
                 //check if user in waitlist already
-                if (!event.containsUser(androidId)) {
+                if (event.getWaitingList().contains(androidId)) {
+                    Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
+                    Log.d("joinWaitlist", "user already in waitlist");
+                }
+                else if (event.getInvitedEntrants().contains(androidId)) {
+                    Toast.makeText(requireContext(), "Check Notifications to Register!", Toast.LENGTH_LONG).show();
+                    Log.d("joinWaitlist", "user already in invited list");
+                }
+                else if (event.getregisteredEntrants().contains(androidId)) {
+                    Toast.makeText(requireContext(), "Already Registered", Toast.LENGTH_LONG).show();
+                    Log.d("joinWaitlist", "user already in registered list");
+                }
+                else if (event.getCancelledEntrants().contains(androidId)) {
+                    Toast.makeText(requireContext(), "Cannot join you have been cancelled", Toast.LENGTH_LONG).show();
+                    Log.d("joinWaitlist", "user already in cancelled list");
+                }
+                else {
                     // add to waitlist of event
                     eventsdb.addUserToWaitingList(eventId, androidId);
 
                     // add to user's joined events
                     usersDB.addWaitlistedEvent(androidId, eventId);
-                    closeFragment();
-                }
-                else {
-                    Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
-                    Log.d("joinWaitlist", "user already in waitlist");
                 }
             }
 
@@ -193,6 +204,7 @@ public class ScannedEventDetailsFragment extends Fragment {
             Toast.makeText(requireContext(), "Waitlist Full", Toast.LENGTH_LONG).show();
             Log.d("joinWaitlist", "Waitlist is Full");
         }
+        closeFragment();
     }
 
 

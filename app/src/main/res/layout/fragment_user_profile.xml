@@ -43,6 +43,7 @@
                     android:src="@drawable/account_cog"
                     android:backgroundTint="@color/periwinkle"
                     app:layout_constraintHorizontal_bias="0.95"
+                    android:visibility="gone"
 
                     app:layout_constraintTop_toTopOf="@+id/user_profile_header"
                     app:layout_constraintBottom_toBottomOf="@id/user_profile_header"
@@ -71,6 +72,7 @@
                     android:background="@color/lavender"
                     android:orientation="vertical"
                     android:padding="15sp"
+                    android:layout_marginTop="16dp"
                     app:layout_constraintBottom_toBottomOf="@+id/user_profile_body"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
