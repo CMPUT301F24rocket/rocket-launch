@@ -25,16 +25,16 @@ import com.squareup.picasso.Picasso;
  * fragment to show details about a registered event
  */
 public class RegisteredEventDetailsFragment extends Fragment {
-    String eventId;
-    Event event;
-    EventsDB eventsdb;
-    UsersDB usersDB;
-    TextView eventNameView;
-    TextView eventCapacityView;
-    CheckBox eventGeolocationRequired;
-    TextView eventDescription;
+    private String eventId;
+    private Event event;
+    private EventsDB eventsdb;
+    private UsersDB usersDB;
+    private TextView eventNameView;
+    private TextView eventCapacityView;
+    private CheckBox eventGeolocationRequired;
+    private TextView eventDescription;
 
-    Button removeRegistrationButton;
+    private Button removeRegistrationButton;
 
 
     /**

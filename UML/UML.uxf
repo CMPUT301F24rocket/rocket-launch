@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <diagram program="umlet" version="15.0.0">
-  <zoom_level>3</zoom_level>
+  <zoom_level>7</zoom_level>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2118</x>
-      <y>663</y>
-      <w>144</w>
-      <h>120</h>
+      <x>4858</x>
+      <y>1141</y>
+      <w>336</w>
+      <h>280</h>
     </coordinates>
     <panel_attributes>Event
 --
@@ -40,10 +40,10 @@
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1158</x>
-      <y>465</y>
-      <w>156</w>
-      <h>42</h>
+      <x>2618</x>
+      <y>679</y>
+      <w>364</w>
+      <h>98</h>
     </coordinates>
     <panel_attributes>UserEventsFragment
 -
@@ -57,10 +57,10 @@ scanQR()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>384</x>
-      <y>537</y>
-      <w>93</w>
-      <h>42</h>
+      <x>812</x>
+      <y>847</y>
+      <w>217</w>
+      <h>98</h>
     </coordinates>
     <panel_attributes>AdminEventsFragment
 -
@@ -76,10 +76,10 @@ scanQR()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>393</x>
-      <y>603</y>
-      <w>84</w>
-      <h>15</h>
+      <x>833</x>
+      <y>1001</y>
+      <w>196</w>
+      <h>35</h>
     </coordinates>
     <panel_attributes>AdminEventsAdapter
 -
@@ -89,10 +89,10 @@ onDeleteListener OnEventDeleteListener</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>201</x>
-      <y>612</y>
-      <w>81</w>
-      <h>9</h>
+      <x>385</x>
+      <y>1022</y>
+      <w>189</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>AdminFacilitiesAdapter</panel_attributes>
     <additional_attributes/>
@@ -100,10 +100,10 @@ onDeleteListener OnEventDeleteListener</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>174</x>
-      <y>537</y>
-      <w>102</w>
-      <h>51</h>
+      <x>322</x>
+      <y>847</y>
+      <w>238</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>AdminFacilitiesFragment
 -
@@ -120,10 +120,10 @@ onDeleteListener OnEventDeleteListener</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>291</x>
-      <y>612</y>
-      <w>81</w>
-      <h>12</h>
+      <x>595</x>
+      <y>1022</y>
+      <w>189</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>AdminImagesAdapter</panel_attributes>
     <additional_attributes/>
@@ -131,10 +131,10 @@ onDeleteListener OnEventDeleteListener</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>285</x>
-      <y>537</y>
-      <w>87</w>
-      <h>51</h>
+      <x>581</x>
+      <y>847</y>
+      <w>203</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>AdminImagesFragment
 -
@@ -151,10 +151,10 @@ onDeleteListener OnEventDeleteListener</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>276</x>
-      <y>417</y>
-      <w>81</w>
-      <h>33</h>
+      <x>560</x>
+      <y>567</y>
+      <w>189</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>AdminModeActivity
 -
@@ -168,10 +168,10 @@ mainActivityButton: ImageButton
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>273</x>
-      <y>480</y>
-      <w>81</w>
-      <h>18</h>
+      <x>553</x>
+      <y>714</y>
+      <w>189</w>
+      <h>42</h>
     </coordinates>
     <panel_attributes>AdminModePagerAdapter
 -
@@ -181,10 +181,10 @@ mainActivityButton: ImageButton
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>66</x>
-      <y>537</y>
-      <w>99</w>
-      <h>51</h>
+      <x>70</x>
+      <y>847</y>
+      <w>231</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>AdminProfilesFragment
 -
@@ -200,10 +200,10 @@ mainActivityButton: ImageButton
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>36</x>
-      <y>612</y>
-      <w>117</w>
-      <h>27</h>
+      <x>0</x>
+      <y>1022</y>
+      <w>273</w>
+      <h>63</h>
     </coordinates>
     <panel_attributes>AdminProfilesAdapter
 -
@@ -216,10 +216,10 @@ setOnProfileDeleteListener(listener: OnProfileDeleteListener)
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>486</x>
-      <y>537</y>
-      <w>126</w>
-      <h>51</h>
+      <x>1050</x>
+      <y>847</y>
+      <w>294</w>
+      <h>119</h>
     </coordinates>
     <panel_attributes>AdminQRDataFragment
 -
@@ -236,10 +236,10 @@ deleteQRCode(item: QRCodeItem, position: int)</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>576</x>
-      <y>612</y>
-      <w>51</w>
-      <h>36</h>
+      <x>1260</x>
+      <y>1022</y>
+      <w>119</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>QRCodeItem
 -
@@ -253,10 +253,10 @@ deleteQRCode(item: QRCodeItem, position: int)</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>312</x>
-      <y>447</y>
-      <w>12</w>
-      <h>39</h>
+      <x>644</x>
+      <y>637</y>
+      <w>28</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -266,10 +266,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>312</x>
-      <y>495</y>
-      <w>12</w>
-      <h>48</h>
+      <x>644</x>
+      <y>749</y>
+      <w>28</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -279,10 +279,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>324</x>
-      <y>495</y>
-      <w>114</w>
-      <h>48</h>
+      <x>672</x>
+      <y>749</y>
+      <w>266</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -292,10 +292,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>489</x>
-      <y>612</y>
-      <w>81</w>
-      <h>12</h>
+      <x>1057</x>
+      <y>1022</y>
+      <w>189</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>AdminQRDataAdapter</panel_attributes>
     <additional_attributes/>
@@ -303,10 +303,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>600</x>
-      <y>585</y>
-      <w>15</w>
-      <h>33</h>
+      <x>1316</x>
+      <y>959</y>
+      <w>35</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=0..*
@@ -316,10 +316,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>339</x>
-      <y>495</y>
-      <w>195</w>
-      <h>48</h>
+      <x>707</x>
+      <y>749</y>
+      <w>455</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -329,10 +329,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>174</x>
-      <y>636</y>
-      <w>54</w>
-      <h>33</h>
+      <x>322</x>
+      <y>1078</y>
+      <w>126</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>Facility
 -
@@ -346,10 +346,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>219</x>
-      <y>495</y>
-      <w>93</w>
-      <h>48</h>
+      <x>427</x>
+      <y>749</y>
+      <w>217</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -359,10 +359,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>123</x>
-      <y>495</y>
-      <w>174</w>
-      <h>48</h>
+      <x>203</x>
+      <y>749</y>
+      <w>406</w>
+      <h>112</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -372,10 +372,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>108</x>
-      <y>585</y>
-      <w>12</w>
-      <h>33</h>
+      <x>168</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -385,10 +385,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>246</x>
-      <y>585</y>
-      <w>12</w>
-      <h>33</h>
+      <x>490</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -398,10 +398,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>345</x>
-      <y>585</y>
-      <w>12</w>
-      <h>33</h>
+      <x>721</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -411,10 +411,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>450</x>
-      <y>576</y>
-      <w>12</w>
-      <h>33</h>
+      <x>966</x>
+      <y>938</y>
+      <w>28</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -424,10 +424,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>192</x>
-      <y>585</y>
-      <w>15</w>
-      <h>57</h>
+      <x>364</x>
+      <y>959</y>
+      <w>35</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m1=0..*
@@ -437,10 +437,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>531</x>
-      <y>585</y>
-      <w>12</w>
-      <h>33</h>
+      <x>1155</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
@@ -450,10 +450,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1197</x>
-      <y>339</y>
-      <w>156</w>
-      <h>78</h>
+      <x>2709</x>
+      <y>385</y>
+      <w>364</w>
+      <h>182</h>
     </coordinates>
     <panel_attributes>MainActivity
 --
@@ -476,10 +476,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1323</x>
-      <y>465</y>
-      <w>156</w>
-      <h>78</h>
+      <x>3003</x>
+      <y>679</y>
+      <w>364</w>
+      <h>182</h>
     </coordinates>
     <panel_attributes>NotificationsFragment
 -
@@ -500,10 +500,10 @@ loadNotifications()</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1494</x>
-      <y>471</y>
-      <w>156</w>
-      <h>123</h>
+      <x>3402</x>
+      <y>693</y>
+      <w>364</w>
+      <h>287</h>
     </coordinates>
     <panel_attributes>UserProfileFragment
 -
@@ -536,10 +536,10 @@ TAG: String
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>309</x>
-      <y>393</y>
-      <w>9</w>
-      <h>30</h>
+      <x>637</x>
+      <y>511</y>
+      <w>21</w>
+      <h>70</h>
     </coordinates>
     <panel_attributes>lt=-</panel_attributes>
     <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
@@ -547,10 +547,10 @@ TAG: String
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1059</x>
-      <y>414</y>
-      <w>153</w>
-      <h>57</h>
+      <x>2387</x>
+      <y>560</y>
+      <w>357</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -559,10 +559,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1239</x>
-      <y>414</y>
-      <w>12</w>
-      <h>57</h>
+      <x>2807</x>
+      <y>560</y>
+      <w>28</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -571,10 +571,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1284</x>
-      <y>414</y>
-      <w>60</w>
-      <h>57</h>
+      <x>2912</x>
+      <y>560</y>
+      <w>140</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -583,10 +583,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1335</x>
-      <y>414</y>
-      <w>198</w>
-      <h>63</h>
+      <x>3031</x>
+      <y>560</y>
+      <w>462</w>
+      <h>147</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -595,10 +595,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>1122</x>
-      <y>303</y>
-      <w>66</w>
-      <h>24</h>
+      <x>2534</x>
+      <y>301</y>
+      <w>154</w>
+      <h>56</h>
     </coordinates>
     <panel_attributes>mainActivity is where
 the app lifecycle lives, except 
@@ -609,10 +609,10 @@ AdminModeActivity</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2124</x>
-      <y>603</y>
-      <w>114</w>
-      <h>45</h>
+      <x>4872</x>
+      <y>1001</y>
+      <w>266</w>
+      <h>105</h>
     </coordinates>
     <panel_attributes>Notification
 --
@@ -628,10 +628,10 @@ CreateInvite(id: String, title: String, message: String)</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>1344</x>
-      <y>297</y>
-      <w>60</w>
-      <h>36</h>
+      <x>3052</x>
+      <y>287</y>
+      <w>140</w>
+      <h>84</h>
     </coordinates>
     <panel_attributes>the four fragments
 to the right of Main
@@ -643,10 +643,10 @@ to do</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>240</x>
-      <y>318</y>
-      <w>156</w>
-      <h>78</h>
+      <x>476</x>
+      <y>336</y>
+      <w>364</w>
+      <h>182</h>
     </coordinates>
     <panel_attributes>MainActivity
 --
@@ -669,10 +669,10 @@ to do</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1050</x>
-      <y>354</y>
-      <w>81</w>
-      <h>33</h>
+      <x>2366</x>
+      <y>420</y>
+      <w>189</w>
+      <h>77</h>
     </coordinates>
     <panel_attributes>AdminModeActivity
 -
@@ -686,10 +686,10 @@ mainActivityButton: ImageButton
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1128</x>
-      <y>369</y>
-      <w>75</w>
-      <h>12</h>
+      <x>2548</x>
+      <y>455</y>
+      <w>175</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-
 </panel_attributes>
@@ -698,10 +698,10 @@ mainActivityButton: ImageButton
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>981</x>
-      <y>465</y>
-      <w>156</w>
-      <h>78</h>
+      <x>2205</x>
+      <y>679</y>
+      <w>364</w>
+      <h>182</h>
     </coordinates>
     <panel_attributes>CreateEventFragment
 -
@@ -721,10 +721,10 @@ mainActivityButton: ImageButton
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1221</x>
-      <y>174</y>
-      <w>114</w>
-      <h>117</h>
+      <x>2765</x>
+      <y>0</y>
+      <w>266</w>
+      <h>273</h>
     </coordinates>
     <panel_attributes>User
 --
@@ -756,10 +756,10 @@ mainActivityButton: ImageButton
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1107</x>
-      <y>201</y>
-      <w>84</w>
-      <h>60</h>
+      <x>2499</x>
+      <y>63</y>
+      <w>196</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>Roles
 --
@@ -779,10 +779,10 @@ mainActivityButton: ImageButton
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1188</x>
-      <y>216</y>
-      <w>39</w>
-      <h>12</h>
+      <x>2688</x>
+      <y>98</y>
+      <w>91</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
 m1=1
@@ -792,10 +792,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1224</x>
-      <y>288</y>
-      <w>12</w>
-      <h>57</h>
+      <x>2772</x>
+      <y>266</y>
+      <w>28</w>
+      <h>133</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -804,10 +804,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1332</x>
-      <y>258</y>
-      <w>96</w>
-      <h>213</h>
+      <x>3024</x>
+      <y>196</y>
+      <w>224</w>
+      <h>497</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -816,10 +816,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1332</x>
-      <y>249</y>
-      <w>213</w>
-      <h>228</h>
+      <x>3024</x>
+      <y>175</y>
+      <w>497</w>
+      <h>532</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -828,10 +828,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1095</x>
-      <y>267</y>
-      <w>132</w>
-      <h>93</h>
+      <x>2471</x>
+      <y>217</y>
+      <w>308</w>
+      <h>217</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -840,10 +840,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>735</x>
-      <y>300</y>
-      <w>228</w>
-      <h>108</h>
+      <x>1631</x>
+      <y>294</y>
+      <w>532</w>
+      <h>252</h>
     </coordinates>
     <panel_attributes>UsersDB
 --
@@ -873,10 +873,10 @@ deleteUser(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)<
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>735</x>
-      <y>414</y>
-      <w>228</w>
-      <h>105</h>
+      <x>1631</x>
+      <y>560</y>
+      <w>532</w>
+      <h>245</h>
     </coordinates>
     <panel_attributes>EventsDB
 --
@@ -905,10 +905,10 @@ deleteUser(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)<
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2079</x>
-      <y>933</y>
-      <w>228</w>
-      <h>105</h>
+      <x>4767</x>
+      <y>1771</y>
+      <w>532</w>
+      <h>245</h>
     </coordinates>
     <panel_attributes>QRCodesDB
 --
@@ -929,10 +929,10 @@ deleteUser(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)<
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1833</x>
-      <y>792</y>
-      <w>228</w>
-      <h>108</h>
+      <x>4193</x>
+      <y>1442</y>
+      <w>532</w>
+      <h>252</h>
     </coordinates>
     <panel_attributes>UsersDB
 --
@@ -962,10 +962,10 @@ deleteUser(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)<
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>363</y>
-      <w>96</w>
-      <h>9</h>
+      <x>2156</x>
+      <y>441</y>
+      <w>224</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>300.0;10.0;10.0;10.0</additional_attributes>
@@ -973,10 +973,10 @@ deleteUser(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)<
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>375</y>
-      <w>90</w>
-      <h>96</h>
+      <x>2156</x>
+      <y>469</y>
+      <w>210</w>
+      <h>224</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -985,10 +985,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>960</x>
-      <y>432</y>
-      <w>51</w>
-      <h>39</h>
+      <x>2156</x>
+      <y>602</y>
+      <w>119</w>
+      <h>91</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>150.0;110.0;150.0;10.0;10.0;10.0</additional_attributes>
@@ -996,10 +996,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1041</x>
-      <y>393</y>
-      <w>162</w>
-      <h>9</h>
+      <x>2345</x>
+      <y>511</y>
+      <w>378</w>
+      <h>21</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>520.0;10.0;10.0;10.0</additional_attributes>
@@ -1007,10 +1007,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>705</x>
-      <y>381</y>
-      <w>795</w>
-      <h>201</h>
+      <x>1561</x>
+      <y>483</y>
+      <w>1855</w>
+      <h>469</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -1019,10 +1019,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1050</x>
-      <y>540</y>
-      <w>9</w>
-      <h>42</h>
+      <x>2366</x>
+      <y>854</y>
+      <w>21</w>
+      <h>98</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
@@ -1030,10 +1030,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1386</x>
-      <y>540</y>
-      <w>9</w>
-      <h>42</h>
+      <x>3150</x>
+      <y>854</y>
+      <w>21</w>
+      <h>98</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
@@ -1041,10 +1041,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>999</x>
-      <y>249</y>
-      <w>42</w>
-      <h>21</h>
+      <x>2247</x>
+      <y>175</y>
+      <w>98</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>MainActvity
 bg=blue</panel_attributes>
@@ -1053,10 +1053,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>126</x>
-      <y>294</y>
-      <w>42</w>
-      <h>21</h>
+      <x>210</x>
+      <y>280</y>
+      <w>98</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>Admin Mode
 bg=blue</panel_attributes>
@@ -1065,10 +1065,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2118</x>
-      <y>462</y>
-      <w>114</w>
-      <h>117</h>
+      <x>4858</x>
+      <y>672</y>
+      <w>266</w>
+      <h>273</h>
     </coordinates>
     <panel_attributes>User
 --
@@ -1100,10 +1100,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>2004</x>
-      <y>489</y>
-      <w>84</w>
-      <h>60</h>
+      <x>4592</x>
+      <y>735</y>
+      <w>196</w>
+      <h>140</h>
     </coordinates>
     <panel_attributes>Roles
 --
@@ -1123,10 +1123,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>2085</x>
-      <y>504</y>
-      <w>39</w>
-      <h>12</h>
+      <x>4781</x>
+      <y>770</y>
+      <w>91</w>
+      <h>28</h>
     </coordinates>
     <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
 m1=1
@@ -1136,10 +1136,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1839</x>
-      <y>933</y>
-      <w>228</w>
-      <h>105</h>
+      <x>4207</x>
+      <y>1771</y>
+      <w>532</w>
+      <h>245</h>
     </coordinates>
     <panel_attributes>EventsDB
 --
@@ -1168,10 +1168,10 @@ m2=1</panel_attributes>
   <element>
     <id>UMLNote</id>
     <coordinates>
-      <x>2052</x>
-      <y>915</y>
-      <w>42</w>
-      <h>21</h>
+      <x>4704</x>
+      <y>1729</y>
+      <w>98</w>
+      <h>49</h>
     </coordinates>
     <panel_attributes>QRCodesDB has an eventsDB
 bg=blue</panel_attributes>
@@ -1180,10 +1180,10 @@ bg=blue</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>1119</x>
-      <y>588</y>
-      <w>228</w>
-      <h>105</h>
+      <x>2527</x>
+      <y>966</y>
+      <w>532</w>
+      <h>245</h>
     </coordinates>
     <panel_attributes>QRCodesDB
 --
@@ -1204,10 +1204,10 @@ bg=blue</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>1233</x>
-      <y>504</y>
-      <w>12</w>
-      <h>90</h>
+      <x>2793</x>
+      <y>770</y>
+      <w>28</w>
+      <h>210</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
@@ -1216,10 +1216,10 @@ m2=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>846</x>
-      <y>516</y>
-      <w>279</w>
-      <h>108</h>
+      <x>1890</x>
+      <y>798</y>
+      <w>651</w>
+      <h>252</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m2=1</panel_attributes>
