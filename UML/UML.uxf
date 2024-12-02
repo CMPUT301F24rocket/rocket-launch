@@ -1,0 +1,1228 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.0.0">
+  <zoom_level>7</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4858</x>
+      <y>1141</y>
+      <w>336</w>
+      <h>280</h>
+    </coordinates>
+    <panel_attributes>Event
+--
+-eventID: String
+-QRCode: String
+-name: String
+-description: String
+-capacity: int
+-geolocationRequired: boolean
+-participants: int
+-waitingList: List&lt;String&gt;
+-invitedEntrants: List&lt;String&gt;
+-cancelledEntrants: List&lt;String&gt;
+-registeredEntrants: List&lt;String&gt;
+-posterUrl: String
+-entrantLocationDataList: &lt;EntrantLocationData&gt;
+-maxWaitlistSize: int
+-notifications: List&lt;Notification&gt;
+-organizer: String
+--
++ addToWaitingList(userID : String) : void
++generateQRCode(): Bitmap
++acceptInvitation(userID: String): boolean
++declineInvitation(userID: String): void
++sampleWaitlist(sampleAmount: int): List&lt;String&gt;
++addToEntrantLocationDataList(entrantLocationData: EntrantLocationData)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2618</x>
+      <y>679</y>
+      <w>364</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>UserEventsFragment
+-
+-addEvent: FloatingActionButton
+-QRLauncher: ActivityResultLauncher&lt;ScanOptions&gt;
+-qrCodesDB: QRCodesDB
+-
+scanQR()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>812</x>
+      <y>847</y>
+      <w>217</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>AdminEventsFragment
+-
+-eventsRecyclerView: RecyclerView
+-adapter: AdminEventsAdapter
+-usersDB: UsersDB
+-
+-showDeleteConfirmationDialog(event: Event)
+-deleteEvent(event: Event)
+-loadEvents()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>833</x>
+      <y>1001</y>
+      <w>196</w>
+      <h>35</h>
+    </coordinates>
+    <panel_attributes>AdminEventsAdapter
+-
+onDeleteListener OnEventDeleteListener</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>385</x>
+      <y>1022</y>
+      <w>189</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>AdminFacilitiesAdapter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>322</x>
+      <y>847</y>
+      <w>238</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>AdminFacilitiesFragment
+-
+-recyclerView: RecyclerView
+-adapter: AdminFacilitiesAdapter
+-facilitiesList: ArrayList&lt;Facility&gt;
+-usersDB: UsersDB
+-
+-loadFacilities()
+-showDeleteConfirmation(facility: Facility, position: int)
+-deleteFacility(facility: Facility, position: int)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>595</x>
+      <y>1022</y>
+      <w>189</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>AdminImagesAdapter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>581</x>
+      <y>847</y>
+      <w>203</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>AdminImagesFragment
+-
+-imagesRecyclerView: RecyclerView
+-adapter: AdminImagesAdapter
+-usersDB: UsersDB
+-usersWithImage: List&lt;User&gt;
+-
+-listenForImageChanges(): void
+-showDeleteConfirmationDialog(user: User)
+-deleteImage(user: User)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>560</x>
+      <y>567</y>
+      <w>189</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>AdminModeActivity
+-
+-usersDB: UsersDB
+user: User
+mainActivityButton: ImageButton
+-
+-getUser(): Void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>553</x>
+      <y>714</y>
+      <w>189</w>
+      <h>42</h>
+    </coordinates>
+    <panel_attributes>AdminModePagerAdapter
+-
+-</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>70</x>
+      <y>847</y>
+      <w>231</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>AdminProfilesFragment
+-
+-profilesRecyclerView: RecyclerView
+-adapter: AdminProfilesAdapter
+-usersDB: UsersDB
+-
+-loadProfiles()
+-showDeleteConfirmation(user: User, position: int)
+-deleteProfile(user: User, position: int)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>0</x>
+      <y>1022</y>
+      <w>273</w>
+      <h>63</h>
+    </coordinates>
+    <panel_attributes>AdminProfilesAdapter
+-
+updateData(newUsers: List&lt;User&gt;)
+removeProfile(position: int)
+setOnProfileDeleteListener(listener: OnProfileDeleteListener)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1050</x>
+      <y>847</y>
+      <w>294</w>
+      <h>119</h>
+    </coordinates>
+    <panel_attributes>AdminQRDataFragment
+-
+-recyclerView: RecyclerView 
+-adapter: AdminQRDataAdapter
+-qrDataList: ArrayList&lt;QRCodeItem&gt;
+-qrCodesDB: QRCodesDB
+-
+loadQRData()
+showDeleteConfirmationDialog(item: QRCodeItem, position: int)
+deleteQRCode(item: QRCodeItem, position: int)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1260</x>
+      <y>1022</y>
+      <w>119</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>QRCodeItem
+-
+-qrCode: String
+-eventId: String
+-
++getQRCode(): String
++getEventId(): String</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>644</x>
+      <y>637</y>
+      <w>28</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>644</x>
+      <y>749</y>
+      <w>28</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>672</x>
+      <y>749</y>
+      <w>266</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0;350.0;90.0;350.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1057</x>
+      <y>1022</y>
+      <w>189</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>AdminQRDataAdapter</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1316</x>
+      <y>959</y>
+      <w>35</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=0..*
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>707</x>
+      <y>749</y>
+      <w>455</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0;620.0;70.0;620.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>322</x>
+      <y>1078</y>
+      <w>126</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>Facility
+-
+-facilityName: String
+-facilityAddress: String
+-userId: String
+-
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>427</x>
+      <y>749</y>
+      <w>217</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>280.0;10.0;280.0;100.0;10.0;100.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>203</x>
+      <y>749</y>
+      <w>406</w>
+      <h>112</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>550.0;10.0;550.0;70.0;10.0;70.0;10.0;140.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>168</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>490</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>721</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>966</x>
+      <y>938</y>
+      <w>28</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>364</x>
+      <y>959</y>
+      <w>35</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m1=0..*
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1155</x>
+      <y>959</y>
+      <w>28</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;90.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2709</x>
+      <y>385</y>
+      <w>364</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>MainActivity
+--
+- user: User
+- usersDB: UsersDB
+-bottomNav: BottomNavigationView
+-createEvent: CreateEventFragment
+-userEvents: UserEventsFragment
+-userProfile: UserProfileFragment
+-notifications: NotificationsFragment
+-notificationHandler: NotificationHandler
+--
+# onCreate(Bundle):  void 
+- checkUserRole(user : User) : void
+- bottomBarNavigation(bottomNav : BottomNavigationView) : void
+- setBarNavigationDisplay(bottomNav : BottomNavigationView, user : User) : void
+-refreshStartupFragment(androidId: String, user: User)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3003</x>
+      <y>679</y>
+      <w>364</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>NotificationsFragment
+-
+-TAG: String
+-notificationsListView: ListView
+-notificationsAdapter: ArrayAdapter&lt;String&gt;
+-notificationList: List&lt;String&gt;
+-user: User   
+-usersDB: UsersDB
+-androidId: String
+-notificationSettingsButton: FloatingActionButton
+-settingsLauncher: ActivityResultLauncher&lt;Intent&gt;
+-
+updateNotificationPreferences()
+loadNotifications()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>3402</x>
+      <y>693</y>
+      <w>364</w>
+      <h>287</h>
+    </coordinates>
+    <panel_attributes>UserProfileFragment
+-
+TAG: String
+-usersDB: UsersDB
+-androidId: String
+-user: User
+
+-nameTextView: TextView
+-emailTextView: TextView
+-phoneTextView: TextView
+-facilityTextView; TextView
+-facilityAddressTextView: TextView
+-facilityLayout: LinearLayout
+-facilityAddressLayout: LinearLayout
+-profileBodyView: ConstraintLayout
+-editProfileAndFeedbackView: ConstraintLayout
+-profileImageView: ImageView
+-ImageView: profilePictureView
+-ImageButton: adminActivityButton
+-feedbackButton: Button
+-
+-openEditProfileFragment()
+-fetchUserProfileFragment()
+-loadProfileImage(imagePath: String)
+-setDefaultProfilePicture(userName: String)
+-updateUI()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>637</x>
+      <y>511</y>
+      <w>21</w>
+      <h>70</h>
+    </coordinates>
+    <panel_attributes>lt=-</panel_attributes>
+    <additional_attributes>10.0;80.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2387</x>
+      <y>560</y>
+      <w>357</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>490.0;10.0;490.0;80.0;10.0;80.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2807</x>
+      <y>560</y>
+      <w>28</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2912</x>
+      <y>560</y>
+      <w>140</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0;170.0;120.0;170.0;170.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3031</x>
+      <y>560</y>
+      <w>462</w>
+      <h>147</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0;630.0;100.0;630.0;190.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>2534</x>
+      <y>301</y>
+      <w>154</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>mainActivity is where
+the app lifecycle lives, except 
+admin where we switch to
+AdminModeActivity</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4872</x>
+      <y>1001</y>
+      <w>266</w>
+      <h>105</h>
+    </coordinates>
+    <panel_attributes>Notification
+--
+-id: String
+-title: String
+-message: String
+-eventID: String
+-invitiation: Boolean
+--
+CreateInvite(id: String, title: String, message: String)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>3052</x>
+      <y>287</y>
+      <w>140</w>
+      <h>84</h>
+    </coordinates>
+    <panel_attributes>the four fragments
+to the right of Main
+Activity are "home pages" for
+each task  a user would like
+to do</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>476</x>
+      <y>336</y>
+      <w>364</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>MainActivity
+--
+- user: User
+- usersDB: UsersDB
+-bottomNav: BottomNavigationView
+-createEvent: CreateEventFragment
+-userEvents: UserEventsFragment
+-userProfile: UserProfileFragment
+-notifications: NotificationsFragment
+-notificationHandler: NotificationHandler
+--
+# onCreate(Bundle):  void 
+- checkUserRole(user : User) : void
+- bottomBarNavigation(bottomNav : BottomNavigationView) : void
+- setBarNavigationDisplay(bottomNav : BottomNavigationView, user : User) : void
+-refreshStartupFragment(androidId: String, user: User)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2366</x>
+      <y>420</y>
+      <w>189</w>
+      <h>77</h>
+    </coordinates>
+    <panel_attributes>AdminModeActivity
+-
+-usersDB: UsersDB
+user: User
+mainActivityButton: ImageButton
+-
+-getUser(): Void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2548</x>
+      <y>455</y>
+      <w>175</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=-
+</panel_attributes>
+    <additional_attributes>10.0;20.0;230.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2205</x>
+      <y>679</y>
+      <w>364</w>
+      <h>182</h>
+    </coordinates>
+    <panel_attributes>CreateEventFragment
+-
+-addNewEventButton: FloatingActionButton
+-eventsDB: private EventsDB
+-usersDB: UsersDB
+-listView: ListView
+-adapter: EventArrayAdapter
+-events: ArrayList&lt;Event&gt;
+-androidID: String
+-
+-openCreateNewEventFragment()
+-openClickedEvent(clickedEventDetailsFragment: CreatedEventDetailsFragment)
+-fetchEvents()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2765</x>
+      <y>0</y>
+      <w>266</w>
+      <h>273</h>
+    </coordinates>
+    <panel_attributes>User
+--
+-androidId: String
+-userName: String
+-userEmail: String
+-userPhoneNumber: String
+-userFacility: String
+-userFacilityAddress: String
+-roles: Roles
+-profilePhotoPath: String
+-profilePhoto: Image
+-notificationPreferences: Boolean
+-notifications: List&lt;Notification&gt;
+-eventsRegistered: List&lt;String&gt;
+-eventsWaitlisted: List&lt;String&gt;
+-eventsCreated: List&lt;String&gt;
+--
+-addNotification(notification: Notification)
+-optInNotifications()
+-optOutNotifications()
+-addJoinedEvent(id: String)
+-removeJoinedEvent(id: String)
+-addCreatedEvent(id: String)
+-removeCreatedEvent(id: String)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2499</x>
+      <y>63</y>
+      <w>196</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Roles
+--
+- organizer : boolean
+- entrant : boolean
+- admin : boolean
+--
++ Roles()
++ setAdmin(admin : boolean) : void
++ isAdmin() : boolean
++ isOrganizer() : boolean
++ setOrganizer(organizer : boolean) : void
++ isEntrant() : boolean
++ setEntrant(entrant : boolean) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2688</x>
+      <y>98</y>
+      <w>91</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2772</x>
+      <y>266</y>
+      <w>28</w>
+      <h>133</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;170.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3024</x>
+      <y>196</y>
+      <w>224</w>
+      <h>497</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>300.0;690.0;300.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3024</x>
+      <y>175</y>
+      <w>497</w>
+      <h>532</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>690.0;740.0;690.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2471</x>
+      <y>217</y>
+      <w>308</w>
+      <h>217</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;290.0;10.0;10.0;420.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1631</x>
+      <y>294</y>
+      <w>532</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>UsersDB
+--
+-db: FirebaseFirestore
+-usersRef: ColelctionReference
+-
+addUser(androidID: String, user: User)
+getUser(androidId: String, onSuccess: OnSuccessListner&lt;User&gt;, onFailure: OnFailureListener)
+updateUser(androidId: String, user: User, onSuccess: OnSuccessListener&lt;Void&gt;, onFailureListener: OnFailureListener)
+setRoles(androidId: String, roles: Roles)
+addNotification(androidID: String, notification: Notification)
+removeNotification(androidID: String, notification: Notification)
+addWaitlistedEvent(androidId: String, eventID: String)
+removeWaitlistedEvent(androidId: String, eventID: String)
+addRegisteredEvent(androidId: String, eventID: String))
+removeRegisteredEvent(androidId: String, eventID: String))
+addCreatedEvent(androidId: String, eventID: String))
+removeCreatedEvent(androidId: String, eventID: String))
+getCreatedEventIds(androidId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
+getRegisteredEventIds(androidId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener))
+getWaitlisetedEventIds(androidId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener))
+getAllUsersInList(usersList: List&lt;String&gt;, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailure)
+deleteFacility(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)
+deleteUser(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>1631</x>
+      <y>560</y>
+      <w>532</w>
+      <h>245</h>
+    </coordinates>
+    <panel_attributes>EventsDB
+--
+-db: FirebaseFirestore
+-eventsRef: ColelctionReference
+-
++addCreatedEvent(event: Event, androidId: String), onCompleteListener: OnCompleteListener&lt;Void&gt;)
++addUserToWaitingList(eventID: String, userID: String)
++removeUserFromWaitingList(String eventID, String userID)
++addUserToRegisteredList(String eventID, String userID)
++removeUserFromRegisteredList(String eventID, String userID)
++removeUserFromInvitedList(String eventID, String userID)
++adddUserTocancelledList(String eventID, String userID)
++updateEvent(String eventId, event: Event, onSuccess: OnSuccessListener&lt;Void&gt;, onFailureListener: OnFailureListener)
++loadEvent(id: String, onSuccess: OnSuccessListener&lt;Event&gt;)
++getWaitlistedUserIDs(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getInviteduserIds(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getCancelledUserIds(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getRegisteredUserIds(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getAllEventsInLIst(eventsList: List&lt;String&gt;, onSuccess: OnSuccessListener&lt;List&lt;Event&gt;&gt;, onFailure: OnFailureListener)
++addToEntrantLocaationDataList(eventID: String, entrantLocation: EntrantLocation)
++removeFromEntrantLocationDataLIst(eventID: String, entrantID: String)
++deleteEvent(eventId: String, onSuccess: OnSuccessListener&lt;Void&gt;, onFailure: OnFailureListener)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4767</x>
+      <y>1771</y>
+      <w>532</w>
+      <h>245</h>
+    </coordinates>
+    <panel_attributes>QRCodesDB
+--
+-db: FirebaseFirestore
+-qRRef: ColelctionReference
+-eventsDB EventsDB
+-
++loadEvent(code: String, success: OnSuccessListener&lt;String&gt;, failure: OnFailureListener)
++loadCode(code: String, success: OnSuccessListener&lt;Event&gt;)
++loadAll(onSuccessListener: OnSuccessListener&lt;List&lt;String&gt;&gt;)
++addCode(eventId: String, onSuccess: OnSuccessListener&lt;String&gt;, onfailure: OnFailureListener)
++removeCode(code: String, eventId: String, onSuccess: OnSuccessListener&lt;Void&gt;, onFailureListener: OnFailureListener)
+-removeCodeFromDatabase(code: String, onSuccess: OnSuccessListener&lt;Void&gt;)
++regenerateCode(code: String, eventId: String, onSuccess: OnSuccessListener&lt;String&gt; onFailure: OnFailureListener)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4193</x>
+      <y>1442</y>
+      <w>532</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>UsersDB
+--
+-db: FirebaseFirestore
+-usersRef: ColelctionReference
+-
+addUser(androidID: String, user: User)
+getUser(androidId: String, onSuccess: OnSuccessListner&lt;User&gt;, onFailure: OnFailureListener)
+updateUser(androidId: String, user: User, onSuccess: OnSuccessListener&lt;Void&gt;, onFailureListener: OnFailureListener)
+setRoles(androidId: String, roles: Roles)
+addNotification(androidID: String, notification: Notification)
+removeNotification(androidID: String, notification: Notification)
+addWaitlistedEvent(androidId: String, eventID: String)
+removeWaitlistedEvent(androidId: String, eventID: String)
+addRegisteredEvent(androidId: String, eventID: String))
+removeRegisteredEvent(androidId: String, eventID: String))
+addCreatedEvent(androidId: String, eventID: String))
+removeCreatedEvent(androidId: String, eventID: String))
+getCreatedEventIds(androidId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
+getRegisteredEventIds(androidId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener))
+getWaitlisetedEventIds(androidId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener))
+getAllUsersInList(usersList: List&lt;String&gt;, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailure)
+deleteFacility(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)
+deleteUser(androidId: String, onSuccessListener: OnSuccessListener&lt;Void&gt;)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2156</x>
+      <y>441</y>
+      <w>224</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>300.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2156</x>
+      <y>469</y>
+      <w>210</w>
+      <h>224</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>280.0;300.0;280.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2156</x>
+      <y>602</y>
+      <w>119</w>
+      <h>91</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>150.0;110.0;150.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2345</x>
+      <y>511</y>
+      <w>378</w>
+      <h>21</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>520.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1561</x>
+      <y>483</y>
+      <w>1855</w>
+      <h>469</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>2630.0;650.0;10.0;650.0;20.0;10.0;100.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2366</x>
+      <y>854</y>
+      <w>21</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>3150</x>
+      <y>854</y>
+      <w>21</w>
+      <h>98</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>2247</x>
+      <y>175</y>
+      <w>98</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>MainActvity
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>210</x>
+      <y>280</y>
+      <w>98</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>Admin Mode
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4858</x>
+      <y>672</y>
+      <w>266</w>
+      <h>273</h>
+    </coordinates>
+    <panel_attributes>User
+--
+-androidId: String
+-userName: String
+-userEmail: String
+-userPhoneNumber: String
+-userFacility: String
+-userFacilityAddress: String
+-roles: Roles
+-profilePhotoPath: String
+-profilePhoto: Image
+-notificationPreferences: Boolean
+-notifications: List&lt;Notification&gt;
+-eventsRegistered: List&lt;String&gt;
+-eventsWaitlisted: List&lt;String&gt;
+-eventsCreated: List&lt;String&gt;
+--
+-addNotification(notification: Notification)
+-optInNotifications()
+-optOutNotifications()
+-addJoinedEvent(id: String)
+-removeJoinedEvent(id: String)
+-addCreatedEvent(id: String)
+-removeCreatedEvent(id: String)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4592</x>
+      <y>735</y>
+      <w>196</w>
+      <h>140</h>
+    </coordinates>
+    <panel_attributes>Roles
+--
+- organizer : boolean
+- entrant : boolean
+- admin : boolean
+--
++ Roles()
++ setAdmin(admin : boolean) : void
++ isAdmin() : boolean
++ isOrganizer() : boolean
++ setOrganizer(organizer : boolean) : void
++ isEntrant() : boolean
++ setEntrant(entrant : boolean) : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>4781</x>
+      <y>770</y>
+      <w>91</w>
+      <h>28</h>
+    </coordinates>
+    <panel_attributes>lt=-&gt;&gt;&gt;&gt;&gt;
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;110.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>4207</x>
+      <y>1771</y>
+      <w>532</w>
+      <h>245</h>
+    </coordinates>
+    <panel_attributes>EventsDB
+--
+-db: FirebaseFirestore
+-eventsRef: ColelctionReference
+-
++addCreatedEvent(event: Event, androidId: String), onCompleteListener: OnCompleteListener&lt;Void&gt;)
++addUserToWaitingList(eventID: String, userID: String)
++removeUserFromWaitingList(String eventID, String userID)
++addUserToRegisteredList(String eventID, String userID)
++removeUserFromRegisteredList(String eventID, String userID)
++removeUserFromInvitedList(String eventID, String userID)
++adddUserTocancelledList(String eventID, String userID)
++updateEvent(String eventId, event: Event, onSuccess: OnSuccessListener&lt;Void&gt;, onFailureListener: OnFailureListener)
++loadEvent(id: String, onSuccess: OnSuccessListener&lt;Event&gt;)
++getWaitlistedUserIDs(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getInviteduserIds(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getCancelledUserIds(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getRegisteredUserIds(eventId: String, onSuccess: OnSuccessListener&lt;List&lt;String&gt;&gt;, onFailure: OnFailureListener)
++getAllEventsInLIst(eventsList: List&lt;String&gt;, onSuccess: OnSuccessListener&lt;List&lt;Event&gt;&gt;, onFailure: OnFailureListener)
++addToEntrantLocaationDataList(eventID: String, entrantLocation: EntrantLocation)
++removeFromEntrantLocationDataLIst(eventID: String, entrantID: String)
++deleteEvent(eventId: String, onSuccess: OnSuccessListener&lt;Void&gt;, onFailure: OnFailureListener)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>4704</x>
+      <y>1729</y>
+      <w>98</w>
+      <h>49</h>
+    </coordinates>
+    <panel_attributes>QRCodesDB has an eventsDB
+bg=blue</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>2527</x>
+      <y>966</y>
+      <w>532</w>
+      <h>245</h>
+    </coordinates>
+    <panel_attributes>QRCodesDB
+--
+-db: FirebaseFirestore
+-qRRef: ColelctionReference
+-eventsDB EventsDB
+-
++loadEvent(code: String, success: OnSuccessListener&lt;String&gt;, failure: OnFailureListener)
++loadCode(code: String, success: OnSuccessListener&lt;Event&gt;)
++loadAll(onSuccessListener: OnSuccessListener&lt;List&lt;String&gt;&gt;)
++addCode(eventId: String, onSuccess: OnSuccessListener&lt;String&gt;, onfailure: OnFailureListener)
++removeCode(code: String, eventId: String, onSuccess: OnSuccessListener&lt;Void&gt;, onFailureListener: OnFailureListener)
+-removeCodeFromDatabase(code: String, onSuccess: OnSuccessListener&lt;Void&gt;)
++regenerateCode(code: String, eventId: String, onSuccess: OnSuccessListener&lt;String&gt; onFailure: OnFailureListener)
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>2793</x>
+      <y>770</y>
+      <w>28</w>
+      <h>210</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;280.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>1890</x>
+      <y>798</y>
+      <w>651</w>
+      <h>252</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>910.0;340.0;10.0;340.0;10.0;10.0</additional_attributes>
+  </element>
+</diagram>

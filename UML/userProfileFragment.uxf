@@ -1,0 +1,68 @@
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>0</x><y>0</y><w>520</w><h>410</h></coordinates><panel_attributes>UserProfileFragment
+-
+TAG: String
+-usersDB: UsersDB
+-androidId: String
+-user: User
+
+-nameTextView: TextView
+-emailTextView: TextView
+-phoneTextView: TextView
+-facilityTextView; TextView
+-facilityAddressTextView: TextView
+-facilityLayout: LinearLayout
+-facilityAddressLayout: LinearLayout
+-profileBodyView: ConstraintLayout
+-editProfileAndFeedbackView: ConstraintLayout
+-profileImageView: ImageView
+-ImageView: profilePictureView
+-ImageButton: adminActivityButton
+-feedbackButton: Button
+-
+-openEditProfileFragment()
+-fetchUserProfileFragment()
+-loadProfileImage(imagePath: String)
+-setDefaultProfilePicture(userName: String)
+-updateUI()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>630</x><y>190</y><w>630</w><h>360</h></coordinates><panel_attributes>EditProfileFragment
+--
+- profileUpdatedListener : OnProfileUpdatedListener
+- nameEditText : EditText
+- emailEditText : EditText
+- phoneEditText : EditText
+- facilityEditText : EditText
+- profileImageView : ImageView
+- db : FirebaseFirestore
+- userRef : DocumentReference
+- androidID : String
+- imageUri : Uri
+--
++ onAttach(context : Context) : void
++ onCreate(savedInstanceState : Bundle) : void
++ onCreateView(inflater : LayoutInflater, container : ViewGroup, savedInstanceState : Bundle) : View
++ openGallery() : void
++ saveImageLocally(bitmap : Bitmap) : String
++ saveImagePathToFirestore(imagePath : String) : void
++ loadProfileImage(imagePath : String) : void
++ loadUserDetails() : void
++ updateUserDetails() : void
++ closeFragment() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>320</y><w>140</w><h>180</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;120;160</additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>610</y><w>490</w><h>290</h></coordinates><panel_attributes>FeedbackFormFragment
+--
+- feedbackText: EditText
+- selectedRating: Int
+- submitFeedbackButton: Button
+- editFeedbackButton: Button
+- isEditingFeedback: Boolean
+- backButton: ImageButton
+- androidID: String 
+--
+- FeedbackFormFragment(String androidID)
+- setupStarRating(View view)
+- updateStarRating(int rating, View view)
+- submitFeedback()
+- enableFeedbackEditing()
+- loadFeedbackFromFirestore()
+</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>400</y><w>160</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;140;210</additional_attributes></element></diagram>

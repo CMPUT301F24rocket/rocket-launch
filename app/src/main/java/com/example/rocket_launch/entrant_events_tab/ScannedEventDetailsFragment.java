@@ -53,7 +53,6 @@ public class ScannedEventDetailsFragment extends Fragment {
     CheckBox eventGeolocationRequired;
     TextView eventDescription;
     LinearLayout eventCapacityLayout;
-    ImageButton add_event_poster_button;
 
     //For Location Data
     private ActivityResultLauncher<String> locationPermissionLauncher;

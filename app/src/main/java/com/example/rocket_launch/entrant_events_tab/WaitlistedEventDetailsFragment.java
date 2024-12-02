@@ -27,18 +27,18 @@ import java.util.Locale;
  * fragment to show details about a waitlisted event
  */
 public class WaitlistedEventDetailsFragment extends Fragment {
-    String eventId;
-    Event event;
-    EventsDB eventsdb;
-    UsersDB usersDB;
-    TextView eventNameView;
-    TextView eventWaitlistCapacityView;
-    CheckBox eventGeolocationRequired;
-    TextView eventDescription;
-    LinearLayout eventCapacityLayout;
+    private String eventId;
+    private Event event;
+    private EventsDB eventsdb;
+    private UsersDB usersDB;
+    private TextView eventNameView;
+    private TextView eventWaitlistCapacityView;
+    private CheckBox eventGeolocationRequired;
+    private TextView eventDescription;
+    private LinearLayout eventCapacityLayout;
     boolean locationRequired;
 
-    Button cancelWaitlistButton;
+    private Button cancelWaitlistButton;
 
     public WaitlistedEventDetailsFragment() {
         // needs to be empty
