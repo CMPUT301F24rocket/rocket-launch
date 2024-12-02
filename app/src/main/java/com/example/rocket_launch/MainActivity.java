@@ -33,14 +33,14 @@ import org.osmdroid.config.Configuration;
  * Authors: Rachel, Nathan, Griffin, Kaiden
  */
 public class MainActivity extends AppCompatActivity {
-    UsersDB usersDB;
-    BottomNavigationView bottomNav;
+    private UsersDB usersDB;
+    private BottomNavigationView bottomNav;
 
-    CreateEventFragment createEvent;
-    UserEventsFragment userEvents;
-    UserProfileFragment userProfile;
-    NotificationsFragment notifications;
-    NotificationHandler notificationHandler;
+    private CreateEventFragment createEvent;
+    private UserEventsFragment userEvents;
+    private UserProfileFragment userProfile;
+    private NotificationsFragment notifications;
+    private NotificationHandler notificationHandler;
 
 
     @Override
@@ -89,7 +89,17 @@ public class MainActivity extends AppCompatActivity {
 
         usersDB = new UsersDB();
 
-        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String androidID;
+
+        // Check if a test Android ID is provided via Intent
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("TEST_ANDROID_ID")) {
+            androidID = intent.getStringExtra("TEST_ANDROID_ID");
+            Log.d("MainActivity", "Using test Android ID from Intent: " + androidID);
+        } else {
+            androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            Log.d("MainActivity", "Using real Android ID: " + androidID);
+        }
 
         usersDB.getUser(androidID, new OnSuccessListener<User>() {
             @Override
@@ -119,7 +129,7 @@ public class MainActivity extends AppCompatActivity {
                             usersDB.setRoles(androidID, roles);
                             setupNavBar(roles);
                             // Refresh the StartUpFragment
-                            refreshStartupFragment(androidID, finalUser, usersDB);
+                            refreshStartupFragment(androidID, finalUser);
 
                         }
                     });
@@ -209,10 +219,9 @@ public class MainActivity extends AppCompatActivity {
      * Refreshes the startup fragment if user chooses the organizer role
      * @param AndroidId Android ID of user
      * @param user  Current User object
-     * @param userdb    Current userdb object
      * Author: Nathan
      */
-    private void refreshStartupFragment(String AndroidId, User user, UsersDB userdb) {
+    private void refreshStartupFragment(String AndroidId, User user) {
 
         // Display the StartUpFragment
         StartUpFragment startfrag = new StartUpFragment(AndroidId, user, usersDB);
