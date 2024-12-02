@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -46,6 +48,13 @@ public class NotificationsFragment extends Fragment {
 
     private FloatingActionButton notificationSettingsButton;
 
+    // set what to do on result
+    private final ActivityResultLauncher<Intent> settingsLauncher =
+            registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+                Log.d("SettingsResult", "Returned from settings");
+                updateNotificationPreferences();
+            });
+
     /**
      * default constructor
      */
@@ -73,7 +82,7 @@ public class NotificationsFragment extends Fragment {
                 Uri uri = Uri.fromParts("package", requireContext().getPackageName(), null);
                 intent.setData(uri);
             }
-            startActivity(intent);
+            settingsLauncher.launch(intent);
         });
 
         notificationsListView = view.findViewById(R.id.notifications_list_view);
@@ -110,7 +119,6 @@ public class NotificationsFragment extends Fragment {
                     .commit();
         });
         loadNotifications();
-        updateNotificationPreferences();
         return view;
     }
 
