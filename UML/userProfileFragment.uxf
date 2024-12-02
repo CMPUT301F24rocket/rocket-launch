@@ -1,4 +1,4 @@
-<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>0</x><y>0</y><w>520</w><h>410</h></coordinates><panel_attributes>UserProfileFragment
+<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>60</x><y>540</y><w>520</w><h>410</h></coordinates><panel_attributes>UserProfileFragment
 -
 TAG: String
 -usersDB: UsersDB
@@ -23,7 +23,7 @@ TAG: String
 -fetchUserProfileFragment()
 -loadProfileImage(imagePath: String)
 -setDefaultProfilePicture(userName: String)
--updateUI()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>630</x><y>190</y><w>630</w><h>360</h></coordinates><panel_attributes>EditProfileFragment
+-updateUI()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>1010</x><y>560</y><w>630</w><h>360</h></coordinates><panel_attributes>EditProfileFragment
 --
 - profileUpdatedListener : OnProfileUpdatedListener
 - nameEditText : EditText
@@ -45,9 +45,9 @@ TAG: String
 + loadProfileImage(imagePath : String) : void
 + loadUserDetails() : void
 + updateUserDetails() : void
-+ closeFragment() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>320</y><w>140</w><h>180</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
++ closeFragment() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>720</y><w>460</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
-m2=1</panel_attributes><additional_attributes>10;10;120;160</additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>610</y><w>490</w><h>290</h></coordinates><panel_attributes>FeedbackFormFragment
+m2=1</panel_attributes><additional_attributes>10;10;440;10</additional_attributes></element><element><id>UMLClass</id><coordinates><x>90</x><y>1160</y><w>490</w><h>290</h></coordinates><panel_attributes>FeedbackFormFragment
 --
 - feedbackText: EditText
 - selectedRating: Int
@@ -57,12 +57,37 @@ m2=1</panel_attributes><additional_attributes>10;10;120;160</additional_attribut
 - backButton: ImageButton
 - androidID: String 
 --
-- FeedbackFormFragment(String androidID)
-- setupStarRating(View view)
-- updateStarRating(int rating, View view)
+- FeedbackFormFragment(androidID: String)
++ onCreateView(inflate: LayoutInflater, container: ViewGroup, savedInstanceState: Bundle)
+- setupStarRating(view: View)
+- updateStarRating(irating: int, view: View)
 - submitFeedback()
 - enableFeedbackEditing()
-- loadFeedbackFromFirestore()
-</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>400</y><w>160</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+- loadFeedbackFromFirestore()</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>340</x><y>940</y><w>40</w><h>240</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
 m1=1
-m2=1</panel_attributes><additional_attributes>10;10;140;210</additional_attributes></element></diagram>
+m2=1</panel_attributes><additional_attributes>10;10;10;220</additional_attributes></element><element><id>UMLClass</id><coordinates><x>0</x><y>0</y><w>610</w><h>340</h></coordinates><panel_attributes>MainActivity
+--
+- user: User
+- usersDB: UsersDB
+-bottomNav: BottomNavigationView
+-createEvent: CreateEventFragment
+-userEvents: UserEventsFragment
+-userProfile: UserProfileFragment
+-notifications: NotificationsFragment
+-notificationHandler: NotificationHandler
+--
+# onCreate(Bundle):  void 
+- checkUserRole(user : User) : void
+- bottomBarNavigation(bottomNav : BottomNavigationView) : void
+- setBarNavigationDisplay(bottomNav : BottomNavigationView, user : User) : void
+-refreshStartupFragment(androidId: String, user: User)</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>330</y><w>30</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;-</panel_attributes><additional_attributes>10;10;10;210</additional_attributes></element><element><id>UMLClass</id><coordinates><x>870</x><y>1200</y><w>350</w><h>190</h></coordinates><panel_attributes>Feedback
+--
+- rating: int
+- feedbackText: String
+--
++ Feedback() 
++ Feedback(rating: Int, feedbackText: String)
++ getRating(): int
++ getFeedbackText(): String</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>570</x><y>1280</y><w>320</w><h>40</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes><additional_attributes>10;10;300;10</additional_attributes></element></diagram>
