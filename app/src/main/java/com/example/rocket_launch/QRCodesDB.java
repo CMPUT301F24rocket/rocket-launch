@@ -54,6 +54,11 @@ public class QRCodesDB {
                 .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
     }
 
+    /**
+     * Loads code from database
+     * @param code Code
+     * @param success OnSuccess listener
+     */
     public void loadCode(String code, OnSuccessListener<Event> success) {
         // try to load from database
         qRRef.document(code).get()
@@ -117,17 +122,27 @@ public class QRCodesDB {
     }
 
     public void removeCode(String code, String eventId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
+        Log.d("QRCodesDB", "Attempting to remove QR code: " + code + " linked to event ID: " + eventId);
         eventsDB.loadEvent(eventId, event -> {
             if (event != null) {
-                qRRef.document(code).delete() // delete qr code in QR database
-                        .addOnSuccessListener(l -> {
-                            event.setQRCode(""); // remove code to event eventId
+                Log.d("QRCodesDB", "Event loaded successfully for eventId: " + eventId);
+                qRRef.document(code).delete()
+                        .addOnSuccessListener(unused -> {
+                            event.setQRCode(""); // Optional: clear QR Code link
                             onSuccess.onSuccess(null);
+                            Log.d("QRCodesDB", "Successfully deleted QR code: " + code);
                         })
-                        .addOnFailureListener(onFailure);
+                        .addOnFailureListener(e -> {
+                            onFailure.onFailure(e);
+                            Log.e("QRCodesDB", "Failed to delete QR code: " + code, e);
+                        });
+            } else {
+                Log.e("QRCodesDB", "Failed to load event for eventId: " + eventId);
+                onFailure.onFailure(new Exception("Event not found for eventId: " + eventId));
             }
         });
     }
+
 
     /**
      * removes a QR code from firestore database

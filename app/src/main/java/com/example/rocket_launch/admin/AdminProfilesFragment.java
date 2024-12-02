@@ -74,7 +74,7 @@ public class AdminProfilesFragment extends Fragment {
     private void showDeleteConfirmation(User user, int position) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete profile?")
-                .setMessage("This action will remove all associated data and cannot be undone.")
+                .setMessage("This action cannot be undone.")
                 .setPositiveButton("Yes", (dialog, which) -> deleteProfile(user, position))
                 .setNegativeButton("No", null)
                 .show();

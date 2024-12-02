@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
+import com.example.rocket_launch.UsersDB;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.util.ArrayList;
@@ -29,59 +30,46 @@ public class AdminEventsFragment extends Fragment {
     private RecyclerView eventsRecyclerView;
     private AdminEventsAdapter adapter;
     private EventsDB eventsDB;
+    private UsersDB usersDB;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.admin_event_fragment, container, false);
 
-        // Set up the RecyclerView
         eventsRecyclerView = view.findViewById(R.id.events_recycler_view);
         eventsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        // Add dividers between RecyclerView items
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL);
         eventsRecyclerView.addItemDecoration(dividerItemDecoration);
 
-        // Initialize the adapter with an empty list
         adapter = new AdminEventsAdapter(new ArrayList<>());
         eventsRecyclerView.setAdapter(adapter);
 
-        // Set up the database and load events
         eventsDB = new EventsDB();
+        usersDB = new UsersDB(); // Initialize UsersDB for handling user dependencies
         loadEvents();
 
-        // Handle delete events
-        adapter.setOnEventDeleteListener(this::showDeleteConfirmationDialog);
+        adapter.setOnEventDeleteListener((event, position) -> showDeleteConfirmationDialog(event, position));
+
 
         return view;
     }
 
-    /**
-     * Shows a confirmation dialog before deleting an event.
-     *
-     * @param event The event to delete.
-     */
-    private void showDeleteConfirmationDialog(Event event) {
+    private void showDeleteConfirmationDialog(Event event, int position) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Event?")
                 .setMessage("This action cannot be undone.")
-                .setPositiveButton("Yes", (dialog, which) -> deleteEvent(event))
+                .setPositiveButton("Yes", (dialog, which) -> deleteEvent(event, position))
                 .setNegativeButton("No", null)
                 .show();
     }
 
-    /**
-     * Deletes the specified event from the database.
-     *
-     * @param event The event to delete.
-     */
-    private void deleteEvent(Event event) {
+    private void deleteEvent(Event event, int position) {
         eventsDB.deleteEvent(event.getEventID(),
                 success -> {
+                    adapter.removeEvent(position); // Remove from RecyclerView
                     Toast.makeText(requireContext(), "Event deleted successfully", Toast.LENGTH_SHORT).show();
-                    loadEvents(); // Refresh the list
                 },
                 failure -> {
                     Toast.makeText(requireContext(), "Failed to delete event", Toast.LENGTH_SHORT).show();
@@ -89,10 +77,7 @@ public class AdminEventsFragment extends Fragment {
                 });
     }
 
-    /**
-     * Loads the list of events from the database and updates the RecyclerView.
-     * Ensures missing names or descriptions are labeled properly.
-     */
+
     private void loadEvents() {
         eventsDB.getEventsRef().get()
                 .addOnSuccessListener(querySnapshot -> {
@@ -101,7 +86,6 @@ public class AdminEventsFragment extends Fragment {
                     for (DocumentSnapshot doc : querySnapshot) {
                         Event event = doc.toObject(Event.class);
                         if (event != null) {
-                            // Ensure missing fields are handled
                             if (event.getName() == null || event.getName().trim().isEmpty()) {
                                 event.setName("No name provided");
                             }

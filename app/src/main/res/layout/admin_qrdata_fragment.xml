@@ -4,10 +4,25 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- Empty state view -->
+    <TextView
+        android:id="@+id/empty_state_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:visibility="gone"
+        android:padding="16dp"
+        android:text="No QR codes available."
+        android:textSize="18sp"
+        android:textColor="@color/black" />
+
     <!-- RecyclerView for QR data -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/qr_recycler_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         android:scrollbars="vertical" />
+
 </LinearLayout>

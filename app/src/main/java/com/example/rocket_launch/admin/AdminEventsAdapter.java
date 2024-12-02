@@ -64,7 +64,7 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
         // Handle long-click deletion
         holder.itemView.setOnLongClickListener(v -> {
             if (onEventDeleteListener != null) {
-                onEventDeleteListener.onEventDelete(event);
+                onEventDeleteListener.onEventDelete(event, holder.getAdapterPosition());
             }
             return true;
         });
@@ -117,7 +117,7 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
      * Interface for handling event deletions via long press.
      */
     public interface OnEventDeleteListener {
-        void onEventDelete(Event event);
+        void onEventDelete(Event event, int position);
     }
 
     private OnEventDeleteListener onEventDeleteListener;
@@ -129,5 +129,10 @@ public class AdminEventsAdapter extends RecyclerView.Adapter<AdminEventsAdapter.
      */
     public void setOnEventDeleteListener(OnEventDeleteListener listener) {
         this.onEventDeleteListener = listener;
+    }
+
+    public void removeEvent(int position) {
+        events.remove(position);
+        notifyItemRemoved(position); // Triggers the animation
     }
 }

@@ -2,9 +2,11 @@ package com.example.rocket_launch.admin;
 
 import android.app.AlertDialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -70,13 +72,17 @@ public class AdminQRDataFragment extends Fragment {
                 .setNegativeButton("No", null)
                 .show();
     }
-
     private void deleteQRCode(QRCodeItem item, int position) {
         qrCodesDB.removeCode(item.getQrCode(), item.getEventId(), unused -> {
             qrDataList.remove(position);
             adapter.notifyItemRemoved(position);
+
+            // Display a success toast
+            Toast.makeText(requireContext(), "QR Code deleted successfully", Toast.LENGTH_SHORT).show();
         }, e -> {
-            // Handle deletion failure if needed
+            // Display a failure toast
+            Toast.makeText(requireContext(), "Failed to delete QR Code. Please try again.", Toast.LENGTH_SHORT).show();
+            Log.e("AdminQRDataFragment", "Error deleting QR Code", e);
         });
     }
 

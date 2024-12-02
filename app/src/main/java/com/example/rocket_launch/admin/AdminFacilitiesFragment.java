@@ -67,7 +67,7 @@ public class AdminFacilitiesFragment extends Fragment {
     private void showDeleteConfirmationDialog(User user, int position) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete Facility?")
-                .setMessage("This action will remove all associated data and cannot be undone.")
+                .setMessage("This action cannot be undone.")
                 .setPositiveButton("Yes", (dialog, which) -> deleteFacility(user, position))
                 .setNegativeButton("No", null)
                 .show();
