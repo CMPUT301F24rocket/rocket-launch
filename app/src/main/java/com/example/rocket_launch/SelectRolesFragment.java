@@ -73,18 +73,6 @@ public class SelectRolesFragment extends DialogFragment {
                     roles.setEntrant(entrant_switch.isChecked());
                     roles.setOrganizer(organizer_switch.isChecked());
 
-
-        dialog.setOnShowListener(dialogInterface -> {
-            Button okButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
-            okButton.setOnClickListener(l -> {
-                roles.setEntrant(entrant_switch.isChecked());
-                roles.setOrganizer(organizer_switch.isChecked());
-
-                if (!roles.isOrganizer() && !roles.isEntrant()) {
-                    entrant_switch.setError("must be at least one role");
-                    organizer_switch.setError("must be at least one role");
-                }
-                else {
                     BottomNavigationView bottomNav = requireActivity().findViewById(R.id.bottom_nav_view);
 
                     if (bottomNav != null) {
