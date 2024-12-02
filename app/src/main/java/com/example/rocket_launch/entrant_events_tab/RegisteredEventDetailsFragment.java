@@ -35,10 +35,17 @@ public class RegisteredEventDetailsFragment extends Fragment {
     Button removeRegistrationButton;
 
 
+    /**
+     * Empty constructor
+     */
     public RegisteredEventDetailsFragment() {
         // needs to be empty
     }
 
+    /**
+     * Constructor that has an event parameter
+     * @param event Registered event
+     */
     public RegisteredEventDetailsFragment(Event event) {
         this.event = event;
     }

@@ -54,6 +54,11 @@ public class QRCodesDB {
                 .addOnFailureListener(e -> Log.e("error loading from database", "error", e));
     }
 
+    /**
+     * Loads code from database
+     * @param code Code
+     * @param success OnSuccess listener
+     */
     public void loadCode(String code, OnSuccessListener<Event> success) {
         // try to load from database
         qRRef.document(code).get()

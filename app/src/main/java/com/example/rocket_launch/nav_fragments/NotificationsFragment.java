@@ -32,6 +32,7 @@ import java.util.List;
 
 /**
  * fragment used to display all of a user's notifications
+ * Author: Rachel
  */
 public class NotificationsFragment extends Fragment {
 
@@ -122,6 +123,10 @@ public class NotificationsFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Function used to update the notification preferences of the user. The
+     * user can choose to have them on or off
+     */
     private void updateNotificationPreferences() {
         boolean notificationPreferences = NotificationManagerCompat.from(requireContext()).areNotificationsEnabled();
         Log.d("NotificationPreferences", "Notifications enabled: " + notificationPreferences);

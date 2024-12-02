@@ -29,6 +29,7 @@ import org.osmdroid.config.Configuration;
 
 /**
  * main activity that gets loaded on startup
+ * Authors: Rachel, Nathan, Griffin, Kaiden
  */
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
@@ -38,8 +39,6 @@ public class MainActivity extends AppCompatActivity {
     UserEventsFragment userEvents;
     UserProfileFragment userProfile;
     NotificationsFragment notifications;
-
-
     NotificationHandler notificationHandler;
 
 
@@ -204,6 +203,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Refreshes the startup fragment if user chooses the organizer role
+     * @param AndroidId Android ID of user
+     * @param user  Current User object
+     * @param userdb    Current userdb object
+     * Author: Nathan
+     */
     private void refreshStartupFragment(String AndroidId, User user, UsersDB userdb) {
 
         // Display the StartUpFragment

@@ -184,6 +184,9 @@ public class FeedbackFormFragment extends Fragment {
                 .addOnFailureListener(e -> Log.e(TAG, "Error loading feedback", e));
     }
 
+    /**
+     * Class that represents feedback object
+     */
     public static class Feedback {
         private int rating;
         private String feedbackText;

@@ -21,7 +21,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * Class that defines a new instance of an event
+ * Author: Kaiden
+ */
 public class Event {
     private String eventID;
     private String QRCode;
@@ -47,7 +50,11 @@ public class Event {
     private String organizer;
 
 
+    /**
+     * Constructor for event class
+     */
     public Event(){
+
         // verify lists appear in database -> ensures no access to undefined attribute
         this.waitingList = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
@@ -165,6 +172,10 @@ public class Event {
     }
 
 
+    /**
+     * Generates the bitmap of the QR code
+     * @return bitmap of QR code, or null
+     */
     public Bitmap generateQRCode() {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
@@ -251,6 +262,9 @@ public class Event {
         this.organizer = organizer;
     }
 
+    /**
+     * Defines the User Array Adapter class
+     */
     public static class UserArrayAdapter extends ArrayAdapter<User> {
 
         /**
