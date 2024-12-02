@@ -1,6 +1,7 @@
 package com.example.rocket_launch.notifications_tab;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,6 +9,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.fragment.app.Fragment;
 
@@ -72,17 +74,32 @@ public class NotificationDetailsFragment extends Fragment {
         // show buttons if invite type notification
         if (isInvitation) {
             confirmationButtons.setVisibility(View.VISIBLE);
+            // verify user is in invite list
+            EventsDB eventsDB = new EventsDB();
+            eventsDB.getInvitedUserIds(eventID, users -> {
+                if (users.contains(androidID)) {
+                    //accept invitation
+                    acceptButton.setOnClickListener(v -> {
+                        AcceptInvitation(eventID, androidID);
+                        requireActivity().getSupportFragmentManager().popBackStack();
+                    });
+                    // decline invitation
+                    declineButton.setOnClickListener(v -> {
+                        DeclineInvitation(eventID, androidID);
+                        requireActivity().getSupportFragmentManager().popBackStack();
+                    });
+                }
+                else {
+                    // show popup that you cannot join
+                    Toast.makeText(requireContext(), "Invalid invitation", Toast.LENGTH_SHORT).show();
+                    // remove notification
+                    UsersDB usersDB = new UsersDB();
+                    usersDB.removeNotification(androidID, notification);
+                    // quit
+                    requireActivity().getSupportFragmentManager().popBackStack();
 
-            //accept invitation
-            acceptButton.setOnClickListener(v -> {
-                AcceptInvitation(eventID, androidID);
-                requireActivity().getSupportFragmentManager().popBackStack();
-            });
-            // decline invitation
-            declineButton.setOnClickListener(v -> {
-                DeclineInvitation(eventID, androidID);
-                requireActivity().getSupportFragmentManager().popBackStack();
-            });
+                }
+            }, e -> Log.d("error", "error", e));
         } else { // regular notification type
             confirmationButtons.setVisibility(View.GONE);
         }
