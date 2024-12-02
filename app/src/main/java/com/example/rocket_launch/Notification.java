@@ -1,7 +1,7 @@
 package com.example.rocket_launch;
 
 /**
- * holds data for each notification
+ * Defines a notification class
  */
 public class Notification {
     private String id;

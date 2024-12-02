@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * class containing all user information
+ * Defines a new user class containing all user information
  */
 public class User {
 
