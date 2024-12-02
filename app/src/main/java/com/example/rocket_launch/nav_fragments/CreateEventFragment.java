@@ -26,7 +26,8 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 
 /**
- * fragment used for displaying events created by an organizer
+ * Fragment used for displaying events created by an organizer
+ * Author: Rachel
  */
 public class CreateEventFragment extends Fragment {
     FloatingActionButton addNewEventButton;

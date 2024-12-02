@@ -80,7 +80,7 @@
                     style="@style/FragmentConstants"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Email:" />
+                    android:text="Email: " />
 
                 <EditText
                     android:id="@+id/edit_user_email"
@@ -89,7 +89,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:inputType="textEmailAddress"
-                    android:hint="Enter Email" />
+                    android:hint="Enter Email"
+                    android:autofillHints="emailAddress"/>
             </LinearLayout>
 
             <LinearLayout
@@ -117,7 +118,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Enter Phone (optional)" />
+                    android:hint="Enter Phone (optional)"
+                    android:autofillHints="phone"/>
 
             </LinearLayout>
 
@@ -154,7 +156,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Enter Facility (optional)" />
+                        android:hint="Enter Facility" />
 
                 </LinearLayout>
 
@@ -184,7 +186,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:hint="Enter Facility Address (optional)" />
+                        android:hint="Enter Facility Address" />
 
                 </LinearLayout>
             </androidx.constraintlayout.widget.ConstraintLayout>

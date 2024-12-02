@@ -91,8 +91,7 @@ public class ScannedEventDetailsFragment extends Fragment {
                         getEntrantLocation();
 
                         //Join event waitlist add it to users joined waitlisted events
-                        eventsdb.addUserToWaitingList(eventId, androidId);
-                        usersDB.addWaitlistedEvent(androidId, eventId);
+                        checkAndAddUser();
                         closeFragment();
 
                     } else {
@@ -155,6 +154,11 @@ public class ScannedEventDetailsFragment extends Fragment {
                         joinWaitlist();
                     });
                 }
+                else {
+                    Log.d("Scan event", "event does not exist");
+                    Toast.makeText(requireContext(), "Event does not exist", Toast.LENGTH_SHORT).show();
+                    closeFragment();
+                }
             }
         });
     }
@@ -174,28 +178,8 @@ public class ScannedEventDetailsFragment extends Fragment {
             } else { //Don't need Location Data --> don't run permissions
 
                 //check if user in waitlist already
-                if (event.getWaitingList().contains(androidId)) {
-                    Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
-                    Log.d("joinWaitlist", "user already in waitlist");
-                }
-                else if (event.getInvitedEntrants().contains(androidId)) {
-                    Toast.makeText(requireContext(), "Check Notifications to Register!", Toast.LENGTH_LONG).show();
-                    Log.d("joinWaitlist", "user already in invited list");
-                }
-                else if (event.getregisteredEntrants().contains(androidId)) {
-                    Toast.makeText(requireContext(), "Already Registered", Toast.LENGTH_LONG).show();
-                    Log.d("joinWaitlist", "user already in registered list");
-                }
-                else if (event.getCancelledEntrants().contains(androidId)) {
-                    Toast.makeText(requireContext(), "Cannot join you have been cancelled", Toast.LENGTH_LONG).show();
-                    Log.d("joinWaitlist", "user already in cancelled list");
-                }
-                else {
-                    // add to waitlist of event
-                    eventsdb.addUserToWaitingList(eventId, androidId);
-                    // add to user's joined events
-                    usersDB.addWaitlistedEvent(androidId, eventId);
-                }
+                checkAndAddUser();
+                closeFragment();
             }
         }
         else {
@@ -260,5 +244,31 @@ public class ScannedEventDetailsFragment extends Fragment {
                 })
                 .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
                 .show();
+    }
+
+    private void checkAndAddUser() {
+        //check if user in waitlist already
+        if (event.getWaitingList().contains(androidId)) {
+            Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in waitlist");
+        }
+        else if (event.getInvitedEntrants().contains(androidId)) {
+            Toast.makeText(requireContext(), "Check Notifications to Register!", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in invited list");
+        }
+        else if (event.getregisteredEntrants().contains(androidId)) {
+            Toast.makeText(requireContext(), "Already Registered", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in registered list");
+        }
+        else if (event.getCancelledEntrants().contains(androidId)) {
+            Toast.makeText(requireContext(), "Cannot join you have been cancelled", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in cancelled list");
+        }
+        else {
+            // add to waitlist of event
+            eventsdb.addUserToWaitingList(eventId, androidId);
+            // add to user's joined events
+            usersDB.addWaitlistedEvent(androidId, eventId);
+        }
     }
 }

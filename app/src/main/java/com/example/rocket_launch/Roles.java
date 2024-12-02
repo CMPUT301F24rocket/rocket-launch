@@ -1,7 +1,7 @@
 package com.example.rocket_launch;
 
 /**
- * class to contain all of a given user's roles
+ * Defines a new class that contains all of a given user's roles
  */
 public class Roles {
     boolean organizer;
