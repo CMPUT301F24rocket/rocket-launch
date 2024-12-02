@@ -111,6 +111,9 @@ public class EntrantListViewWaitlistFragment extends Fragment {
                 Notification inviteNotification = new Notification();
                 String title = String.format(Locale.CANADA, "You are invited to join %s in a redraw!", event.getName());
                 inviteNotification.createInvite(java.util.UUID.randomUUID().toString(), title, eventId);
+                for (String userId : sampledUsers) {
+                    NotificationHelper.sendPrefabNotification(userId, inviteNotification);
+                }
             });
         });
 

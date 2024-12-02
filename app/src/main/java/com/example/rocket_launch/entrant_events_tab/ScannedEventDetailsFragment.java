@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -32,6 +33,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.location.Priority;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
@@ -106,6 +108,8 @@ public class ScannedEventDetailsFragment extends Fragment {
         androidId = Settings.Secure.getString(requireContext().getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
+    ImageView eventPosterView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_new_event_details, container, false);
@@ -115,19 +119,18 @@ public class ScannedEventDetailsFragment extends Fragment {
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
         eventCapacityLayout = view.findViewById(R.id.waitlist_capacity_layout);
-        add_event_poster_button = view.findViewById(R.id.add_event_poster_button);
-        add_event_poster_button.setVisibility(View.GONE);
+        eventPosterView = view.findViewById(R.id.event_poster_view);
 
         locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         joinWaitlistButton = view.findViewById(R.id.join_waitlist_button);
-        view.findViewById(R.id.cancel_button).setOnClickListener(l -> {
-            closeFragment();
-        });
+        view.findViewById(R.id.cancel_button).setOnClickListener(l -> closeFragment());
+
         getEvent();
 
         return view;
     }
+
 
     /**
      * loads an event with eventId
@@ -148,19 +151,26 @@ public class ScannedEventDetailsFragment extends Fragment {
                     eventGeolocationRequired.setChecked(event.getGeolocationRequired());
                     eventDescription.setText(event.getDescription());
                     geolocationDataRequired = event.getGeolocationRequired();
-                    // in get event so we cant press before we have event
-                    joinWaitlistButton.setOnClickListener(l -> {
-                        joinWaitlist();
-                    });
-                }
-                else {
-                    Log.d("Scan event", "event does not exist");
-                    Toast.makeText(requireContext(), "Event does not exist", Toast.LENGTH_SHORT).show();
-                    closeFragment();
+
+                    // Load the poster image or use a default image
+                    if (event.getPosterUrl() != null && !event.getPosterUrl().isEmpty()) {
+                        Picasso.get()
+                                .load(event.getPosterUrl())
+                                .placeholder(R.drawable.sample_poster) // Optional: Loading placeholder
+                                .error(R.drawable.sample_poster) // Fallback to sample poster on error
+                                .into(eventPosterView);
+                    } else {
+                        // Directly set sample poster if no URL exists
+                        eventPosterView.setImageResource(R.drawable.sample_poster);
+                    }
+
+                    joinWaitlistButton.setOnClickListener(l -> joinWaitlist());
                 }
             }
         });
     }
+
+
 
     /**
      * function to join waiting list and update databse accordingly

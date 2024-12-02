@@ -11,10 +11,13 @@ import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
 import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,17 +31,21 @@ public class AdminProfilesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.admin_profile_fragment, container, false);
 
+        // Set up RecyclerView
         profilesRecyclerView = view.findViewById(R.id.profiles_recycler_view);
         profilesRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
         profilesRecyclerView.addItemDecoration(new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL));
 
+        // Initialize adapter and attach to RecyclerView
         adapter = new AdminProfilesAdapter(new ArrayList<>());
         profilesRecyclerView.setAdapter(adapter);
 
+        // Initialize Firestore DB and load profiles
         usersDB = new UsersDB();
         loadProfiles();
 
-        adapter.setOnProfileDeleteListener((user, position) -> showDeleteConfirmation(user, position));
+        // Set long-click listener for profile deletion
+        adapter.setOnProfileDeleteListener(this::showDeleteConfirmation);
 
         return view;
     }
@@ -48,11 +55,19 @@ public class AdminProfilesFragment extends Fragment {
             List<User> users = new ArrayList<>();
             for (DocumentSnapshot doc : querySnapshot) {
                 User user = doc.toObject(User.class);
+
                 if (user != null) {
+                    // Set placeholders for missing fields
+                    if (user.getUserName() == null || user.getUserName().trim().isEmpty()) {
+                        user.setUserName("No name provided");
+                    }
+                    if (user.getUserEmail() == null || user.getUserEmail().trim().isEmpty()) {
+                        user.setUserEmail("No email provided");
+                    }
                     users.add(user);
                 }
             }
-            adapter.updateData(users);
+            adapter.updateData(users); // Update adapter with loaded profiles
         });
     }
 
@@ -67,9 +82,12 @@ public class AdminProfilesFragment extends Fragment {
 
     private void deleteProfile(User user, int position) {
         usersDB.getUsersRef().document(user.getAndroidId()).delete()
-                .addOnSuccessListener(aVoid -> adapter.removeProfile(position))
+                .addOnSuccessListener(aVoid -> {
+                    adapter.removeProfile(position); // Remove from RecyclerView
+                    Toast.makeText(requireContext(), "Profile deleted successfully", Toast.LENGTH_SHORT).show();
+                })
                 .addOnFailureListener(e -> {
-                    // Log failure if needed
+                    Toast.makeText(requireContext(), "Failed to delete profile", Toast.LENGTH_SHORT).show();
                 });
     }
 }
