@@ -136,6 +136,7 @@ public class CreateEventFragment extends Fragment {
                 Log.e("FetchEvents", "Error fetching events from events_dev collection", e);
                 Toast.makeText(requireContext(), "Failed to load events", Toast.LENGTH_SHORT).show();
             });
+
         }, e -> Log.e("FetchEvents", "Error fetching event IDs", e));
     }
 
