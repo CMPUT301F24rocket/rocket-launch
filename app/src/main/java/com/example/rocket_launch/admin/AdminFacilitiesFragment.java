@@ -23,13 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Fragment for displaying facilities in the admin section.
+ * Fragment for managing facilities in the admin section. Displays a list of facilities
+ * in a RecyclerView and allows admins to delete facilities from the database.
  * Author: Pouyan
  */
 public class AdminFacilitiesFragment extends Fragment {
-    private RecyclerView facilitiesRecyclerView;
-    private AdminFacilitiesAdapter adapter;
-    private UsersDB usersDB;
+    private RecyclerView facilitiesRecyclerView; // RecyclerView for displaying facilities
+    private AdminFacilitiesAdapter adapter; // Adapter for managing facility items
+    private UsersDB usersDB; // Database reference for user-related data
 
     @Nullable
     @Override
@@ -53,7 +54,7 @@ public class AdminFacilitiesFragment extends Fragment {
 
         // Initialize UsersDB
         usersDB = new UsersDB();
-        loadFacilities();
+        loadFacilities(); // Load facilities from the database
 
         return view;
     }
@@ -61,8 +62,9 @@ public class AdminFacilitiesFragment extends Fragment {
     /**
      * Shows a confirmation dialog before deleting a facility.
      *
-     * @param user The user (facility owner) to delete.
+     * @param user     The user (facility owner) to delete.
      * @param position The position in the adapter.
+     * Author: Pouyan
      */
     private void showDeleteConfirmationDialog(User user, int position) {
         new AlertDialog.Builder(requireContext())
@@ -74,10 +76,11 @@ public class AdminFacilitiesFragment extends Fragment {
     }
 
     /**
-     * Deletes the specified facility using UsersDB.
+     * Deletes the specified facility using UsersDB and removes it from the RecyclerView.
      *
-     * @param user The user (facility owner) to delete.
+     * @param user     The user (facility owner) to delete.
      * @param position The position in the adapter.
+     * Author: Pouyan
      */
     private void deleteFacility(User user, int position) {
         usersDB.deleteFacility(user.getAndroidId(), new OnSuccessListener<Void>() {
@@ -91,10 +94,12 @@ public class AdminFacilitiesFragment extends Fragment {
 
     /**
      * Loads the list of facilities from the database and updates the RecyclerView.
+     * Ensures facilities with missing fields are labeled appropriately.
+     * Author: Pouyan
      */
     private void loadFacilities() {
         usersDB.getUsersRef().get().addOnSuccessListener(querySnapshot -> {
-            List<User> facilities = new ArrayList<>();
+            List<User> facilities = new ArrayList<>(); // List to hold loaded facilities
 
             for (DocumentSnapshot doc : querySnapshot) {
                 User user = doc.toObject(User.class);
@@ -119,9 +124,9 @@ public class AdminFacilitiesFragment extends Fragment {
                 }
             }
 
-            adapter.updateData(facilities);
+            adapter.updateData(facilities); // Update adapter with loaded facilities
         }).addOnFailureListener(e -> {
-            Log.e("loadFacilities", "Failed to load facilities", e);
+            Log.e("loadFacilities", "Failed to load facilities", e); // Log the error
         });
     }
 }
