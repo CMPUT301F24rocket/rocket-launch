@@ -1,0 +1,125 @@
+Index: UML/userProfileFragment.uxf
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"no\"?>\n<diagram program=\"umlet\" version=\"15.0.0\">\n  <zoom_level>10</zoom_level>\n  <element>\n    <id>UMLClass</id>\n    <coordinates>\n      <x>20</x>\n      <y>20</y>\n      <w>520</w>\n      <h>410</h>\n    </coordinates>\n    <panel_attributes>UserProfileFragment\n-\nTAG: String\n-usersDB: UsersDB\n-androidId: String\n-user: User\n\n-nameTextView: TextView\n-emailTextView: TextView\n-phoneTextView: TextView\n-facilityTextView; TextView\n-facilityAddressTextView: TextView\n-facilityLayout: LinearLayout\n-facilityAddressLayout: LinearLayout\n-profileBodyView: ConstraintLayout\n-editProfileAndFeedbackView: ConstraintLayout\n-profileImageView: ImageView\n-ImageView: profilePictureView\n-ImageButton: adminActivityButton\n-feedbackButton: Button\n-\n-openEditProfileFragment()\n-fetchUserProfileFragment()\n-loadProfileImage(imagePath: String)\n-setDefaultProfilePicture(userName: String)\n-updateUI()</panel_attributes>\n    <additional_attributes/>\n  </element>\n  <element>\n    <id>UMLClass</id>\n    <coordinates>\n      <x>650</x>\n      <y>210</y>\n      <w>630</w>\n      <h>360</h>\n    </coordinates>\n    <panel_attributes>EditProfileFragment\n--\n- profileUpdatedListener : OnProfileUpdatedListener\n- nameEditText : EditText\n- emailEditText : EditText\n- phoneEditText : EditText\n- facilityEditText : EditText\n- profileImageView : ImageView\n- db : FirebaseFirestore\n- userRef : DocumentReference\n- androidID : String\n- imageUri : Uri\n--\n+ onAttach(context : Context) : void\n+ onCreate(savedInstanceState : Bundle) : void\n+ onCreateView(inflater : LayoutInflater, container : ViewGroup, savedInstanceState : Bundle) : View\n+ openGallery() : void\n+ saveImageLocally(bitmap : Bitmap) : String\n+ saveImagePathToFirestore(imagePath : String) : void\n+ loadProfileImage(imagePath : String) : void\n+ loadUserDetails() : void\n+ updateUserDetails() : void\n+ closeFragment() : void</panel_attributes>\n    <additional_attributes/>\n  </element>\n  <element>\n    <id>Relation</id>\n    <coordinates>\n      <x>530</x>\n      <y>340</y>\n      <w>140</w>\n      <h>180</h>\n    </coordinates>\n    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-\nm1=1\nm2=1</panel_attributes>\n    <additional_attributes>10.0;10.0;120.0;160.0</additional_attributes>\n  </element>\n</diagram>\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/UML/userProfileFragment.uxf b/UML/userProfileFragment.uxf
+--- a/UML/userProfileFragment.uxf	(revision 8e2dab7584910a213909023494693fd5e3ea32ef)
++++ b/UML/userProfileFragment.uxf	(date 1733170681749)
+@@ -1,15 +1,4 @@
+-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+-<diagram program="umlet" version="15.0.0">
+-  <zoom_level>10</zoom_level>
+-  <element>
+-    <id>UMLClass</id>
+-    <coordinates>
+-      <x>20</x>
+-      <y>20</y>
+-      <w>520</w>
+-      <h>410</h>
+-    </coordinates>
+-    <panel_attributes>UserProfileFragment
++<diagram program="umletino" version="15.1"><zoom_level>10</zoom_level><element><id>UMLClass</id><coordinates><x>0</x><y>0</y><w>520</w><h>410</h></coordinates><panel_attributes>UserProfileFragment
+ -
+ TAG: String
+ -usersDB: UsersDB
+@@ -34,18 +23,7 @@
+ -fetchUserProfileFragment()
+ -loadProfileImage(imagePath: String)
+ -setDefaultProfilePicture(userName: String)
+--updateUI()</panel_attributes>
+-    <additional_attributes/>
+-  </element>
+-  <element>
+-    <id>UMLClass</id>
+-    <coordinates>
+-      <x>650</x>
+-      <y>210</y>
+-      <w>630</w>
+-      <h>360</h>
+-    </coordinates>
+-    <panel_attributes>EditProfileFragment
++-updateUI()</panel_attributes><additional_attributes></additional_attributes></element><element><id>UMLClass</id><coordinates><x>630</x><y>190</y><w>630</w><h>360</h></coordinates><panel_attributes>EditProfileFragment
+ --
+ - profileUpdatedListener : OnProfileUpdatedListener
+ - nameEditText : EditText
+@@ -67,20 +45,24 @@
+ + loadProfileImage(imagePath : String) : void
+ + loadUserDetails() : void
+ + updateUserDetails() : void
+-+ closeFragment() : void</panel_attributes>
+-    <additional_attributes/>
+-  </element>
+-  <element>
+-    <id>Relation</id>
+-    <coordinates>
+-      <x>530</x>
+-      <y>340</y>
+-      <w>140</w>
+-      <h>180</h>
+-    </coordinates>
+-    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+++ closeFragment() : void</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>510</x><y>320</y><w>140</w><h>180</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
++m1=1
++m2=1</panel_attributes><additional_attributes>10;10;120;160</additional_attributes></element><element><id>UMLClass</id><coordinates><x>160</x><y>610</y><w>490</w><h>290</h></coordinates><panel_attributes>FeedbackFormFragment
++--
++- feedbackText: EditText
++- selectedRating: Int
++- submitFeedbackButton: Button
++- editFeedbackButton: Button
++- isEditingFeedback: Boolean
++- backButton: ImageButton
++- androidID: String
++--
++- FeedbackFormFragment(String androidID)
++- setupStarRating(View view)
++- updateStarRating(int rating, View view)
++- submitFeedback()
++- enableFeedbackEditing()
++- loadFeedbackFromFirestore()
++</panel_attributes><additional_attributes></additional_attributes></element><element><id>Relation</id><coordinates><x>270</x><y>400</y><w>160</w><h>230</h></coordinates><panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+ m1=1
+-m2=1</panel_attributes>
+-    <additional_attributes>10.0;10.0;120.0;160.0</additional_attributes>
+-  </element>
+-</diagram>
++m2=1</panel_attributes><additional_attributes>10;10;140;210</additional_attributes></element></diagram>
+\ No newline at end of file
+Index: app/build.gradle.kts
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>import com.android.build.gradle.internal.getSdkDir\n\nplugins {\n    alias(libs.plugins.android.application)\n    //firebase\n    id(\"com.google.gms.google-services\")\n}\n\nandroid {\n    namespace = \"com.example.rocket_launch\"\n    compileSdk = 34\n\n    defaultConfig {\n        applicationId = \"com.example.rocket_launch\"\n        minSdk = 24\n        targetSdk = 34\n        versionCode = 1\n        versionName = \"1.0\"\n\n        testInstrumentationRunner = \"androidx.test.runner.AndroidJUnitRunner\"\n    }\n\n    buildTypes {\n        release {\n            isMinifyEnabled = false\n            proguardFiles(\n                getDefaultProguardFile(\"proguard-android-optimize.txt\"),\n                \"proguard-rules.pro\"\n            )\n        }\n    }\n    compileOptions {\n        sourceCompatibility = JavaVersion.VERSION_1_8\n        targetCompatibility = JavaVersion.VERSION_1_8\n    }\n}\n\ndependencies {\n\n    implementation(libs.appcompat)\n    implementation(libs.material)\n    implementation(libs.activity)\n    implementation(libs.constraintlayout)\n    implementation(libs.firebase.firestore)\n    implementation(libs.navigation.fragment)\n    implementation(libs.navigation.ui)\n\n    // QR code scanner\n    implementation(\"com.journeyapps:zxing-android-embedded:4.3.0\")\n    implementation(\"com.google.zxing:core:3.3.3\")\n\n    // Glide\n    implementation(\"com.github.bumptech.glide:glide:4.16.0\")\n\n    //firebase\n    implementation(platform(\"com.google.firebase:firebase-bom:33.5.1\"))\n    implementation(\"com.google.firebase:firebase-analytics\")\n    implementation(\"com.google.firebase:firebase-firestore\")\n\n    //OSM\n    implementation(\"org.osmdroid:osmdroid-android:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-wms:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-mapsforge:6.1.11\")\n    implementation(\"org.osmdroid:osmdroid-geopackage:6.1.11\")\n\n    //Nominatim (For Geocoding)\n    implementation(\"com.squareup.okhttp3:okhttp:4.9.1\")\n\n    //Google Location Services\n    implementation (\"com.google.android.gms:play-services-location:21.0.1\")\n\n    // Espresso and JUnit for UI Testing\n    implementation (\"androidx.appcompat:appcompat:1.7.0\")\n    implementation (\"com.google.android.material:material:1.6.1\")\n    implementation (\"androidx.constraintlayout:constraintlayout:2.2.0\")\n\n    implementation (\"com.google.firebase:firebase-storage:20.2.0\")\n    implementation (\"com.github.bumptech.glide:glide:4.12.0\")\n    implementation(libs.firebase.database)\n    implementation(libs.recyclerview)\n    // implementation(libs.ui.graphics.android)\n    annotationProcessor (\"com.github.bumptech.glide:compiler:4.12.0\")\n    implementation (\"com.squareup.picasso:picasso:2.71828\")\n\n    testImplementation (\"org.junit.jupiter:junit-jupiter-api:5.0.1\")\n    testRuntimeOnly (\"org.junit.jupiter:junit-jupiter-engine:5.0.1\")\n\n    androidTestImplementation (\"androidx.test.ext:junit:1.1.5\")\n    androidTestImplementation (\"androidx.test.espresso:espresso-core:3.5.1\")\n\n    // Glide for Image Loading\n    implementation (\"com.github.bumptech.glide:glide:4.15.1\")\n    annotationProcessor (\"com.github.bumptech.glide:compiler:4.15.1\")\n\n    \n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/build.gradle.kts b/app/build.gradle.kts
+--- a/app/build.gradle.kts	(revision 8e2dab7584910a213909023494693fd5e3ea32ef)
++++ b/app/build.gradle.kts	(date 1733170600820)
+@@ -33,6 +33,7 @@
+         sourceCompatibility = JavaVersion.VERSION_1_8
+         targetCompatibility = JavaVersion.VERSION_1_8
+     }
++
+ }
+ 
+ dependencies {
+Index: .idea/gradle.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\n<project version=\"4\">\n  <component name=\"GradleMigrationSettings\" migrationVersion=\"1\" />\n  <component name=\"GradleSettings\">\n    <option name=\"linkedExternalProjectsSettings\">\n      <GradleProjectSettings>\n        <option name=\"externalProjectPath\" value=\"$PROJECT_DIR$\" />\n        <option name=\"gradleJvm\" value=\"#GRADLE_LOCAL_JAVA_HOME\" />\n        <option name=\"modules\">\n          <set>\n            <option value=\"$PROJECT_DIR$\" />\n            <option value=\"$PROJECT_DIR$/app\" />\n          </set>\n        </option>\n        <option name=\"resolveExternalAnnotations\" value=\"false\" />\n      </GradleProjectSettings>\n    </option>\n  </component>\n</project>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/.idea/gradle.xml b/.idea/gradle.xml
+--- a/.idea/gradle.xml	(revision 8e2dab7584910a213909023494693fd5e3ea32ef)
++++ b/.idea/gradle.xml	(date 1733177653171)
+@@ -4,6 +4,7 @@
+   <component name="GradleSettings">
+     <option name="linkedExternalProjectsSettings">
+       <GradleProjectSettings>
++        <option name="testRunner" value="CHOOSE_PER_TEST" />
+         <option name="externalProjectPath" value="$PROJECT_DIR$" />
+         <option name="gradleJvm" value="#GRADLE_LOCAL_JAVA_HOME" />
+         <option name="modules">
