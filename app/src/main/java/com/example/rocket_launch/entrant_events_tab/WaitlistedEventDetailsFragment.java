@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -18,6 +19,7 @@ import com.example.rocket_launch.R;
 import com.example.rocket_launch.UsersDB;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.squareup.picasso.Picasso;
 
 import java.util.Locale;
 
@@ -54,24 +56,25 @@ public class WaitlistedEventDetailsFragment extends Fragment {
 
     }
 
+    ImageView eventPosterView;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_waitlisted_event_details, container, false);
 
+        eventPosterView = view.findViewById(R.id.event_poster_view);
+
+        // Initialize other views and load event details
         eventNameView = view.findViewById(R.id.view_event_name);
         eventWaitlistCapacityView = view.findViewById(R.id.view_waitlist_capacity);
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
         eventCapacityLayout = view.findViewById(R.id.waitlist_capacity_layout);
-
         cancelWaitlistButton = view.findViewById(R.id.cancel_waitlist_button);
-        cancelWaitlistButton.setOnClickListener(l -> {
-        leaveWaitlist();
-        });
 
-        view.findViewById(R.id.cancel_button).setOnClickListener(l -> {
-            closeFragment();
-        });
+        cancelWaitlistButton.setOnClickListener(l -> leaveWaitlist());
+        view.findViewById(R.id.cancel_button).setOnClickListener(l -> closeFragment());
+
         getEvent();
 
         return view;
@@ -96,10 +99,20 @@ public class WaitlistedEventDetailsFragment extends Fragment {
                     eventGeolocationRequired.setChecked(event.getGeolocationRequired());
                     locationRequired = event.getGeolocationRequired();
                     eventDescription.setText(event.getDescription());
-                    // in get event so we cant press before we have event
-                    cancelWaitlistButton.setOnClickListener(l -> {
-                        leaveWaitlist();
-                    });
+
+                    // Load the poster image or use the sample image if no URL is available
+                    if (event.getPosterUrl() != null && !event.getPosterUrl().isEmpty()) {
+                        Picasso.get()
+                                .load(event.getPosterUrl())
+                                .placeholder(R.drawable.sample_poster) // Optional placeholder
+                                .error(R.drawable.sample_poster) // Optional error image
+                                .into(eventPosterView);
+                    } else {
+                        // Use the sample image as default
+                        eventPosterView.setImageResource(R.drawable.sample_poster);
+                    }
+
+                    cancelWaitlistButton.setOnClickListener(l -> leaveWaitlist());
                 }
             }
         });
