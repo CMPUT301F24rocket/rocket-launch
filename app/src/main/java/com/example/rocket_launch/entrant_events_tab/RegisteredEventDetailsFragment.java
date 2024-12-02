@@ -66,8 +66,6 @@ public class RegisteredEventDetailsFragment extends Fragment {
         eventCapacityView = view.findViewById(R.id.view_event_capacity);
         eventGeolocationRequired = view.findViewById(R.id.view_checkbox_geolocation_requirement);
         eventDescription = view.findViewById(R.id.view_event_description);
-        ImageButton imageButton = view.findViewById(R.id.add_event_poster_button);
-        imageButton.setVisibility(View.GONE);
 
         removeRegistrationButton = view.findViewById(R.id.cancel_registration_button);
         removeRegistrationButton.setOnClickListener(l -> {

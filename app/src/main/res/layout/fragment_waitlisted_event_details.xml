@@ -67,6 +67,7 @@ xmlns:tools="http://schemas.android.com/tools">
 
             <!--Set Event Waitlist Capacity Size-->
             <LinearLayout
+                android:id="@+id/waitlist_capacity_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:visibility="gone"
