@@ -1,9 +1,12 @@
 package com.example.rocket_launch.admin;
 
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -12,87 +15,109 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.rocket_launch.R;
+import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.data.Facility;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 
 /**
- * Fragment for managing and displaying the list of facilities in the admin view.
+ * Fragment for managing facilities in the admin view.
  * Author: Pouyan
  */
 public class AdminFacilitiesFragment extends Fragment {
     private RecyclerView recyclerView;
     private AdminFacilitiesAdapter adapter;
     private ArrayList<Facility> facilitiesList = new ArrayList<>();
+    private UsersDB usersDB;
 
-    /**
-     * Inflates the layout for the fragment and initializes the RecyclerView.
-     *
-     * @param inflater LayoutInflater for inflating the view.
-     * @param container The container ViewGroup.
-     * @param savedInstanceState Saved instance state bundle.
-     * @return The created view for this fragment.
-     * Author: Pouyan
-     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        // Inflate the layout for the fragment
         View view = inflater.inflate(R.layout.admin_facilities_fragment, container, false);
 
-        // Initialize RecyclerView
         recyclerView = view.findViewById(R.id.facilities_recycler_view);
         recyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
-        // Add dividers between items
         DividerItemDecoration divider = new DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL);
         recyclerView.addItemDecoration(divider);
 
-        // Initialize adapter with the facilities list
-        adapter = new AdminFacilitiesAdapter(facilitiesList);
+        adapter = new AdminFacilitiesAdapter(facilitiesList, (position) -> {
+            Facility facility = facilitiesList.get(position);
+            showDeleteConfirmation(facility, position);
+        });
+
         recyclerView.setAdapter(adapter);
 
-        // Load data from Firebase
+        usersDB = new UsersDB();
         loadFacilities();
 
         return view;
     }
 
     /**
-     * Loads the list of facilities from the Firestore database.
-     * Queries the "user_info_dev" collection and updates the RecyclerView.
+     * Loads facilities from Firestore into the RecyclerView.
+     * Includes all facilities, even those missing addresses.
      * Author: Pouyan
      */
     private void loadFacilities() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        db.collection("user_info_dev") // Querying user_info_dev collection
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    facilitiesList.clear(); // Clear the list to avoid duplicates
-                    for (DocumentSnapshot document : queryDocumentSnapshots.getDocuments()) {
-                        String facilityName = document.getString("userFacility");
-                        String facilityAddress = document.getString("userFacilityAddress");
+        usersDB.getUsersRef().get().addOnSuccessListener(querySnapshot -> {
+            facilitiesList.clear(); // Clear the list to avoid duplicates
+            querySnapshot.forEach(doc -> {
+                String facilityName = doc.getString("userFacility");
+                String facilityAddress = doc.getString("userFacilityAddress");
 
-                        // Apply placeholders for missing data
-                        if (facilityName == null || facilityName.trim().isEmpty()) {
-                            facilityName = "No facility name provided";
-                        }
-                        if (facilityAddress == null || facilityAddress.trim().isEmpty()) {
-                            facilityAddress = "No address provided";
-                        }
+                // Check if both fields are missing; skip such facilities
+                if ((facilityName == null || facilityName.trim().isEmpty()) &&
+                        (facilityAddress == null || facilityAddress.trim().isEmpty())) {
+                    return; // Skip this facility entirely
+                }
 
-                        // Add only if facility data exists
-                        if (!facilityName.equals("No facility name provided") || !facilityAddress.equals("No address provided")) {
-                            facilitiesList.add(new Facility(facilityName, facilityAddress));
-                        }
-                    }
-                    adapter.notifyDataSetChanged(); // Notify adapter to refresh RecyclerView
+                // Handle missing name or address with placeholders
+                if (facilityName == null || facilityName.trim().isEmpty()) {
+                    facilityName = "No name provided";
+                }
+                if (facilityAddress == null || facilityAddress.trim().isEmpty()) {
+                    facilityAddress = "No address provided";
+                }
+
+                // Add the facility to the list
+                facilitiesList.add(new Facility(facilityName, facilityAddress, doc.getId()));
+            });
+            adapter.notifyDataSetChanged(); // Notify adapter to refresh RecyclerView
+        }).addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to load facilities.", Toast.LENGTH_SHORT).show());
+    }
+
+
+    /**
+     * Shows a confirmation dialog before deleting a facility.
+     *
+     * @param facility The facility to delete.
+     * @param position The position of the facility in the list.
+     * Author: Pouyan
+     */
+    private void showDeleteConfirmation(Facility facility, int position) {
+        new AlertDialog.Builder(requireContext())
+                .setTitle("Delete Facility?")
+                .setMessage("This action cannot be undone.")
+                .setPositiveButton("Yes", (dialog, which) -> deleteFacility(facility, position))
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    /**
+     * Deletes a facility from Firestore and removes it from the list.
+     *
+     * @param facility The facility to delete.
+     * @param position The position of the facility in the list.
+     * Author: Pouyan
+     */
+    private void deleteFacility(Facility facility, int position) {
+        usersDB.getUsersRef().document(facility.getUserId()).update("userFacility", "", "userFacilityAddress", "")
+                .addOnSuccessListener(unused -> {
+                    facilitiesList.remove(position);
+                    adapter.notifyItemRemoved(position);
+                    Toast.makeText(requireContext(), "Facility deleted.", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e -> {
-                    // Log and notify the user of any errors
-                    System.out.println("Error fetching facilities: " + e.getMessage());
-                });
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to delete facility.", Toast.LENGTH_SHORT).show());
     }
 }
