@@ -97,6 +97,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     checkUserRole(user);
                     setupNavBar(user.getRoles());
+                    bottomNav.setVisibility(View.VISIBLE);
 
                     // Display the UserHomepageFragment
                     UserHomepageFragment frag = new UserHomepageFragment(user.getUserName(), user.getProfilePhotoPath());
@@ -105,7 +106,7 @@ public class MainActivity extends AppCompatActivity {
                             .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
                             .commit();
                 } else {
-
+                    bottomNav.setVisibility(View.GONE);
                     user = new User();
                     user.setAndroidId(androidID);
                     usersDB.addUser(androidID, user);
@@ -116,10 +117,9 @@ public class MainActivity extends AppCompatActivity {
                         public void onSuccess(Roles roles) {
                             usersDB.setRoles(androidID, roles);
                             setupNavBar(roles);
-
-
                             // Refresh the StartUpFragment
                             refreshStartupFragment(androidID, finalUser, usersDB);
+
                         }
                     });
                     frag.show(getSupportFragmentManager(), "Create New User");
@@ -130,7 +130,6 @@ public class MainActivity extends AppCompatActivity {
                             .beginTransaction()
                             .replace(R.id.fragment_frame, startfrag) // Ensure R.id.fragment_frame is the container
                             .commit();
-
                 }
             }
         }, e -> Log.w("Firebase", "Error getting user", e));
@@ -146,9 +145,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkUserRole(User user) {
         if (user.getRoles().isAdmin()) {
-            Intent intent = new Intent(this, AdminModeActivity.class);
-            startActivity(intent);
-            finish();
+            if (user.getRoles().isOrganizer() || user.getRoles().isEntrant()){
+                return;
+            } else {
+                Intent intent = new Intent(this, AdminModeActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 

@@ -1,5 +1,6 @@
 package com.example.rocket_launch.nav_fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import com.example.rocket_launch.R;
 import com.example.rocket_launch.Roles;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.admin.AdminModeActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -63,6 +66,7 @@ public class UserProfileFragment extends Fragment {
     private ConstraintLayout editProfileAndFeedbackView;
     private ImageView profileImageView;
     private ImageView profilePictureView;
+    private ImageButton adminActivityButton;
 
     // Navigate to feedback from
     private Button feedbackButton;
@@ -81,7 +85,7 @@ public class UserProfileFragment extends Fragment {
         profilePictureView = view.findViewById(R.id.profile_picture_display);
         facilityLayout = view.findViewById(R.id.display_profile_facility);
         facilityAddressLayout = view.findViewById(R.id.display_profile_facility_address);
-
+        adminActivityButton = view.findViewById(R.id.admin_activity_button);
 
         // Set up "Edit Profile" button listener
         Button editProfileButton = view.findViewById(R.id.edit_profile_button);
@@ -92,6 +96,13 @@ public class UserProfileFragment extends Fragment {
             editProfileAndFeedbackView.setVisibility(View.GONE);
 
             openEditProfileFragment();
+        });
+
+        //go to admin mode
+        adminActivityButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminModeActivity.class);
+            startActivity(intent);
+            getActivity().finish();
         });
 
         // Set up "Give Feedback"
@@ -149,6 +160,11 @@ public class UserProfileFragment extends Fragment {
                     facilityAddressLayout.setVisibility(View.VISIBLE);
                     facilityTextView.setText(user.getUserFacility());
                     facilityAddressTextView.setText(user.getUserFacilityAddress());
+                }
+                if (user.getRoles().isAdmin()){
+                    adminActivityButton.setVisibility(View.VISIBLE);
+                } else {
+                    adminActivityButton.setVisibility(View.GONE);
                 }
 
                 nameTextView.setText(user.getUserName());
