@@ -116,8 +116,8 @@ public class AdminFacilitiesFragment extends Fragment {
                 .addOnSuccessListener(unused -> {
                     facilitiesList.remove(position);
                     adapter.notifyItemRemoved(position);
-                    Toast.makeText(requireContext(), "Facility deleted.", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(requireContext(), "Facility deleted successfully", Toast.LENGTH_SHORT).show();
                 })
-                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to delete facility.", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(requireContext(), "Failed to delete facility", Toast.LENGTH_SHORT).show());
     }
 }
