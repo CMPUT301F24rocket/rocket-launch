@@ -17,6 +17,10 @@ public class UserTest {
     private User user;
     private Event event;
 
+    /**
+     * Tests the user functions for related user stories
+     * Author: Griffin
+     */
     @Before
     public void setUp(){
         user = new User();

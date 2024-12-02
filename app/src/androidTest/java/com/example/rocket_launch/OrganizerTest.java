@@ -14,6 +14,10 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Tests the organizer functions for related user stories
+ * Author: Griffin
+ */
 public class OrganizerTest {
 
     @Test
