@@ -118,7 +118,6 @@ public class ScannedEventDetailsFragment extends Fragment {
         add_event_poster_button = view.findViewById(R.id.add_event_poster_button);
         add_event_poster_button.setVisibility(View.GONE);
 
-
         locationProviderClient = LocationServices.getFusedLocationProviderClient(requireContext());
 
         joinWaitlistButton = view.findViewById(R.id.join_waitlist_button);
