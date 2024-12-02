@@ -217,14 +217,14 @@ public class MainActivity extends AppCompatActivity {
 
     /**
      * Refreshes the startup fragment if user chooses the organizer role
-     * @param AndroidId Android ID of user
+     * @param androidId Android ID of user
      * @param user  Current User object
      * Author: Nathan
      */
-    private void refreshStartupFragment(String AndroidId, User user) {
+    private void refreshStartupFragment(String androidId, User user) {
 
         // Display the StartUpFragment
-        StartUpFragment startfrag = new StartUpFragment(AndroidId, user, usersDB);
+        StartUpFragment startfrag = new StartUpFragment(androidId, user, usersDB);
         getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.fragment_frame, startfrag) // Ensure R.id.fragment_frame is the container

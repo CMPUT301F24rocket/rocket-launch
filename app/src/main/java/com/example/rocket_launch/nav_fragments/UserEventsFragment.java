@@ -30,9 +30,9 @@ import com.journeyapps.barcodescanner.ScanOptions;
  */
 public class UserEventsFragment extends Fragment {
 
-    FloatingActionButton addEvent;
-    ActivityResultLauncher<ScanOptions> QRLauncher;
-    QRCodesDB qrCodesDB;
+    private FloatingActionButton addEvent;
+    private ActivityResultLauncher<ScanOptions> QRLauncher;
+    private QRCodesDB qrCodesDB;
 
     /**
      * default constructor
