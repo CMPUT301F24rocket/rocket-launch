@@ -362,6 +362,16 @@
                 public void onSuccess(User userData) {
                     user = userData;
                     refreshFragmentData();
+                    // Load the profile picture URL from Firestore
+                    String profilePhotoPath = user.getProfilePhotoPath();
+                    if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
+                        Picasso.get()
+                                .load(profilePhotoPath)
+                                .into(profileImageView);
+                    } else {
+                        // Generate dynamic default profile picture
+                        setDefaultProfilePicture(user.getUserName());
+                    }
                 }
             }, e -> Log.w("Firebase", "Error loading user", e));
         }
@@ -380,17 +390,6 @@
                 facilityAddressEditText.setText(user.getUserFacilityAddress());
             } else {
                 facilityLayout.setVisibility(View.GONE);
-            }
-
-            // Load the profile picture URL from Firestore
-            String profilePhotoPath = user.getProfilePhotoPath();
-            if (profilePhotoPath != null && !profilePhotoPath.isEmpty()) {
-                Picasso.get()
-                        .load(profilePhotoPath)
-                        .into(profileImageView);
-            } else {
-                // Generate dynamic default profile picture
-                setDefaultProfilePicture(user.getUserName());
             }
         }
 
