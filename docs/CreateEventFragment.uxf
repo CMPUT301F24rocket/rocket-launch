@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.0.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>220</x>
+      <y>20</y>
+      <w>520</w>
+      <h>260</h>
+    </coordinates>
+    <panel_attributes>CreateEventFragment
+-
+-addNewEventButton: FloatingActionButton
+-eventsDB: private EventsDB
+-usersDB: UsersDB
+-listView: ListView
+-adapter: EventArrayAdapter
+-events: ArrayList&lt;Event&gt;
+-androidID: String
+-
+-openCreateNewEventFragment()
+-openClickedEvent(clickedEventDetailsFragment: CreatedEventDetailsFragment)
+-fetchEvents()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>430</x>
+      <y>400</y>
+      <w>320</w>
+      <h>320</h>
+    </coordinates>
+    <panel_attributes>CreateNewEventFragment
+-
+-eventsDB: EventsDB
+-androidId: String
+-editEventCapacity: EditText
+-editEventCapacity: EditText
+-editWaitlistLimitSize: EditText
+-editEventDescription: EditText
+-checkBoxGeolocationRequired: CheckBox
+-checkBoxWaitlistLimit: CheckBox
+-eventNameOverlay: TextView
+-editEventPosterView: ImageView
+-event: Event
+-
+-openImagePicker()
+-uploadImageUrlToEvent(downloadUrl: String)
+-createEvent()
+-closeFragment()
+-sendEventNotification()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>570</x>
+      <y>270</y>
+      <w>100</w>
+      <h>150</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>80.0;10.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>130</x>
+      <y>270</y>
+      <w>190</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m2=1</panel_attributes>
+    <additional_attributes>170.0;10.0;10.0;340.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>20</x>
+      <y>610</y>
+      <w>260</w>
+      <h>110</h>
+    </coordinates>
+    <panel_attributes>CreatedEventDetailsFragment
+-
+eventsDB: EventsDB
+event: Event
+-
+pressButton(fragment: Fragment)
+closeFragment()</panel_attributes>
+    <additional_attributes/>
+  </element>
+</diagram>

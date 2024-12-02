@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<diagram program="umlet" version="15.0.0">
+  <zoom_level>10</zoom_level>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>20</x>
+      <y>20</y>
+      <w>520</w>
+      <h>410</h>
+    </coordinates>
+    <panel_attributes>UserProfileFragment
+-
+TAG: String
+-usersDB: UsersDB
+-androidId: String
+-user: User
+
+-nameTextView: TextView
+-emailTextView: TextView
+-phoneTextView: TextView
+-facilityTextView; TextView
+-facilityAddressTextView: TextView
+-facilityLayout: LinearLayout
+-facilityAddressLayout: LinearLayout
+-profileBodyView: ConstraintLayout
+-editProfileAndFeedbackView: ConstraintLayout
+-profileImageView: ImageView
+-ImageView: profilePictureView
+-ImageButton: adminActivityButton
+-feedbackButton: Button
+-
+-openEditProfileFragment()
+-fetchUserProfileFragment()
+-loadProfileImage(imagePath: String)
+-setDefaultProfilePicture(userName: String)
+-updateUI()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>650</x>
+      <y>210</y>
+      <w>630</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>EditProfileFragment
+--
+- profileUpdatedListener : OnProfileUpdatedListener
+- nameEditText : EditText
+- emailEditText : EditText
+- phoneEditText : EditText
+- facilityEditText : EditText
+- profileImageView : ImageView
+- db : FirebaseFirestore
+- userRef : DocumentReference
+- androidID : String
+- imageUri : Uri
+--
++ onAttach(context : Context) : void
++ onCreate(savedInstanceState : Bundle) : void
++ onCreateView(inflater : LayoutInflater, container : ViewGroup, savedInstanceState : Bundle) : View
++ openGallery() : void
++ saveImageLocally(bitmap : Bitmap) : String
++ saveImagePathToFirestore(imagePath : String) : void
++ loadProfileImage(imagePath : String) : void
++ loadUserDetails() : void
++ updateUserDetails() : void
++ closeFragment() : void</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>530</x>
+      <y>340</y>
+      <w>140</w>
+      <h>180</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;&lt;&lt;&lt;-
+m1=1
+m2=1</panel_attributes>
+    <additional_attributes>10.0;10.0;120.0;160.0</additional_attributes>
+  </element>
+</diagram>
