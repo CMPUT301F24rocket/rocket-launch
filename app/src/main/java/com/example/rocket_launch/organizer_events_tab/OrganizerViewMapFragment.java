@@ -344,11 +344,12 @@ public class OrganizerViewMapFragment extends Fragment {
         entrantDB.getUser(entrantID, new OnSuccessListener<User>() {
             @Override
             public void onSuccess(User user) {
-                User entrantUser = user;
-                String entrantName = entrantUser.getUserName();
-                Log.i("Fetch Entrant Name", "onSuccess: entrant name fetched: " + entrantName);
-                entrantNameCallBack.onEntrantNameFetched(entrantName);
-
+                if (user != null){
+                    User entrantUser = user;
+                    String entrantName = entrantUser.getUserName();
+                    Log.i("Fetch Entrant Name", "onSuccess: entrant name fetched: " + entrantName);
+                    entrantNameCallBack.onEntrantNameFetched(entrantName);
+                } else {Log.e("Fetch Entrant Name", "getEntrantUserName: error fetching entrant name");}
             }
         }, e -> {
                     Log.e("Fetch Entrant Name", "getEntrantUserName: error fetching entrant name", e);
@@ -597,13 +598,16 @@ public class OrganizerViewMapFragment extends Fragment {
 
                 //change the marker colour
                 Drawable markerIcon = entrantMarker.getIcon();
-                Drawable markerNewColor = DrawableCompat.wrap(markerIcon);
-                DrawableCompat.setTint(markerNewColor, ContextCompat.getColor(requireContext(), R.color.in_range_marker));
+                if (markerIcon != null){
+                    Drawable markerNewColor = DrawableCompat.wrap(markerIcon);
+                    DrawableCompat.setTint(markerNewColor, ContextCompat.getColor(requireContext(), R.color.in_range_marker));
 
-                entrantMarker.setIcon(markerNewColor);
-                mapView.invalidate();
-                //add to the in range list
-                mapOptionsViewModel.addToEntrantsInRangeList(entrantMarker);
+                    entrantMarker.setIcon(markerNewColor);
+                    mapView.invalidate();
+                    //add to the in range list
+                    mapOptionsViewModel.addToEntrantsInRangeList(entrantMarker);
+                }
+
                 Log.i("IN RANGE LIST", "checkEntrantRangeStatus: Range list markers: " + mapOptionsViewModel.getEntrantsInRangeList().getValue().toString());
             }
             else { //entrant not in range, add them to the not in range list
@@ -611,12 +615,15 @@ public class OrganizerViewMapFragment extends Fragment {
 
                 //change the marker colour
                 Drawable markerIcon = entrantMarker.getIcon();
-                Drawable markerNewColor = DrawableCompat.wrap(markerIcon);
-                DrawableCompat.setTint(markerNewColor, ContextCompat.getColor(requireContext(), R.color.out_of_range_marker));
+                if (markerIcon != null){
+                    Drawable markerNewColor = DrawableCompat.wrap(markerIcon);
+                    DrawableCompat.setTint(markerNewColor, ContextCompat.getColor(requireContext(), R.color.out_of_range_marker));
 
-                entrantMarker.setIcon(markerNewColor);
-                mapView.invalidate();
-                mapOptionsViewModel.addToEntrantsOutOfRangeList(entrantMarker);
+                    entrantMarker.setIcon(markerNewColor);
+                    mapView.invalidate();
+                    mapOptionsViewModel.addToEntrantsOutOfRangeList(entrantMarker);
+                }
+
                 Log.i("OUT OF RANGE LIST", "checkEntrantRangeStatus: Range list markers: " + mapOptionsViewModel.getEntrantsOutOfRangeList().getValue().toString());
             }
 
