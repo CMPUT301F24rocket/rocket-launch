@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,6 +20,8 @@ import java.util.Objects;
 
 /**
  * fragment displayed when a user wants to edit their roles
+ * Author: Kaiden
+ * Contributors: Rachel
  */
 public class SelectRolesFragment extends DialogFragment {
     private Roles roles;
@@ -53,12 +56,22 @@ public class SelectRolesFragment extends DialogFragment {
         entrant_switch.setChecked(roles.isEntrant());
         organizer_switch.setChecked(roles.isOrganizer());
 
-        AlertDialog dialog = new AlertDialog.Builder(getContext())
-            .setView(view)
-            .setTitle("Select Role")
-            .setNegativeButton("Cancel", null)
-            .setPositiveButton("Ok", null)
-            .create();
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        AlertDialog dialog = builder
+                .setView(view)
+                .setTitle("Select Role")
+                //.setNegativeButton("Cancel", null)
+                .setPositiveButton("Ok", null)
+                .create();
+
+        //prevent positiveButton click if  no role is picked
+        dialog.setOnShowListener(dialogInterface -> {
+            Button positiveButton = dialog.getButton(AlertDialog.BUTTON_POSITIVE);
+
+            positiveButton.setOnClickListener(v -> {
+                if (entrant_switch.isChecked() || organizer_switch.isChecked()){
+                    roles.setEntrant(entrant_switch.isChecked());
+                    roles.setOrganizer(organizer_switch.isChecked());
 
 
         dialog.setOnShowListener(dialogInterface -> {
@@ -80,15 +93,14 @@ public class SelectRolesFragment extends DialogFragment {
                         menu.findItem(R.id.navigation_user_events).setVisible(roles.isEntrant());
                         menu.findItem(R.id.navigation_create_events).setVisible(roles.isOrganizer());
                     }
-
                     listener.onSuccess(roles);
                     dialog.dismiss();
-                }
+                } else {
+                    Toast.makeText(requireContext(), "Please select at least one role", Toast.LENGTH_SHORT).show();}
             });
         });
-
-
         return dialog;
+
     }
 
     /**

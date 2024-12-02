@@ -1,5 +1,6 @@
 package com.example.rocket_launch;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -105,6 +106,10 @@ public class StartUpFragment extends Fragment {
                                 .beginTransaction()
                                 .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
                                 .commit();
+
+                        Intent intent = getActivity().getIntent();
+                        getActivity().finish();
+                        startActivity(intent);
                     },
                     error -> Log.e(TAG, "failed to update user details", error));
         }
