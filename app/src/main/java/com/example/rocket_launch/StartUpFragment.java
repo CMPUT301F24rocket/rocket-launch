@@ -16,6 +16,8 @@ import androidx.annotation.Nullable;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.Fragment;
 
+import org.checkerframework.checker.regex.qual.Regex;
+
 /**
  * Fragment shown on first log in to get user information
  * Author: Nathan
@@ -31,6 +33,13 @@ public class StartUpFragment extends Fragment {
 
     private static final String TAG = "StartUpFragment";
 
+    /**
+     * Default constructor for StartUpFragment
+     * @param androidID androidID for user
+     * @param user Current user
+     * @param usersDB UserDB instance
+     * Author: Nathan
+     */
     public StartUpFragment(String androidID, User user, UsersDB usersDB) {
         this.androidID = androidID;
         this.user = user;
@@ -64,7 +73,8 @@ public class StartUpFragment extends Fragment {
     }
 
     /**
-     * Update user details in Firestore
+     * Saves user details on startup page to firestore
+     * Author: Nathan
      */
     private void saveUserDetails() {
 
@@ -78,9 +88,29 @@ public class StartUpFragment extends Fragment {
             nameEditTextStartup.setError("Name cannot be empty");
             validData = false;
         }
+
+        // Validate that user enters correct email
+        String emailPattern = "[a-zA-Z\\d._%+-]+@[a-z\\d.-]+\\.[a-zA-Z]{2,}";
         if (email.isEmpty()) {
             emailEditTextStartup.setError("Email cannot be empty");
             validData = false;
+        }
+
+        // Checks if email matches email pattern
+        if (!email.matches(emailPattern)) {
+            Toast.makeText(getContext(), "Enter a valid email", Toast.LENGTH_SHORT).show();
+            validData = false;
+        }
+
+        // Validate that user enters correct phone pattern
+        String phonePattern = "\\+?[1-9]\\d{1,14}";
+
+        // Checks if phone number matches phone number pattern
+        if (!phone.isEmpty()) {
+            if (!phone.matches(phonePattern)) {
+                validData = false;
+                Toast.makeText(getContext(), "Enter a valid phone number", Toast.LENGTH_SHORT).show();
+            }
         }
 
         if (validData) {
