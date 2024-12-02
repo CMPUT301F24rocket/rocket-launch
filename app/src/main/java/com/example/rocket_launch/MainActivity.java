@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -108,6 +109,7 @@ public class MainActivity extends AppCompatActivity {
                     bottomNav.setVisibility(View.GONE);
                     user = new User();
                     user.setAndroidId(androidID);
+                    user.setNotificationPreferences(NotificationManagerCompat.from(context).areNotificationsEnabled());
                     usersDB.addUser(androidID, user);
                     SelectRolesFragment frag = new SelectRolesFragment(user.getRoles());
                     User finalUser = user;
