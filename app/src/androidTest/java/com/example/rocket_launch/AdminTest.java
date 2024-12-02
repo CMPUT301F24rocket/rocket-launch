@@ -11,6 +11,8 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 
+
+
 public class AdminTest {
     private List<Event> events;
     private List<User> profiles;
@@ -18,8 +20,13 @@ public class AdminTest {
     private List<String> hashedQRCodeData;
     private List<com.example.rocket_launch.data.Facility> facilities;
 
+    /**
+     * Tests the admin functions for related user stories
+     * Author: Griffin
+     */
     @Before
     public void setUp() {
+
         events = new ArrayList<>();
         profiles = new ArrayList<>();
         images = new ArrayList<>();
@@ -37,9 +44,6 @@ public class AdminTest {
 
         hashedQRCodeData.add("hashedQRCode1");
         hashedQRCodeData.add("hashedQRCode2");
-
-        facilities.add(new com.example.rocket_launch.data.Facility("Facility A", "123 Street"));
-        facilities.add(new com.example.rocket_launch.data.Facility("Facility B", "456 Avenue"));
     }
 
     @Test
