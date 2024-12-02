@@ -81,9 +81,9 @@ public class ScannedEventDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //For Location Permissions if Location Required
-        //Author: Rachel
-        //from: https://developer.android.com/training/permissions/requesting#java, accessed 2024-11-26
+        /*For Location Permissions if Location Required
+            Author: Rachel
+            from: https://developer.android.com/training/permissions/requesting#java, accessed 2024-11-26 */
         locationPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                     if (isGranted) {
@@ -171,7 +171,7 @@ public class ScannedEventDetailsFragment extends Fragment {
                 locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
                 Log.i("JOIN WAITLIST TEST", "joinWaitlist REQUIRES GEOLOCATION DATA");
 
-            } else{ //Don't need Location Data --> don't run permissions
+            } else { //Don't need Location Data --> don't run permissions
 
                 //check if user in waitlist already
                 if (event.getWaitingList().contains(androidId)) {
@@ -193,18 +193,15 @@ public class ScannedEventDetailsFragment extends Fragment {
                 else {
                     // add to waitlist of event
                     eventsdb.addUserToWaitingList(eventId, androidId);
-
                     // add to user's joined events
                     usersDB.addWaitlistedEvent(androidId, eventId);
                 }
             }
-
         }
         else {
             Toast.makeText(requireContext(), "Waitlist Full", Toast.LENGTH_LONG).show();
             Log.d("joinWaitlist", "Waitlist is Full");
         }
-        closeFragment();
     }
 
 
