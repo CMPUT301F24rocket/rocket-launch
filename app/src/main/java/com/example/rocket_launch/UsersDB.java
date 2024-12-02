@@ -12,9 +12,7 @@ import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * databse class for interfacing with database
@@ -324,6 +322,70 @@ public class UsersDB {
                 })
                 .addOnSuccessListener(v -> {onSuccess.onSuccess(users);})
                 .addOnFailureListener(onFailure);
+    }
+
+    public void deleteFacility(String androidId, OnSuccessListener<Void> onSuccessListener) {
+        getUser(androidId, user -> {
+            // remove organizer role
+            user.getRoles().setOrganizer(false);
+
+            // remove all created events
+            EventsDB eventsDB = new EventsDB();
+            for (String event : user.getEventsCreated()) {
+                eventsDB.deleteEvent(event,
+                        l -> Log.d("delete facility", "created event deleted successfully"),
+                        e -> Log.d("delete facility", "created event deletion error", e));
+            }
+
+            // if both roles are false, remove from database
+            if (!user.getRoles().isEntrant()) {
+                usersRef.document(androidId).delete()
+                        .addOnSuccessListener(onSuccessListener)
+                        .addOnFailureListener(e -> Log.d("delete facility", "full deletion error", e));
+            } else {
+                // remove facility name and address
+                user.setUserFacility("");
+                user.setUserFacilityAddress("");
+                user.setEventsCreated(new ArrayList<String>());
+                updateUser(androidId, user, onSuccessListener, e -> {
+                    Log.d("delete facility", "error updating user");
+                });
+            }
+        }, e -> Log.e("delete facility", "error retrieving facility", e));
+    }
+
+    public void deleteUser(String androidId, OnSuccessListener<Void> onSuccessListener) {
+        getUser(androidId, user -> {
+            // remove user role
+            user.getRoles().setEntrant(false);
+            EventsDB eventsDB = new EventsDB();
+
+            // remove from waitlisted events
+            for (String eventId : user.getEventsWaitlisted()) {
+                eventsDB.removeUserFromWaitingList(eventId, androidId);
+                removeWaitlistedEvent(androidId, eventId);
+            }
+
+            // remove from registered events
+            for (String eventId : user.getEventsRegistered()) {
+                eventsDB.removeUserFromRegisteredList(eventId, androidId);
+                removeRegisteredEvent(androidId, eventId);
+            }
+
+            // if both roles are false, remove from database
+            if (!user.getRoles().isOrganizer()) {
+                usersRef.document(androidId).delete()
+                        .addOnSuccessListener(l -> Log.d("delete user", "full deletion successful"))
+                        .addOnFailureListener(e -> Log.d("delete user", "full deletion error", e));
+            } else {
+                user.setUserName("");
+                user.setUserEmail("");
+                user.setUserPhoneNumber("");
+                updateUser(androidId, user, onSuccessListener, e -> {
+                    Log.d("delete user", "error updating user", e);
+                });
+            }
+        }, e -> Log.e("delete user", "error retrieving user", e));
     }
 
     public void loadProfilePhoto(String androidId) {

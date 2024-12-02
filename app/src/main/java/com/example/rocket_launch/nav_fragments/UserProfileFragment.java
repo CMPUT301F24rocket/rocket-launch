@@ -1,5 +1,6 @@
 package com.example.rocket_launch.nav_fragments;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -15,6 +16,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -33,6 +35,7 @@ import com.example.rocket_launch.R;
 import com.example.rocket_launch.Roles;
 import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
+import com.example.rocket_launch.admin.AdminModeActivity;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -42,6 +45,7 @@ import org.checkerframework.checker.nullness.qual.Nullable;
 
 /**
  * fragment for displaying all user profile information
+ * Author: Rachel
  */
 public class UserProfileFragment extends Fragment {
 
@@ -63,6 +67,7 @@ public class UserProfileFragment extends Fragment {
     private ConstraintLayout editProfileAndFeedbackView;
     private ImageView profileImageView;
     private ImageView profilePictureView;
+    private ImageButton adminActivityButton;
 
     // Navigate to feedback from
     private Button feedbackButton;
@@ -81,7 +86,7 @@ public class UserProfileFragment extends Fragment {
         profilePictureView = view.findViewById(R.id.profile_picture_display);
         facilityLayout = view.findViewById(R.id.display_profile_facility);
         facilityAddressLayout = view.findViewById(R.id.display_profile_facility_address);
-
+        adminActivityButton = view.findViewById(R.id.admin_activity_button);
 
         // Set up "Edit Profile" button listener
         Button editProfileButton = view.findViewById(R.id.edit_profile_button);
@@ -92,6 +97,13 @@ public class UserProfileFragment extends Fragment {
             editProfileAndFeedbackView.setVisibility(View.GONE);
 
             openEditProfileFragment();
+        });
+
+        //go to admin mode
+        adminActivityButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getActivity(), AdminModeActivity.class);
+            startActivity(intent);
+            getActivity().finish();
         });
 
         // Set up "Give Feedback"
@@ -150,6 +162,11 @@ public class UserProfileFragment extends Fragment {
                     facilityTextView.setText(user.getUserFacility());
                     facilityAddressTextView.setText(user.getUserFacilityAddress());
                 }
+                if (user.getRoles().isAdmin()){
+                    adminActivityButton.setVisibility(View.VISIBLE);
+                } else {
+                    adminActivityButton.setVisibility(View.GONE);
+                }
 
                 nameTextView.setText(user.getUserName());
                 emailTextView.setText(user.getUserEmail());
@@ -192,6 +209,10 @@ public class UserProfileFragment extends Fragment {
                 });
     }
 
+    /**
+     * Generates and sets a default profile name for the user
+     * @param userName Gets the name of the user
+     */
     private void setDefaultProfilePicture(String userName) {
         // Default background color and text settings
         int width = 200;  // Width of the Bitmap

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Toast;
@@ -15,8 +16,13 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import com.example.rocket_launch.nav_fragments.UserProfileFragment;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+/**
+ * Fragment that contains the feedback form
+ * Authors: Nathan and Chetan
+ */
 public class FeedbackFormFragment extends Fragment {
 
     private static final String TAG = "FeedbackFormFragment";
@@ -27,21 +33,29 @@ public class FeedbackFormFragment extends Fragment {
     private Button submitFeedbackButton;
     private Button editFeedbackButton;
     private boolean isEditingFeedback = false;
+    private ImageButton backButton;
 
     private String androidId;
 
+    /**
+     * Default constructor for FeedbackFormFragment
+     * @param androidId User's androidID
+     * Author: Nathan
+     */
     public FeedbackFormFragment(String androidId) {
         this.androidId = androidId;
     }
 
     @Nullable
     @Override
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_feedback_form, container, false);
 
         feedbackText = view.findViewById(R.id.feedback_text);
         submitFeedbackButton = view.findViewById(R.id.submit_feedback_button);
         editFeedbackButton = view.findViewById(R.id.edit_feedback_button);
+        backButton = view.findViewById(R.id.back_button);
 
         // Set up feedback star ratings
         setupStarRating(view);
@@ -54,9 +68,23 @@ public class FeedbackFormFragment extends Fragment {
 
         loadFeedbackFromFirestore();
 
+        //back button pressed
+        backButton.setOnClickListener(v -> {
+            UserProfileFragment userFragment = new UserProfileFragment();
+            requireActivity().getSupportFragmentManager()
+                    .beginTransaction()
+                    .replace(R.id.fragment_frame, userFragment)
+                    .commit();
+        });
+
         return view;
     }
 
+    /**
+     * Setup the stars used for feedback form
+     * @param view View that setups star rating
+     * Author: Chetan
+     */
     private void setupStarRating(View view) {
         for (int i = 1; i <= 5; i++) {
             int starId = getResources().getIdentifier("star" + i, "id", requireContext().getPackageName());
@@ -73,6 +101,12 @@ public class FeedbackFormFragment extends Fragment {
         }
     }
 
+    /**
+     * Updates the stars used for feedback form
+     * @param rating Integer between 1 and 5
+     * @param view View that setups star rating
+     * Author: Chetan
+     */
     private void updateStarRating(int rating, View view) {
         selectedRating = rating;
         for (int i = 1; i <= 5; i++) {
@@ -82,6 +116,11 @@ public class FeedbackFormFragment extends Fragment {
         }
     }
 
+
+    /**
+     * Submits the feedback form into firestore
+     * Author: Chetan
+     */
     private void submitFeedback() {
         String feedback = feedbackText.getText().toString().trim();
         if (selectedRating == 0) {
@@ -108,6 +147,10 @@ public class FeedbackFormFragment extends Fragment {
                 .addOnFailureListener(e -> Log.e(TAG, "Error submitting feedback", e));
     }
 
+    /**
+     * Enables feedback text input
+     * Author: Chetan
+     */
     private void enableFeedbackEditing() {
         isEditingFeedback = true;
         feedbackText.setEnabled(true);
@@ -116,6 +159,10 @@ public class FeedbackFormFragment extends Fragment {
         editFeedbackButton.setVisibility(View.GONE);
     }
 
+    /**
+     * Loads feedback from firestore
+     * Author: Chetan
+     */
     private void loadFeedbackFromFirestore() {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -137,6 +184,9 @@ public class FeedbackFormFragment extends Fragment {
                 .addOnFailureListener(e -> Log.e(TAG, "Error loading feedback", e));
     }
 
+    /**
+     * Class that represents feedback object
+     */
     public static class Feedback {
         private int rating;
         private String feedbackText;

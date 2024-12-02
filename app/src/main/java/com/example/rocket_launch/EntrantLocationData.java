@@ -15,6 +15,12 @@ public class EntrantLocationData {
 
     }
 
+    /**
+     * Constructor for Entrant location data
+     * @param entrantID Gets the ID of the entrant
+     * @param latitude  Gets the entrant's latitude
+     * @param longitude Gets the entrant's longitude
+     */
     public EntrantLocationData(String entrantID, double latitude, double longitude){
         this.entrantID = entrantID;
         this.entrantLatitude = latitude;
@@ -26,6 +32,7 @@ public class EntrantLocationData {
     public double getEntrantLatitude(){return entrantLatitude;}
     public double getEntrantLongitude(){return entrantLongitude;}
 
+    // Setter methods
     public void setEntrantID(String entrantID){this.entrantID = entrantID;}
     public void setEntrantLatitude(double entrantLatitude){this.entrantLatitude = entrantLatitude;}
     public void setEntrantLongitude(double entrantLongitude){this.entrantLongitude = entrantLongitude;}

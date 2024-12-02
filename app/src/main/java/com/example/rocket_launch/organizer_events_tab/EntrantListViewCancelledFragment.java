@@ -32,7 +32,7 @@ public class EntrantListViewCancelledFragment extends Fragment {
     private EventsDB eventsDB;
     private UsersDB usersDB;
     private ListView listView;
-    private Event.UserArrayAdapter adapter;
+    private UserListArrayAdapter adapter;
     private ArrayList<User> users;
     private String eventId;
     private Button notifyButton;
@@ -48,7 +48,7 @@ public class EntrantListViewCancelledFragment extends Fragment {
         eventsDB = new EventsDB();
         usersDB = new UsersDB();
         users = new ArrayList<>();
-        adapter = new Event.UserArrayAdapter(requireContext(), users);
+        adapter = new UserListArrayAdapter(requireContext(), users);
         listView.setAdapter(adapter);
         notifyButton = view.findViewById(R.id.sendNotification);
         notifyButton.setOnClickListener(l -> {
@@ -61,11 +61,6 @@ public class EntrantListViewCancelledFragment extends Fragment {
                     .replace(R.id.fragment_frame, notificationCreator)
                     .addToBackStack(null)
                     .commit();
-        });
-
-        listView.setOnItemClickListener((parent, itemView, position, id) -> {
-            // TODO - maybe?
-            User clickedUser = users.get(position);
         });
 
         return view;

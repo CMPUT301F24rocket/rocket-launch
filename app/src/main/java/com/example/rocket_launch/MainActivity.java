@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,18 +30,17 @@ import org.osmdroid.config.Configuration;
 
 /**
  * main activity that gets loaded on startup
+ * Authors: Rachel, Nathan, Griffin, Kaiden
  */
 public class MainActivity extends AppCompatActivity {
-    UsersDB usersDB;
-    BottomNavigationView bottomNav;
+    private UsersDB usersDB;
+    private BottomNavigationView bottomNav;
 
-    CreateEventFragment createEvent;
-    UserEventsFragment userEvents;
-    UserProfileFragment userProfile;
-    NotificationsFragment notifications;
-
-
-    NotificationHandler notificationHandler;
+    private CreateEventFragment createEvent;
+    private UserEventsFragment userEvents;
+    private UserProfileFragment userProfile;
+    private NotificationsFragment notifications;
+    private NotificationHandler notificationHandler;
 
 
     @Override
@@ -89,7 +89,17 @@ public class MainActivity extends AppCompatActivity {
 
         usersDB = new UsersDB();
 
-        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String androidID;
+
+        // Check if a test Android ID is provided via Intent
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("TEST_ANDROID_ID")) {
+            androidID = intent.getStringExtra("TEST_ANDROID_ID");
+            Log.d("MainActivity", "Using test Android ID from Intent: " + androidID);
+        } else {
+            androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            Log.d("MainActivity", "Using real Android ID: " + androidID);
+        }
 
         usersDB.getUser(androidID, new OnSuccessListener<User>() {
             @Override
@@ -97,6 +107,7 @@ public class MainActivity extends AppCompatActivity {
                 if (user != null) {
                     checkUserRole(user);
                     setupNavBar(user.getRoles());
+                    bottomNav.setVisibility(View.VISIBLE);
 
                     // Display the UserHomepageFragment
                     UserHomepageFragment frag = new UserHomepageFragment(user.getUserName(), user.getProfilePhotoPath());
@@ -105,9 +116,10 @@ public class MainActivity extends AppCompatActivity {
                             .replace(R.id.fragment_frame, frag) // Ensure R.id.fragment_frame is the container
                             .commit();
                 } else {
-
+                    bottomNav.setVisibility(View.GONE);
                     user = new User();
                     user.setAndroidId(androidID);
+                    user.setNotificationPreferences(NotificationManagerCompat.from(context).areNotificationsEnabled());
                     usersDB.addUser(androidID, user);
                     SelectRolesFragment frag = new SelectRolesFragment(user.getRoles());
                     User finalUser = user;
@@ -116,10 +128,9 @@ public class MainActivity extends AppCompatActivity {
                         public void onSuccess(Roles roles) {
                             usersDB.setRoles(androidID, roles);
                             setupNavBar(roles);
-
-
                             // Refresh the StartUpFragment
-                            refreshStartupFragment(androidID, finalUser, usersDB);
+                            refreshStartupFragment(androidID, finalUser);
+
                         }
                     });
                     frag.show(getSupportFragmentManager(), "Create New User");
@@ -130,7 +141,6 @@ public class MainActivity extends AppCompatActivity {
                             .beginTransaction()
                             .replace(R.id.fragment_frame, startfrag) // Ensure R.id.fragment_frame is the container
                             .commit();
-
                 }
             }
         }, e -> Log.w("Firebase", "Error getting user", e));
@@ -146,9 +156,13 @@ public class MainActivity extends AppCompatActivity {
      */
     private void checkUserRole(User user) {
         if (user.getRoles().isAdmin()) {
-            Intent intent = new Intent(this, AdminModeActivity.class);
-            startActivity(intent);
-            finish();
+            if (user.getRoles().isOrganizer() || user.getRoles().isEntrant()){
+                return;
+            } else {
+                Intent intent = new Intent(this, AdminModeActivity.class);
+                startActivity(intent);
+                finish();
+            }
         }
     }
 
@@ -201,7 +215,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void refreshStartupFragment(String AndroidId, User user, UsersDB userdb) {
+    /**
+     * Refreshes the startup fragment if user chooses the organizer role
+     * @param AndroidId Android ID of user
+     * @param user  Current User object
+     * Author: Nathan
+     */
+    private void refreshStartupFragment(String AndroidId, User user) {
 
         // Display the StartUpFragment
         StartUpFragment startfrag = new StartUpFragment(AndroidId, user, usersDB);

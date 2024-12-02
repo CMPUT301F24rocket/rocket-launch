@@ -21,7 +21,10 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
 
-
+/**
+ * Class that defines a new instance of an event
+ * Author: Kaiden
+ */
 public class Event {
     private String eventID;
     private String QRCode;
@@ -37,16 +40,21 @@ public class Event {
     private List<String> invitedEntrants;
     private List<String> cancelledEntrants;
     private List<String> registeredEntrants;
-  
-    private List<String> finalEntrants;
+
     private String posterUrl;
     private List<EntrantLocationData> entrantLocationDataList;
 
     private int maxWaitlistSize;// Integer
     private List<Notification> notifications; // new notification list
 
+    private String organizer;
 
+
+    /**
+     * Constructor for event class
+     */
     public Event(){
+
         // verify lists appear in database -> ensures no access to undefined attribute
         this.waitingList = new ArrayList<>();
         this.cancelledEntrants = new ArrayList<>();
@@ -139,8 +147,6 @@ public class Event {
 
     public boolean getGeolocationRequired() {return geolocationRequired;}
 
-    // public boolean isGeolocationRequired() {return geolocationRequired;}
-
     public Calendar getStartTime() {
         return startTime;
     }
@@ -166,6 +172,10 @@ public class Event {
     }
 
 
+    /**
+     * Generates the bitmap of the QR code
+     * @return bitmap of QR code, or null
+     */
     public Bitmap generateQRCode() {
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         try {
@@ -244,6 +254,17 @@ public class Event {
         this.invitedEntrants = invitedEntrants;
     }
 
+    public String getOrganizer() {
+        return organizer;
+    }
+
+    public void setOrganizer(String organizer) {
+        this.organizer = organizer;
+    }
+
+    /**
+     * Defines the User Array Adapter class
+     */
     public static class UserArrayAdapter extends ArrayAdapter<User> {
 
         /**

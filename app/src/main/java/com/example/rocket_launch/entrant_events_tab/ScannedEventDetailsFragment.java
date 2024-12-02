@@ -81,9 +81,9 @@ public class ScannedEventDetailsFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        //For Location Permissions if Location Required
-        //Author: Rachel
-        //from: https://developer.android.com/training/permissions/requesting#java, accessed 2024-11-26
+        /*For Location Permissions if Location Required
+            Author: Rachel
+            from: https://developer.android.com/training/permissions/requesting#java, accessed 2024-11-26 */
         locationPermissionLauncher =
                 registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
                     if (isGranted) {
@@ -91,8 +91,7 @@ public class ScannedEventDetailsFragment extends Fragment {
                         getEntrantLocation();
 
                         //Join event waitlist add it to users joined waitlisted events
-                        eventsdb.addUserToWaitingList(eventId, androidId);
-                        usersDB.addWaitlistedEvent(androidId, eventId);
+                        checkAndAddUser();
                         closeFragment();
 
                     } else {
@@ -155,6 +154,11 @@ public class ScannedEventDetailsFragment extends Fragment {
                         joinWaitlist();
                     });
                 }
+                else {
+                    Log.d("Scan event", "event does not exist");
+                    Toast.makeText(requireContext(), "Event does not exist", Toast.LENGTH_SHORT).show();
+                    closeFragment();
+                }
             }
         });
     }
@@ -171,23 +175,12 @@ public class ScannedEventDetailsFragment extends Fragment {
                 locationPermissionLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION);
                 Log.i("JOIN WAITLIST TEST", "joinWaitlist REQUIRES GEOLOCATION DATA");
 
-            } else{ //Don't need Location Data --> don't run permissions
+            } else { //Don't need Location Data --> don't run permissions
 
                 //check if user in waitlist already
-                if (!event.containsUser(androidId)) {
-                    // add to waitlist of event
-                    eventsdb.addUserToWaitingList(eventId, androidId);
-
-                    // add to user's joined events
-                    usersDB.addWaitlistedEvent(androidId, eventId);
-                    closeFragment();
-                }
-                else {
-                    Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
-                    Log.d("joinWaitlist", "user already in waitlist");
-                }
+                checkAndAddUser();
+                closeFragment();
             }
-
         }
         else {
             Toast.makeText(requireContext(), "Waitlist Full", Toast.LENGTH_LONG).show();
@@ -251,5 +244,31 @@ public class ScannedEventDetailsFragment extends Fragment {
                 })
                 .setNegativeButton("Cancel", (dialog, i) -> dialog.dismiss())
                 .show();
+    }
+
+    private void checkAndAddUser() {
+        //check if user in waitlist already
+        if (event.getWaitingList().contains(androidId)) {
+            Toast.makeText(requireContext(), "Already in Waitlist", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in waitlist");
+        }
+        else if (event.getInvitedEntrants().contains(androidId)) {
+            Toast.makeText(requireContext(), "Check Notifications to Register!", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in invited list");
+        }
+        else if (event.getregisteredEntrants().contains(androidId)) {
+            Toast.makeText(requireContext(), "Already Registered", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in registered list");
+        }
+        else if (event.getCancelledEntrants().contains(androidId)) {
+            Toast.makeText(requireContext(), "Cannot join you have been cancelled", Toast.LENGTH_LONG).show();
+            Log.d("joinWaitlist", "user already in cancelled list");
+        }
+        else {
+            // add to waitlist of event
+            eventsdb.addUserToWaitingList(eventId, androidId);
+            // add to user's joined events
+            usersDB.addWaitlistedEvent(androidId, eventId);
+        }
     }
 }

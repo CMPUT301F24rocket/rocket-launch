@@ -131,6 +131,9 @@ public class CreateNewEventFragment extends Fragment {
         return view;
     }
 
+    /**
+     * Opens image picker
+     */
     private void openImagePicker() {
         Intent intent = new Intent();
         intent.setType("image/*");
@@ -153,6 +156,10 @@ public class CreateNewEventFragment extends Fragment {
         }
     }
 
+    /**
+     * Uploads event poster to firebase
+     * @param imageUri URI of image
+     */
     private void uploadEventPoster(Uri imageUri) {
         String fileName = "event_pictures/event_" + System.currentTimeMillis() + ".jpg";
 
@@ -175,6 +182,11 @@ public class CreateNewEventFragment extends Fragment {
                     }
                 });
     }
+
+    /**
+     * Saves image url to event
+     * @param downloadUrl URL of download
+     */
     private void saveImageUrlToEvent(String downloadUrl) {
         if (event.getEventID() == null) {
             Log.e("SaveImageUrl", "Event ID is null, cannot save poster URL.");
@@ -220,6 +232,8 @@ public class CreateNewEventFragment extends Fragment {
 
         String eventID = UUID.randomUUID().toString();
         event.setEventID(eventID);
+
+        event.setOrganizer(androidId);
 
         eventsDB.addCreatedEvent(event, androidId, v -> closeFragment());
     }
