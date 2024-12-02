@@ -89,7 +89,17 @@ public class MainActivity extends AppCompatActivity {
 
         usersDB = new UsersDB();
 
-        String androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        String androidID;
+
+        // Check if a test Android ID is provided via Intent
+        Intent intent = getIntent();
+        if (intent != null && intent.hasExtra("TEST_ANDROID_ID")) {
+            androidID = intent.getStringExtra("TEST_ANDROID_ID");
+            Log.d("MainActivity", "Using test Android ID from Intent: " + androidID);
+        } else {
+            androidID = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+            Log.d("MainActivity", "Using real Android ID: " + androidID);
+        }
 
         usersDB.getUser(androidID, new OnSuccessListener<User>() {
             @Override
