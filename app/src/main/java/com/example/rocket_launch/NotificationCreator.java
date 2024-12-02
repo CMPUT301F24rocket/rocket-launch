@@ -85,14 +85,16 @@ public class NotificationCreator extends Fragment {
             Notification notification = new Notification(
                     java.util.UUID.randomUUID().toString(), titleText, messageText);
 
-            // send to all users in list
+            // try to send to all users in list
+            int notificationCounter = 0; // to display how many were sent
             for (User user : users) {
                 // if they want to receive notifications, send notification
                 if (user.getNotificationPreferences()) {
                     NotificationHelper.sendPrefabNotification(user.getAndroidId(), notification);
+                    notificationCounter += 1;
                 }
             }
-            Toast.makeText(requireContext(), String.format(Locale.CANADA, "Sent notification to %d users", users.size()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(requireContext(), String.format(Locale.CANADA, "Sent notification to %d users", notificationCounter), Toast.LENGTH_SHORT).show();
             closeFragment();
         }
     }
