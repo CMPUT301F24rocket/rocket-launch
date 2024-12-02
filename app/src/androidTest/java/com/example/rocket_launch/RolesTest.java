@@ -9,6 +9,7 @@ public class RolesTest {
 
     /**
      * Test types of roles
+     * Author: Griffin
      */
 
     @Test

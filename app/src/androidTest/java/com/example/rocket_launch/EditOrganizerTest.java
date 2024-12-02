@@ -13,15 +13,11 @@ import android.util.Log;
 
 import androidx.test.core.app.ActivityScenario;
 import androidx.test.core.app.ApplicationProvider;
-import androidx.test.ext.junit.runners.AndroidJUnit4;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
-@RunWith(AndroidJUnit4.class)
-public class EditUserTest {
-
+public class EditOrganizerTest {
 
     private String testAndroidId;
     private ActivityScenario<MainActivity> scenario;
@@ -40,30 +36,35 @@ public class EditUserTest {
 
         Log.d("TestSetup", "Launched MainActivity with test Android ID: " + testAndroidId);
     }
+
     /**
-     * Test the initizialization and interactions of an user within th app
+     * Test the initizialization and interactions of an organizer within th app
      * author: Griffin
      * - The test in the beginning will make a new user based on a created androidID. I did this
      * because I was having troubles on showing the test since the tests will always be related to the androidID
      * of the emulator (and since im already in the database I wont see the startup screen). Since the US states that
      * the androidID is used for logging in, there are times in the test cases that your androidID will take precedence
      * over the created androidID. You will be altering your actual data at some point during the tests.
-     * - Will show the startup for making an user
+     * - Will show the startup for making an organizer
      * - will then go to the profile and edit it
      * - then show all the navigation related to it
      * @throws InterruptedException if the sleep thread is interrupted
      */
 
     @Test
-    public void testUserInitialization() throws InterruptedException {
+    public void testOrganizerInitialization() throws InterruptedException {
+        // turn on organizer
         Thread.sleep(10000);
-        onView(withId(R.id.entrant_switch)).perform(click());
+        onView(withId(R.id.organizer_switch)).perform(click());
         onView(withId(android.R.id.button1)).perform(click());
+
 
         Thread.sleep(5000);
         onView(withId(R.id.edit_user_name)).perform(typeText("John Smith"));
         onView(withId(R.id.edit_user_email)).perform(typeText("jsmith@ualberta.ca"));
         onView(withId(R.id.edit_user_phone)).perform(typeText("123-456-789"));
+        onView(withId(R.id.edit_user_facility)).perform(typeText("Van Vilet Centre"));
+        onView(withId(R.id.edit_user_facility_address)).perform(typeText("8834 114 St NW"));
         onView(withId(R.id.startup_button)).perform(click());
 
         Thread.sleep(5000);
@@ -82,9 +83,10 @@ public class EditUserTest {
         Thread.sleep(5000);
 
         // Click photo options
-        onView(withId(R.id.delete_profile_picture_button)).perform(click());
-        Thread.sleep(5000);
         onView(withId(R.id.generate_profile_picture_button)).perform(click());
+        Thread.sleep(5000);
+        onView(withId(R.id.delete_profile_picture_button)).perform(click());
+
 
         //Edit user name
         onView(withId(R.id.edit_user_name)).perform(replaceText(""));
@@ -108,8 +110,7 @@ public class EditUserTest {
         Thread.sleep(3000);
 
         // look at user events
-        onView(withId(R.id.navigation_user_events)).perform(click());
+        onView(withId(R.id.navigation_create_events)).perform(click());
         Thread.sleep(3000);
-
     }
 }

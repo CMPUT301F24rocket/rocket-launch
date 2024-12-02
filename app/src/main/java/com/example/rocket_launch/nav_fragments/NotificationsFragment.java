@@ -5,7 +5,6 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.provider.Settings.Secure;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,7 +24,6 @@ import com.example.rocket_launch.User;
 import com.example.rocket_launch.UsersDB;
 import com.example.rocket_launch.notifications_tab.NotificationDetailsFragment;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -73,6 +71,7 @@ public class NotificationsFragment extends Fragment {
         notificationSettingsButton.setOnClickListener(v -> {
 
             // open app notification settings
+
             Intent intent = new Intent();
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) { // For Android 8.0 (Oreo) and above
                 intent.setAction(Settings.ACTION_APP_NOTIFICATION_SETTINGS);
