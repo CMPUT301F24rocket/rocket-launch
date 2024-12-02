@@ -74,20 +74,20 @@ public class AdminProfilesFragment extends Fragment {
     private void showDeleteConfirmation(User user, int position) {
         new AlertDialog.Builder(requireContext())
                 .setTitle("Delete profile?")
-                .setMessage("This action cannot be undone.")
+                .setMessage("This action will remove all associated data and cannot be undone.")
                 .setPositiveButton("Yes", (dialog, which) -> deleteProfile(user, position))
                 .setNegativeButton("No", null)
                 .show();
     }
 
     private void deleteProfile(User user, int position) {
-        usersDB.getUsersRef().document(user.getAndroidId()).delete()
-                .addOnSuccessListener(aVoid -> {
+        usersDB.deleteUser(user.getAndroidId(),
+                unused -> {
                     adapter.removeProfile(position); // Remove from RecyclerView
                     Toast.makeText(requireContext(), "Profile deleted successfully", Toast.LENGTH_SHORT).show();
-                })
-                .addOnFailureListener(e -> {
-                    Toast.makeText(requireContext(), "Failed to delete profile", Toast.LENGTH_SHORT).show();
-                });
+                }
+        );
     }
 }
+
+

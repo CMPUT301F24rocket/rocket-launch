@@ -1,6 +1,7 @@
 package com.example.rocket_launch.admin;
 
 import android.os.Bundle;
+import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -8,7 +9,6 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +17,7 @@ import com.example.rocket_launch.R;
 import com.example.rocket_launch.Event;
 import com.example.rocket_launch.EventsDB;
 import com.google.firebase.firestore.DocumentSnapshot;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,10 +38,10 @@ public class AdminEventsFragment extends Fragment {
 
         // Set up the RecyclerView
         eventsRecyclerView = view.findViewById(R.id.events_recycler_view);
-        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventsRecyclerView.setLayoutManager(new LinearLayoutManager(requireContext()));
 
         // Add dividers between RecyclerView items
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(eventsRecyclerView.getContext(), LinearLayoutManager.VERTICAL);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(requireContext(), LinearLayoutManager.VERTICAL);
         eventsRecyclerView.addItemDecoration(dividerItemDecoration);
 
         // Initialize the adapter with an empty list
@@ -52,7 +53,7 @@ public class AdminEventsFragment extends Fragment {
         loadEvents();
 
         // Handle delete events
-        adapter.setOnEventDeleteListener(event -> showDeleteConfirmationDialog(event));
+        adapter.setOnEventDeleteListener(this::showDeleteConfirmationDialog);
 
         return view;
     }
@@ -77,43 +78,42 @@ public class AdminEventsFragment extends Fragment {
      * @param event The event to delete.
      */
     private void deleteEvent(Event event) {
-        eventsDB.deleteEvent(event.getEventID(), l -> {
-            loadEvents();
-        }, e -> {
-            Log.e("admin delete event", "error deleting event", e);
-        });
-//        eventsDB.getEventsRef().document(event.getEventID())
-//                .delete()
-//                .addOnSuccessListener(aVoid -> {
-//                    // Refresh the list after deletion
-//                    loadEvents();
-//                })
-//                .addOnFailureListener(e -> {
-//                    // Handle deletion failure (e.g., show a toast or log the error)
-//                });
+        eventsDB.deleteEvent(event.getEventID(),
+                success -> {
+                    Toast.makeText(requireContext(), "Event deleted successfully", Toast.LENGTH_SHORT).show();
+                    loadEvents(); // Refresh the list
+                },
+                failure -> {
+                    Toast.makeText(requireContext(), "Failed to delete event", Toast.LENGTH_SHORT).show();
+                    Log.e("AdminEventsFragment", "Error deleting event", failure);
+                });
     }
 
     /**
      * Loads the list of events from the database and updates the RecyclerView.
-     * Author: Pouyan
+     * Ensures missing names or descriptions are labeled properly.
      */
     private void loadEvents() {
-        // Fetch events from the Firestore database
-        eventsDB.getEventsRef().get().addOnSuccessListener(querySnapshot -> {
-            List<Event> events = new ArrayList<>();
+        eventsDB.getEventsRef().get()
+                .addOnSuccessListener(querySnapshot -> {
+                    List<Event> events = new ArrayList<>();
 
-            // Convert Firestore documents to Event objects
-            for (DocumentSnapshot doc : querySnapshot) {
-                Event event = doc.toObject(Event.class);
-                if (event != null) {
-                    events.add(event);
-                }
-            }
+                    for (DocumentSnapshot doc : querySnapshot) {
+                        Event event = doc.toObject(Event.class);
+                        if (event != null) {
+                            // Ensure missing fields are handled
+                            if (event.getName() == null || event.getName().trim().isEmpty()) {
+                                event.setName("No name provided");
+                            }
+                            if (event.getDescription() == null || event.getDescription().trim().isEmpty()) {
+                                event.setDescription("No description provided");
+                            }
+                            events.add(event);
+                        }
+                    }
 
-            // Update the adapter with the fetched events
-            adapter.updateData(events);
-        }).addOnFailureListener(e -> {
-            // Handle errors here if the fetch fails
-        });
+                    adapter.updateData(events);
+                })
+                .addOnFailureListener(e -> Log.e("AdminEventsFragment", "Failed to load events", e));
     }
 }
