@@ -8,11 +8,17 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import com.example.rocket_launch.R;
 import com.example.rocket_launch.User;
+
 import java.util.List;
 
+/**
+ * Adapter for displaying a list of user profiles in the admin view.
+ * Allows long-click deletion of profiles.
+ * Author: Pouyan
+ */
 public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdapter.ViewHolder> {
     private List<User> users;
-    private OnProfileDeleteListener onProfileDeleteListener;
+    private OnProfileDeleteListener deleteListener;
 
     public AdminProfilesAdapter(List<User> users) {
         this.users = users;
@@ -28,15 +34,22 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         User user = users.get(position);
-        holder.userName.setText(user.getUserName() != null ? user.getUserName() : "No name provided");
-        holder.userEmail.setText(user.getUserEmail() != null ? user.getUserEmail() : "No email provided");
 
-        // Long-press to delete
+        // Set name and email with placeholders if missing
+        holder.tvUserName.setText(user.getUserName() != null && !user.getUserName().trim().isEmpty()
+                ? user.getUserName()
+                : "No name provided");
+
+        holder.tvUserEmail.setText(user.getUserEmail() != null && !user.getUserEmail().trim().isEmpty()
+                ? user.getUserEmail()
+                : "No email provided");
+
+        // Handle long-click for deletion
         holder.itemView.setOnLongClickListener(v -> {
-            if (onProfileDeleteListener != null) {
-                onProfileDeleteListener.onProfileDelete(user, position);
+            if (deleteListener != null) {
+                deleteListener.onProfileDelete(user, holder.getAdapterPosition());
             }
-            return true;
+            return true; // Indicate the event is consumed
         });
     }
 
@@ -46,7 +59,7 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
     }
 
     public void updateData(List<User> newUsers) {
-        this.users = newUsers;
+        users = newUsers;
         notifyDataSetChanged();
     }
 
@@ -55,21 +68,21 @@ public class AdminProfilesAdapter extends RecyclerView.Adapter<AdminProfilesAdap
         notifyItemRemoved(position);
     }
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
-        TextView userName, userEmail;
+    public void setOnProfileDeleteListener(OnProfileDeleteListener listener) {
+        this.deleteListener = listener;
+    }
 
-        public ViewHolder(@NonNull View itemView) {
+    static class ViewHolder extends RecyclerView.ViewHolder {
+        TextView tvUserName, tvUserEmail;
+
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-            userName = itemView.findViewById(R.id.user_name);
-            userEmail = itemView.findViewById(R.id.user_email);
+            tvUserName = itemView.findViewById(R.id.user_name);
+            tvUserEmail = itemView.findViewById(R.id.user_email);
         }
     }
 
     public interface OnProfileDeleteListener {
         void onProfileDelete(User user, int position);
-    }
-
-    public void setOnProfileDeleteListener(OnProfileDeleteListener listener) {
-        this.onProfileDeleteListener = listener;
     }
 }

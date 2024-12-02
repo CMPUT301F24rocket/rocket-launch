@@ -26,6 +26,7 @@ import com.journeyapps.barcodescanner.ScanOptions;
 
 /**
  * fragment used to display all events related to an entrant
+ * Author: Rachel
  */
 public class UserEventsFragment extends Fragment {
 

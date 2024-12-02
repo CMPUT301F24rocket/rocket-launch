@@ -23,6 +23,8 @@
 
     <!-- Notification Channel Strings -->
     <string name="channel_name">Event Notifications</string> <!-- Added -->
-    <string name="channel_description">Notifications for actions related to event creation and management.</string> <!-- Added -->
+    <string name="channel_description">Notifications for actions related to event creation and management.</string>
+    <string name="startup_page">Startup page</string>
+    <string name="enter_user_information">Enter User Information</string> <!-- Added -->
 
 </resources>

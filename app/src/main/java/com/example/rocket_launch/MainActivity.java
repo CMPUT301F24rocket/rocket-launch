@@ -13,6 +13,7 @@ import android.view.View;
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.NotificationManagerCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -29,6 +30,7 @@ import org.osmdroid.config.Configuration;
 
 /**
  * main activity that gets loaded on startup
+ * Authors: Rachel, Nathan, Griffin, Kaiden
  */
 public class MainActivity extends AppCompatActivity {
     UsersDB usersDB;
@@ -38,8 +40,6 @@ public class MainActivity extends AppCompatActivity {
     UserEventsFragment userEvents;
     UserProfileFragment userProfile;
     NotificationsFragment notifications;
-
-
     NotificationHandler notificationHandler;
 
 
@@ -119,6 +119,7 @@ public class MainActivity extends AppCompatActivity {
                     bottomNav.setVisibility(View.GONE);
                     user = new User();
                     user.setAndroidId(androidID);
+                    user.setNotificationPreferences(NotificationManagerCompat.from(context).areNotificationsEnabled());
                     usersDB.addUser(androidID, user);
                     SelectRolesFragment frag = new SelectRolesFragment(user.getRoles());
                     User finalUser = user;
@@ -214,6 +215,13 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Refreshes the startup fragment if user chooses the organizer role
+     * @param AndroidId Android ID of user
+     * @param user  Current User object
+     * @param userdb    Current userdb object
+     * Author: Nathan
+     */
     private void refreshStartupFragment(String AndroidId, User user, UsersDB userdb) {
 
         // Display the StartUpFragment
