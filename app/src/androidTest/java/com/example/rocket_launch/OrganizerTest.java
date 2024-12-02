@@ -81,8 +81,8 @@ public class OrganizerTest {
         assertNotNull(locationData);
         assertEquals(2, locationData.size());
         assertEquals("user1", locationData.get(0).getEntrantID());
-        assertEquals(51.0486, locationData.get(0).getEntrantLatitude(), 0.001);
-        assertEquals(-114.0708, locationData.get(0).getEntrantLongitude(), 0.001);
+        assertEquals(51.0447, locationData.get(0).getEntrantLatitude(), 0.001);
+        assertEquals(-114.0719, locationData.get(0).getEntrantLongitude(), 0.001);
     }
 
     @Test

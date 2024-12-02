@@ -4,6 +4,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.assertion.ViewAssertions.matches;
+import static androidx.test.espresso.matcher.ViewMatchers.isChecked;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 
@@ -22,7 +23,6 @@ public class CreateEventTest {
     public ActivityScenarioRule<MainActivity> scenario =
             new ActivityScenarioRule<>(MainActivity.class);
 
-
     /**
      * Test to navigate to Create Event screen and create a new event
      *
@@ -36,7 +36,41 @@ public class CreateEventTest {
 
     @Test
     public void testNavigateToCreateEventFragment() throws InterruptedException {
+
+
+
+
+        // Check if we can see the navigation and go to user settings
+        Thread.sleep(5000);
+        onView(withId(R.id.bottom_nav_view)).check(matches(isDisplayed()));
+        onView(withId(R.id.navigation_user_profile)).check(matches(isDisplayed()));
+        onView(withId(R.id.navigation_user_profile)).perform(click());
+
+        onView(withId(R.id.edit_profile_button)).perform(click());
+        onView(withId(R.id.edit_user_role_button)).perform(click());
+
+        onView(withId(R.id.entrant_switch)).check(matches(isChecked()));
+        onView(withId(R.id.entrant_switch)).perform(click());
+        onView(withId(R.id.entrant_switch)).check(matches(isChecked()));
+
+        onView(withId(R.id.save_profile_edit_button)).perform(click());
+        Thread.sleep(3000);
+
+        onView(withId(R.id.edit_user_role_button)).perform(click());
+        Thread.sleep(5000);
+
+
+
+
+
+
+
+
+
+
+
         // Check if we can see the navigation and click create event
+        Thread.sleep(5000);
         onView(withId(R.id.bottom_nav_view)).check(matches(isDisplayed()));
         onView(withId(R.id.navigation_create_events)).check(matches(isDisplayed()));
         onView(withId(R.id.navigation_create_events)).perform(click());
@@ -55,5 +89,6 @@ public class CreateEventTest {
         onView(withId(R.id.checkbox_geolocation_requirement)).perform(click());
         onView(withId(R.id.edit_event_description)).perform(typeText("Sample Event Description"));
         onView(withId(R.id.create_event_button)).perform(click());
+        Thread.sleep(5000);
     }
 }
