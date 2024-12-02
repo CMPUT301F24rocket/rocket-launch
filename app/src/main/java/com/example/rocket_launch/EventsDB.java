@@ -494,67 +494,33 @@ public class EventsDB {
         });
     }
 
-
-    // Add a notification to an event
-    // Updated addNotificationToEvent Method
-    public void addNotificationToEvent(String eventID, Notification notification) {
-        // Convert Notification object to a Map
-        Map<String, Object> notificationMap = new HashMap<>();
-        notificationMap.put("id", notification.getId());
-        notificationMap.put("title", notification.getTitle());
-        notificationMap.put("message3", notification.getMessage());
-       // notificationMap.put("timestamp", notification.getTimestamp());
-
-        // Update Firebase with the notification map
-        eventsRef.document(eventID)
-                .update("notifications", FieldValue.arrayUnion(notificationMap))
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Notification added to event"))
-                .addOnFailureListener(e -> Log.w("Firebase", "Error adding notification", e));
-    }
-
-
-    // Remove a notification from an event
-    public void removeNotificationFromEvent(String eventID, Notification notification) {
-        eventsRef.document(eventID)
-                .update("notifications", FieldValue.arrayRemove(notification))
-                .addOnSuccessListener(aVoid -> Log.d("Firebase", "Notification removed from event"))
-                .addOnFailureListener(e -> Log.w("Firebase", "Error removing notification", e));
-    }
-
-    // Retrieve notifications for an event
-    public void getNotificationsForEvent(String eventID, OnSuccessListener<List<Notification>> onSuccess) {
-        eventsRef.document(eventID).get()
-                .addOnSuccessListener(documentSnapshot -> {
-                    if (documentSnapshot.exists()) {
-                        List<Map<String, Object>> notificationMaps = (List<Map<String, Object>>) documentSnapshot.get("notifications");
-                        List<Notification> notifications = new ArrayList<>();
-
-                        if (notificationMaps != null) {
-                            for (Map<String, Object> map : notificationMaps) {
-                                String id = (String) map.get("id");
-                                String title = (String) map.get("title");
-                                String message = (String) map.get("message");
-                                Notification notification = new Notification(id, title, message);
-                                notifications.add(notification);
-                            }
-                        }
-
-                        onSuccess.onSuccess(notifications);
-                    }
-                })
-                .addOnFailureListener(e -> Log.w("Firebase", "Error fetching notifications", e));
-    }
-
     /**
      * Delete an event from the database.
+     * Author: Kaiden
      * @param eventId The ID of the event to delete.
      * @param onSuccess Callback for successful deletion.
      * @param onFailure Callback for failed deletion.
      */
     public void deleteEvent(String eventId, OnSuccessListener<Void> onSuccess, OnFailureListener onFailure) {
-        eventsRef.document(eventId).delete()
-                .addOnSuccessListener(onSuccess)
-                .addOnFailureListener(onFailure);
+        loadEvent(eventId, event -> {
+            UsersDB usersDB = new UsersDB();
+            // when an event is deleted it must be deleted from the organizer's created events list
+            usersDB.removeCreatedEvent(event.getEventID(), eventId);
+
+            // remove occurrence from all users in waiting list
+            for (String androidId : event.getWaitingList()) {
+                usersDB.removeWaitlistedEvent(androidId, eventId);
+            }
+
+            // remove occurrence from all useres in registered (final) list
+            for (String androidId : event.getregisteredEntrants()) {
+                usersDB.removeRegisteredEvent(androidId, eventId);
+            }
+
+            eventsRef.document(eventId).delete()
+                    .addOnSuccessListener(onSuccess)
+                    .addOnFailureListener(onFailure);
+        });
     }
 
     public void loadPoster(String androidId) {
