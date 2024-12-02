@@ -52,6 +52,7 @@ public class EntrantListViewInvitedFragment extends Fragment {
                     .setMessage("This action cannot be undone.")
                     .setPositiveButton("Yes", (dialog, which) -> {
                         eventsDB.removeUserFromInvitedList(eventId, users.get(position).getAndroidId());
+                        eventsDB.addUserToCancelledList(eventId, users.get(position).getAndroidId());
                         users.remove(position);
                         adapter.notifyDataSetChanged();
                     })
